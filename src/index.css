@@ -1,1 +1,11 @@
 @import "tailwindcss";
+
+@layer utilities {
+  .bg-main {
+    background-color: #030303;
+  }
+
+  .bg-menu {
+    background-color: #0a0a0a;
+  }
+}
