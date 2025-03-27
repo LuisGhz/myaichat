@@ -4,6 +4,7 @@ import { useParams } from "react-router";
 import { Message } from "types/chat/Message.type";
 import { MessagesList } from "./MessagesList";
 import { InputSection } from "./InputSection";
+import { NewMessageReq } from "types/chat/NewMessageReq.type";
 
 export const CurrentChat = () => {
   const [messages, setMessages] = useState<Message[]>([]);
@@ -13,25 +14,28 @@ export const CurrentChat = () => {
 
   useEffect(() => {
     (async () => {
-      if (params.id) setMessages(await getChatMessages(params.id));
+      if (params.id) {
+        setMessages(await getChatMessages(params.id));
+        return;
+      }
+      setMessages([]);
     })();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [params.id]);
 
   // Scroll to bottom whenever messages change
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
-  const onSend = async (newUserMessage: string) => {
-    setMessages(prevMessages => [
-      ...prevMessages,
-      {
-        role: "User",
-        content: newUserMessage
-      }
-    ]);
-    const res = await sendNewMessage(newUserMessage);
+  const sendMessage = async (newUserMessage: string) => {
+    const req: NewMessageReq = {
+      chatId: params.id,
+      prompt: newUserMessage,
+      model: 'gpt-4o-mini'
+    }
+
+    const res = await sendNewMessage(req);
     if (res) {
       setMessages(prevMessages => [
         ...prevMessages,
@@ -41,6 +45,17 @@ export const CurrentChat = () => {
         }
       ]);
     }
+  }
+
+  const onEnter = async (newUserMessage: string) => {
+    setMessages(prevMessages => [
+      ...prevMessages,
+      {
+        role: "User",
+        content: newUserMessage
+      }
+    ]);
+    await sendMessage(newUserMessage);
   };
 
   return (
@@ -53,7 +68,7 @@ export const CurrentChat = () => {
             <div ref={messagesEndRef} />
           </section>
         )}
-        <InputSection onSend={onSend} />
+        <InputSection onEnter={onEnter} />
       </div>
     </>
   );
