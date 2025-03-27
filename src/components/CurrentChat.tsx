@@ -1,6 +1,6 @@
 import { useChats } from "hooks/useChats";
 import { useEffect, useState, useRef } from "react";
-import { useParams } from "react-router";
+import { useNavigate, useParams } from "react-router";
 import { Message } from "types/chat/Message.type";
 import { MessagesList } from "./MessagesList";
 import { InputSection } from "./InputSection";
@@ -9,6 +9,7 @@ import { NewMessageReq } from "types/chat/NewMessageReq.type";
 export const CurrentChat = () => {
   const [messages, setMessages] = useState<Message[]>([]);
   const params = useParams();
+  const navigate = useNavigate()
   const { getChatMessages, sendNewMessage } = useChats();
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
@@ -44,6 +45,9 @@ export const CurrentChat = () => {
           content: res.content
         }
       ]);
+
+      if (!params.id && res.chatId)
+        navigate(`/chat/${res.chatId}`, { replace: true });
     }
   }
 
