@@ -1,8 +1,10 @@
+import "./InputSection.css";
+
 export const InputSection = () => {
   return (<>
-    <section className="my-2 flex">
+    <section className="my-2 flex bg-input-section p-2 justify-evenly">
       <span>+</span>
-      <input className="w-10/12 mx-3" type="text" />
+      <textarea className="input py-2 px-4" placeholder="Message MyAIChat" ></textarea>
       <span>Microphone</span>
     </section>
   </>)
