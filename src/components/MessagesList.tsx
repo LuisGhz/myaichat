@@ -1,4 +1,5 @@
 import { Message } from "types/chat/Message.type";
+import "./MessagesList.css";
 
 type MessagesListProps = {
   messages: Message[];
@@ -7,9 +8,13 @@ type MessagesListProps = {
 export const MessagesList = ({ messages }: MessagesListProps) => {
   return (
     <>
-      <ul>
+      <ul className="w-full">
         {messages.map((message) => (
-          <li>{message.content}</li>
+          <li className={`flex w-full ${message.role === 'User' ? 'justify-end' : ''}`}>
+            <div className={`w-max max-w-[35rem] text-white ${message.role === 'User' ? 'user-message' : ''}`}>
+              {message.content}
+            </div>
+          </li>
         ))}
       </ul>
     </>
