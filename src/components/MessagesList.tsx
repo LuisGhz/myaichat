@@ -12,8 +12,8 @@ export const MessagesList = ({ messages }: MessagesListProps) => {
   return (
     <>
       <ul className="w-full">
-        {messages.map((message) => (
-          <li className={`flex w-full ${message.role === 'User' ? 'justify-end' : ''}`}>
+        {messages.map((message, idx) => (
+          <li className={`flex w-full ${message.role === 'User' ? 'justify-end' : ''}`} key={idx}>
             <div className={`w-max max-w-[35rem] text-white mb-2 ${message.role === 'User' ? 'user-message' : ''}`}>
               {formatToMarkDown(message.content)}
             </div>

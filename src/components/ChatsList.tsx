@@ -20,7 +20,7 @@ export const ChatsList = () => {
       <li><Link to={'/'}>Bienvenido</Link></li>
       <li><Link to={'/chat'}>New chat</Link></li>
       {chats.length > 0 &&
-        chats.map(chat => (<li><Link to={`/chat/${chat.id}`}>{chat.title}</Link></li>))
+        chats.map(chat => (<li key={chat.id}><Link to={`/chat/${chat.id}`}>{chat.title}</Link></li>))
       }
     </ul>
   </>);
