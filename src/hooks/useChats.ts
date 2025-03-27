@@ -1,4 +1,4 @@
-import { getAllChatsService } from "services/chat.service";
+import { getAllChatsService, getChatMessagesService } from "services/chat.service";
 
 export const useChats = () => {
   const getAllChats = async () => {
@@ -6,5 +6,11 @@ export const useChats = () => {
     return chats;
   };
 
-  return { getAllChats };
+  const getChatMessages = async (id: string) => {
+    const res = await getChatMessagesService(id);
+    const messages = res?.historyMessages || [];
+    return messages;
+  }
+
+  return { getAllChats, getChatMessages };
 };
