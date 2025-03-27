@@ -1,5 +1,5 @@
 import { useChats } from "hooks/useChats";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useParams } from "react-router";
 import { Message } from "types/chat/Message.type";
 import { MessagesList } from "./MessagesList";
@@ -9,20 +9,42 @@ export const CurrentChat = () => {
   const [messages, setMessages] = useState<Message[]>([]);
   const params = useParams();
   const { getChatMessages } = useChats();
+  const messagesEndRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     (async () => {
-      if (params.id)
-        setMessages(await getChatMessages(params.id))
+      if (params.id) setMessages(await getChatMessages(params.id));
     })();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  return (<>
-    <div className="flex flex-col h-full max-w-9/12 mx-auto pt-2">
-      {messages.length === 0 && <section className="grow">History</section>}
-      {messages.length > 0 && <section className="grow"><MessagesList messages={messages} /></section>}
-      <InputSection />
-    </div>
-  </>);
+  // Scroll to bottom whenever messages change
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages]);
+
+  const onSend = (newUserMessage: string) => {
+    const newMessages = [...messages];
+    newMessages.push({
+      role: "User",
+      content: newUserMessage
+    });
+
+    setMessages(newMessages);
+  };
+
+  return (
+    <>
+      <div className="flex flex-col h-full max-w-9/12 mx-auto pt-2">
+        {messages.length === 0 && <section className="grow">History</section>}
+        {messages.length > 0 && (
+          <section className="grow overflow-y-auto hide-scrollbar">
+            <MessagesList messages={messages} />
+            <div ref={messagesEndRef} />
+          </section>
+        )}
+        <InputSection onSend={onSend} />
+      </div>
+    </>
+  );
 };
