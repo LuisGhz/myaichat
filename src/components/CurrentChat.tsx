@@ -8,7 +8,7 @@ import { InputSection } from "./InputSection";
 export const CurrentChat = () => {
   const [messages, setMessages] = useState<Message[]>([]);
   const params = useParams();
-  const { getChatMessages } = useChats();
+  const { getChatMessages, sendNewMessage } = useChats();
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -23,14 +23,24 @@ export const CurrentChat = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
-  const onSend = (newUserMessage: string) => {
-    const newMessages = [...messages];
-    newMessages.push({
-      role: "User",
-      content: newUserMessage
-    });
-
-    setMessages(newMessages);
+  const onSend = async (newUserMessage: string) => {
+    setMessages(prevMessages => [
+      ...prevMessages,
+      {
+        role: "User",
+        content: newUserMessage
+      }
+    ]);
+    const res = await sendNewMessage(newUserMessage);
+    if (res) {
+      setMessages(prevMessages => [
+        ...prevMessages,
+        {
+          role: "Assistant",
+          content: res.content
+        }
+      ]);
+    }
   };
 
   return (
