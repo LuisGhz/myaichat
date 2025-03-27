@@ -4,11 +4,11 @@ import { ChatsList } from "components/ChatsList"
 function App() {
 
   return (
-    <div className="flex">
+    <div className="flex h-full">
       <div className="w-2xs">
         <ChatsList />
       </div>
-      <main>
+      <main className="grow bg-main">
         <Outlet />
       </main>
     </div>
