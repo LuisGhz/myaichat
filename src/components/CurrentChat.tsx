@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router";
 import { Message } from "types/chat/Message.type";
 import { MessagesList } from "./MessagesList";
+import { InputSection } from "./InputSection";
 
 export const CurrentChat = () => {
   const [messages, setMessages] = useState<Message[]>([]);
@@ -18,8 +19,10 @@ export const CurrentChat = () => {
   }, []);
 
   return (<>
-    {messages.length === 0 && <section>History</section>}
-    {messages.length > 0 && <MessagesList messages={messages} />}
-    <section><input type="text" /></section>
+    <div className="flex flex-col h-full max-w-9/12 mx-auto pt-2">
+      {messages.length === 0 && <section className="grow">History</section>}
+      {messages.length > 0 && <section className="grow"><MessagesList messages={messages} /></section>}
+      <InputSection />
+    </div>
   </>);
 };
