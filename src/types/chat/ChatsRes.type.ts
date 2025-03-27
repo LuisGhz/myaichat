@@ -1,5 +1,5 @@
 import { ChatSummary } from "./ChatSummary.type"
 
-export type Chats = {
+export type ChatsRes = {
   chats: ChatSummary[];
 }
