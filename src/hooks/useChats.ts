@@ -2,7 +2,8 @@ import { getAllChatsService, getChatMessagesService } from "services/chat.servic
 
 export const useChats = () => {
   const getAllChats = async () => {
-    const chats = await getAllChatsService();
+    const chatRes = await getAllChatsService();
+    const chats = chatRes?.chats || [];
     return chats;
   };
 
