@@ -1,5 +1,6 @@
 import { useChats } from "hooks/useChats";
 import { useEffect, useState } from "react";
+import { Link } from "react-router";
 import { ChatSummary } from "types/chat/ChatSummary.type";
 
 export const ChatsList = () => {
@@ -13,13 +14,14 @@ export const ChatsList = () => {
       setChats(ch);
     })();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  }, []);
+
   return (<>
     <ul>
-      <li>Bienvenido</li>
-      <li>New chat</li>
+      <li><Link to={'/'}>Bienvenido</Link></li>
+      <li><Link to={'/chat'}>New chat</Link></li>
       {chats.length > 0 &&
-        chats.map(chat => (<li>{chat.title}</li>))
+        chats.map(chat => (<li><Link to={`/chat/${chat.id}`}>{chat.title}</Link></li>))
       }
     </ul>
   </>);
