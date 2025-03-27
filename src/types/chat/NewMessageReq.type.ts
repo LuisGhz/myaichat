@@ -1,5 +1,7 @@
+import { Models } from "./Models.type";
+
 export type NewMessageReq = {
-  chatId: string;
+  chatId?: string;
   prompt: string;
-  model: string;
+  model: Models;
 }

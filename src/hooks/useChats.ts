@@ -1,4 +1,9 @@
-import { getAllChatsService, getChatMessagesService } from "services/chat.service";
+import {
+  getAllChatsService,
+  getChatMessagesService,
+  sendNewMessageService,
+} from "services/chat.service";
+import { NewMessageReq } from "types/chat/NewMessageReq.type";
 
 export const useChats = () => {
   const getAllChats = async () => {
@@ -11,7 +16,12 @@ export const useChats = () => {
     const res = await getChatMessagesService(id);
     const messages = res?.historyMessages || [];
     return messages;
-  }
+  };
 
-  return { getAllChats, getChatMessages };
+  const sendNewMessage = async (newMessageOps: NewMessageReq) => {
+    const res = await sendNewMessageService(newMessageOps);
+    return res;
+  };
+
+  return { getAllChats, getChatMessages, sendNewMessage };
 };
