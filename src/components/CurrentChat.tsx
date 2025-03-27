@@ -1,12 +1,14 @@
 import { useChats } from "hooks/useChats";
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, useContext } from "react";
 import { useNavigate, useParams } from "react-router";
 import { Message } from "types/chat/Message.type";
 import { MessagesList } from "./MessagesList";
 import { InputSection } from "./InputSection";
 import { NewMessageReq } from "types/chat/NewMessageReq.type";
+import { AppContext } from "context/AppContext";
 
 export const CurrentChat = () => {
+  const { getAllChatsForList } = useContext(AppContext);
   const [messages, setMessages] = useState<Message[]>([]);
   const params = useParams();
   const navigate = useNavigate()
@@ -46,8 +48,10 @@ export const CurrentChat = () => {
         }
       ]);
 
-      if (!params.id && res.chatId)
+      if (!params.id && res.chatId) {
         navigate(`/chat/${res.chatId}`, { replace: true });
+        getAllChatsForList();
+      }
     }
   }
 
