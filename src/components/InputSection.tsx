@@ -2,17 +2,17 @@ import { KeyboardEvent, useState } from "react";
 import "./InputSection.css";
 
 type InputSectionProps = {
-  onSend: (newUserMessage: string) => void;
+  onEnter: (newUserMessage: string) => void;
 };
 
-export const InputSection = ({ onSend }: InputSectionProps) => {
+export const InputSection = ({ onEnter }: InputSectionProps) => {
   const [userInput, setUserInput] = useState("");
 
   const onMessageKeyDown = (event: KeyboardEvent<HTMLTextAreaElement>) => {
     if (event.key === "Enter") {
       event.preventDefault();
       if (userInput.trim().length === 0) return;
-      onSend(userInput);
+      onEnter(userInput);
       setUserInput("");
     }
   };
