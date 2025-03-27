@@ -9,15 +9,14 @@ export const ChatsList = () => {
 
   useEffect(() => {
     (async () => {
-      const res = await getAllChats();
-      const ch = res?.chats || [] as ChatSummary[];
-      setChats(ch);
+      const chatRes = await getAllChats();
+      setChats(chatRes);
     })();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (<>
-    <ul>
+    <ul className="bg-menu text-white h-full">
       <li><Link to={'/'}>Bienvenido</Link></li>
       <li><Link to={'/chat'}>New chat</Link></li>
       {chats.length > 0 &&
