@@ -62,7 +62,10 @@
         "wayou.vscode-todo-highlight",
         "xabikos.javascriptsnippets",
         "zaaack.markdown-editor"
-      ]
+      ],
+      "settings": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode"
+      }
     }
   }
 }
