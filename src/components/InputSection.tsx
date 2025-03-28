@@ -1,6 +1,6 @@
 import { KeyboardEvent, useState } from "react";
 import "./InputSection.css";
-import { PlusIcon } from "assets/icons/PlusIcon";
+// import { PlusIcon } from "assets/icons/PlusIcon";
 import { MicrophoneIcon } from "assets/icons/MicrophoneIcon";
 
 type InputSectionProps = {
@@ -22,9 +22,10 @@ export const InputSection = ({ onEnter }: InputSectionProps) => {
   return (
     <>
       <section className="my-2 flex bg-cop-5 p-2 justify-evenly">
-        <span className="text-white mt-2 cursor-pointer">
+        {/* TODO: ADD files interation */}
+        {/* <span className="text-white mt-2 cursor-pointer">
           <PlusIcon />
-        </span>
+        </span> */}
         <textarea
           className="input py-2 px-4"
           placeholder="Message MyAIChat"
