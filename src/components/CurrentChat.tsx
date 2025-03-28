@@ -13,6 +13,7 @@ export const CurrentChat = () => {
   const { getAllChatsForList } = useContext(AppContext);
   const [messages, setMessages] = useState<Message[]>([]);
   const [model, setModel] = useState<Models>("gpt-4o-mini");
+  const [currentModel, setCurrentModel] = useState("");
   const params = useParams();
   const navigate = useNavigate();
   const { getChatMessages, sendNewMessage } = useChats();
@@ -21,9 +22,13 @@ export const CurrentChat = () => {
   useEffect(() => {
     (async () => {
       if (params.id) {
-        setMessages(await getChatMessages(params.id));
+        const res = await getChatMessages(params.id);
+        setMessages(res?.historyMessages || []);
+        setCurrentModel(res?.model || "");
         return;
       }
+      setCurrentModel("");
+      setModel("gpt-4o-mini");
       setMessages([]);
     })();
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -53,6 +58,7 @@ export const CurrentChat = () => {
 
       if (!params.id && res.chatId) {
         navigate(`/chat/${res.chatId}`, { replace: true });
+        setCurrentModel(model);
         getAllChatsForList();
       }
     }
@@ -72,6 +78,9 @@ export const CurrentChat = () => {
   return (
     <>
       <div className="flex flex-col h-full max-w-9/12 mx-auto pt-2">
+        {currentModel && (
+          <div className="text-gray-700 text-xs">{currentModel}</div>
+        )}
         {messages.length === 0 && (
           <section className="grow">
             <NewConversation model={model} setModel={setModel} />

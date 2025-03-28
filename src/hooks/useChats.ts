@@ -13,9 +13,7 @@ export const useChats = () => {
   };
 
   const getChatMessages = async (id: string) => {
-    const res = await getChatMessagesService(id);
-    const messages = res?.historyMessages || [];
-    return messages;
+    return await getChatMessagesService(id);
   };
 
   const sendNewMessage = async (newMessageOps: NewMessageReq) => {
