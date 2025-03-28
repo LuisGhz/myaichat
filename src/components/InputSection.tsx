@@ -1,5 +1,7 @@
 import { KeyboardEvent, useState } from "react";
 import "./InputSection.css";
+import { PlusIcon } from "assets/icons/PlusIcon";
+import { MicrophoneIcon } from "assets/icons/MicrophoneIcon";
 
 type InputSectionProps = {
   onEnter: (newUserMessage: string) => void;
@@ -20,7 +22,9 @@ export const InputSection = ({ onEnter }: InputSectionProps) => {
   return (
     <>
       <section className="my-2 flex bg-input-section p-2 justify-evenly">
-        <span>+</span>
+        <span className="text-white mt-2 cursor-pointer">
+          <PlusIcon />
+        </span>
         <textarea
           className="input py-2 px-4"
           placeholder="Message MyAIChat"
@@ -28,7 +32,9 @@ export const InputSection = ({ onEnter }: InputSectionProps) => {
           value={userInput}
           onChange={(e) => setUserInput(e.target.value)}
         ></textarea>
-        <span>Microphone</span>
+        <span className="text-white mt-2 cursor-pointer">
+          <MicrophoneIcon />
+        </span>
       </section>
     </>
   );
