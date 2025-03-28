@@ -8,7 +8,7 @@ function App() {
       <div className="w-2xs">
         <ChatsList />
       </div>
-      <main className="grow bg-main">
+      <main className="grow bg-cop-3">
         <Outlet />
       </main>
     </div>

@@ -21,7 +21,7 @@ export const InputSection = ({ onEnter }: InputSectionProps) => {
 
   return (
     <>
-      <section className="my-2 flex bg-input-section p-2 justify-evenly">
+      <section className="my-2 flex bg-cop-5 p-2 justify-evenly">
         <span className="text-white mt-2 cursor-pointer">
           <PlusIcon />
         </span>
