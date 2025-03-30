@@ -18,3 +18,7 @@ export const sendNewMessageService = async (newMessageReq: NewMessageReq) => {
     newMessageReq
   );
 };
+
+export const deleteChatService = async (id: string) => {
+  return await apiClient.del(`/chat/${id}/delete`);
+};

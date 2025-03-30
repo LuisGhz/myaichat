@@ -10,7 +10,7 @@ type Props = {
 export const AppContextProvider = ({ children }: Props) => {
   const [chats, setChats] = useState<ChatSummary[]>([]);
 
-  const { getAllChats } = useChats();
+  const { getAllChats, deleteChat } = useChats();
 
   useEffect(() => {
     getAllChatsForList();
@@ -22,8 +22,14 @@ export const AppContextProvider = ({ children }: Props) => {
     setChats(ch.reverse());
   };
 
+  const deleteChatById = async (id: string) => {
+    await deleteChat(id);
+    const updatedChats = chats.filter((chat) => chat.id !== id);
+    setChats(updatedChats);
+  };
+
   return (
-    <AppContext.Provider value={{ chats, getAllChatsForList }}>
+    <AppContext.Provider value={{ chats, getAllChatsForList, deleteChatById }}>
       {children}
     </AppContext.Provider>
   );

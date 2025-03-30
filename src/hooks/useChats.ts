@@ -2,6 +2,7 @@ import {
   getAllChatsService,
   getChatMessagesService,
   sendNewMessageService,
+  deleteChatService,
 } from "services/chat.service";
 import { NewMessageReq } from "types/chat/NewMessageReq.type";
 
@@ -21,5 +22,9 @@ export const useChats = () => {
     return res;
   };
 
-  return { getAllChats, getChatMessages, sendNewMessage };
+  const deleteChat = async (id: string) => {
+    return await deleteChatService(id);
+  };
+
+  return { getAllChats, getChatMessages, sendNewMessage, deleteChat };
 };
