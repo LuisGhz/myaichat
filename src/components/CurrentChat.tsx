@@ -87,7 +87,7 @@ export const CurrentChat = () => {
           </section>
         )}
         {messages.length > 0 && (
-          <section className="grow overflow-y-auto hide-scrollbar">
+          <section className="grow overflow-y-auto hide-scrollbar px-5">
             <MessagesList messages={messages} />
             <div ref={messagesEndRef} />
           </section>
