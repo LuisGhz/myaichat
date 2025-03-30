@@ -18,7 +18,8 @@ export const AppContextProvider = ({ children }: Props) => {
   }, []);
 
   const getAllChatsForList = async () => {
-    setChats(await getAllChats());
+    const ch = await getAllChats();
+    setChats(ch.reverse());
   };
 
   return (
