@@ -12,7 +12,7 @@ export const ChatsList = () => {
         <li>
           <Link to={"/"}>Bienvenido</Link>
         </li>
-        <li className="bg-cop-1 hover:bg-cop-2 cursor-pointer text-white px-2 py-1 text-center w-10/12 mx-auto rounded-sm transition-colors duration-300 mb-3">
+        <li className="bg-cop-1 hover:bg-cop-2 cursor-pointer text-white px-2 py-1 text-center w-10/12 mx-auto rounded-sm transition-colors duration-300 my-3">
           <Link className="flex justify-center" to={"/chat"}>
             <PencilSquareIcon className="size-4 text-white me-2 mt-1" />
             <span>New conversation</span>
