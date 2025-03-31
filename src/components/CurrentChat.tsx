@@ -1,5 +1,5 @@
 import { useChats } from "hooks/useChats";
-import { useEffect, useState, useRef, useContext } from "react";
+import { useEffect, useState, useContext } from "react";
 import { useNavigate, useParams } from "react-router";
 import { Message } from "types/chat/Message.type";
 import { MessagesList } from "./MessagesList";
@@ -17,7 +17,6 @@ export const CurrentChat = () => {
   const params = useParams();
   const navigate = useNavigate();
   const { getChatMessages, sendNewMessage } = useChats();
-  const messagesEndRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     (async () => {
@@ -33,11 +32,6 @@ export const CurrentChat = () => {
     })();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [params.id]);
-
-  // Scroll to bottom whenever messages change
-  useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages]);
 
   const sendMessage = async (newUserMessage: string) => {
     const req: NewMessageReq = {
@@ -89,7 +83,6 @@ export const CurrentChat = () => {
         {messages.length > 0 && (
           <section className="grow overflow-y-auto hide-scrollbar px-5">
             <MessagesList messages={messages} />
-            <div ref={messagesEndRef} />
           </section>
         )}
         <InputSection onEnter={onEnter} />
