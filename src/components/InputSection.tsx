@@ -87,27 +87,37 @@ export const InputSection = ({ onEnter }: InputSectionProps) => {
 
   return (
     <>
-      <section className="my-2 flex bg-cop-5 p-2 justify-evenly rounded-xl w-11/12 md:w-full mx-auto">
+      <section className="my-2 flex bg-cop-5 p-2 justify-evenly rounded-xl w-11/12 md:w-full mx-auto" aria-label="Message input area">
         {/* TODO: ADD files interation */}
         {/* <span className="text-white mt-2 cursor-pointer">
           <PlusIcon />
         </span> */}
+        <label htmlFor="messageInput" className="sr-only">Type a message</label>
         <textarea
+          id="messageInput"
           className="input py-2 px-4 overflow-y-auto"
           style={{
-            height: `${inputHeight}rem`,
-            scrollbarWidth: "none" /* Firefox */,
-            msOverflowStyle: "none" /* IE and Edge */,
+        height: `${inputHeight}rem`,
+        scrollbarWidth: "none" /* Firefox */,
+        msOverflowStyle: "none" /* IE and Edge */,
           }}
           ref={textarea}
           placeholder="Message MyAIChat"
           onKeyDown={onMessageKeyDown}
           value={userInput}
           onChange={(e) => setUserInput(e.target.value)}
+          aria-label="Message input"
+          role="textbox"
+          aria-multiline="true"
         ></textarea>
-        <span className="text-white mt-2 cursor-pointer">
+        <button 
+          className="text-white mt-2 cursor-pointer"
+          aria-label="Activate voice input"
+          type="button"
+          onClick={() => {/* Voice input handler */}}
+        >
           <MicrophoneIcon />
-        </span>
+        </button>
       </section>
     </>
   );
