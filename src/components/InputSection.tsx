@@ -90,8 +90,12 @@ export const InputSection = ({ onEnter }: InputSectionProps) => {
           <PlusIcon />
         </span> */}
         <textarea
-          className="input py-2 px-4 overflow-hidden"
-          style={{ height: `${inputHeight}rem` }}
+          className="input py-2 px-4 overflow-y-auto"
+          style={{ 
+            height: `${inputHeight}rem`, 
+            scrollbarWidth: 'none', /* Firefox */
+            msOverflowStyle: 'none', /* IE and Edge */
+          }}
           ref={textarea}
           placeholder="Message MyAIChat"
           onKeyDown={onMessageKeyDown}
