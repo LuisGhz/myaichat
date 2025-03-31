@@ -9,7 +9,7 @@ type MessagesListProps = {
 
 export const MessagesList = ({ messages }: MessagesListProps) => {
   const formatToMarkDown = useMarkDown();
-  const messagesEndRef = useRef<HTMLDivElement>(null);
+  const messagesEndRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({
@@ -27,7 +27,7 @@ export const MessagesList = ({ messages }: MessagesListProps) => {
             }`}
             key={idx}
           >
-            <div
+            <article
               className={`w-max max-w-[15rem] md:max-w-[35rem] text-white mb-2 ${
                 message.role === "User" ? "user-message" : ""
               }`}
@@ -36,7 +36,7 @@ export const MessagesList = ({ messages }: MessagesListProps) => {
               }}
             >
               {formatToMarkDown(message.content)}
-            </div>
+            </article>
           </li>
         ))}
       </ul>
