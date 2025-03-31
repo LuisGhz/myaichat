@@ -79,22 +79,25 @@ export const InputSection = ({ onEnter }: InputSectionProps) => {
   };
 
   useEffect(() => {
-    if (params.id) textarea.current?.focus();
+    const windowWidth = window.innerWidth;
+    const smallDesktopWidth = 1024;
+    if (params.id && windowWidth >= smallDesktopWidth)
+      textarea.current?.focus();
   }, [params.id]);
 
   return (
     <>
-      <section className="my-2 flex bg-cop-5 p-2 justify-evenly rounded-xl">
+      <section className="my-2 flex bg-cop-5 p-2 justify-evenly rounded-xl w-11/12 md:w-full mx-auto">
         {/* TODO: ADD files interation */}
         {/* <span className="text-white mt-2 cursor-pointer">
           <PlusIcon />
         </span> */}
         <textarea
           className="input py-2 px-4 overflow-y-auto"
-          style={{ 
-            height: `${inputHeight}rem`, 
-            scrollbarWidth: 'none', /* Firefox */
-            msOverflowStyle: 'none', /* IE and Edge */
+          style={{
+            height: `${inputHeight}rem`,
+            scrollbarWidth: "none" /* Firefox */,
+            msOverflowStyle: "none" /* IE and Edge */,
           }}
           ref={textarea}
           placeholder="Message MyAIChat"
