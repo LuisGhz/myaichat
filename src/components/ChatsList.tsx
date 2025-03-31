@@ -23,19 +23,19 @@ export const ChatsList = () => {
       </div>
       <div
         className={`${
-          isMenuOpen ? "w-64" : "w-0"
-        } transition-width duration-500 md:relative bg-cop-4 `}
+          isMenuOpen ? "w-0 md:w-64" : "w-0"
+        } transition-width duration-500 relative bg-cop-4 `}
       >
         <ul
           className={`bg-cop-4 text-white h-full px-3 overflow-y-auto overflow-x-hidden hide-scrollbar fixed md:relative top-0 left-0 z-50 transition-all duration-500 w-64 ${
-            isMenuOpen ? "translate-x-0" : "-translate-x-full"
+            isMenuOpen ? "-translate-x-full md:translate-x-0" : "translate-x-0 md:-translate-x-full"
           } shadow-lg md:shadow-none`}
         >
           <li className="flex justify-between items-center px-2 py-1">
             <Link to={"/"}>MyAIChat</Link>
             <ArrowLeftCircleIcon
               className="size-4 cursor-pointer text-white hover:text-gray-300 transition-colors duration-300"
-              onClick={() => setIsMenuOpen(false)}
+              onClick={() => setIsMenuOpen(!isMenuOpen)}
             />
           </li>
           <li className="bg-cop-1 hover:bg-cop-2 cursor-pointer text-white px-2 py-1 text-center w-10/12 mx-auto rounded-sm transition-colors duration-300 my-3">
