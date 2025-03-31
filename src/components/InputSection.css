@@ -7,8 +7,6 @@
   border-style: solid;
   border-radius: .5rem;
   resize: none;
-  height: 2.5rem;
-  overflow: hidden;
   &:focus-within {
     outline: none;
   }
