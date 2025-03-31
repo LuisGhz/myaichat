@@ -9,6 +9,10 @@
   --color-cop-6: #0c101c;
 }
 
+html, body {
+  font-size: 16px;
+}
+
 /* Hide scrollbar for Chrome, Safari and Opera */
 .hide-scrollbar::-webkit-scrollbar {
   display: none;
