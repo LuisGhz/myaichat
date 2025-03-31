@@ -17,6 +17,7 @@ export const ChatsList = () => {
           MyAIChat
         </Link>
         <button
+          type="button"
           aria-expanded={isMenuOpen}
           aria-controls="sidebar-menu"
           aria-label={isMenuOpen ? "Close sidebar menu" : "Open sidebar menu"}
@@ -51,6 +52,7 @@ export const ChatsList = () => {
               MyAIChat
             </Link>
             <button
+              type="button"
               onClick={() => setIsMenuOpen(!isMenuOpen)}
               aria-label="Close sidebar menu"
             >
@@ -81,6 +83,7 @@ export const ChatsList = () => {
                   {chat.title}
                 </Link>
                 <button
+                  type="button"
                   onClick={() => deleteChatById(chat.id)}
                   aria-label={`Delete chat: ${chat.title}`}
                 >
