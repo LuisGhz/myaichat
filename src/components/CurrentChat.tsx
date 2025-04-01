@@ -3,7 +3,7 @@ import { useEffect, useState, useContext } from "react";
 import { useNavigate, useParams } from "react-router";
 import { Message } from "types/chat/Message.type";
 import { MessagesList } from "./MessagesList";
-import { InputSection } from "./InputSection";
+import { InputSection } from "./InputSection/InputSection";
 import { NewMessageReq } from "types/chat/NewMessageReq.type";
 import { AppContext } from "context/AppContext";
 import { NewConversation } from "./NewConversation";
