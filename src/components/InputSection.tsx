@@ -3,6 +3,7 @@ import "./InputSection.css";
 // import { PlusIcon } from "assets/icons/PlusIcon";
 import { MicrophoneIcon } from "assets/icons/MicrophoneIcon";
 import { useParams } from "react-router";
+import { ScreensWidth } from "consts/ScreensWidth";
 
 type InputSectionProps = {
   onEnter: (newUserMessage: string) => void;
@@ -11,6 +12,7 @@ type InputSectionProps = {
 export const InputSection = ({ onEnter }: InputSectionProps) => {
   const [userInput, setUserInput] = useState("");
   const [inputHeight, setInputHeight] = useState(2.5);
+  const [isInputFocused, setIsInputFocused] = useState(false);
   const textarea = useRef<HTMLTextAreaElement>(null);
   const cursorPositionRef = useRef<number | null>(null);
   const params = useParams();
@@ -80,26 +82,44 @@ export const InputSection = ({ onEnter }: InputSectionProps) => {
 
   useEffect(() => {
     const windowWidth = window.innerWidth;
-    const smallDesktopWidth = 1024;
-    if (params.id && windowWidth >= smallDesktopWidth)
+    if (params.id && windowWidth >= ScreensWidth.smallDesktop)
       textarea.current?.focus();
   }, [params.id]);
 
+  const onFocusTextarea = () => {
+    if (window.innerWidth < ScreensWidth.tablet) {
+      textarea.current?.classList.add("w-full");
+      setIsInputFocused(true);
+    }
+  };
+
+  const onBlurTextarea = () => {
+    if (window.innerWidth < ScreensWidth.tablet) {
+      textarea.current?.classList.remove("w-full");
+      setIsInputFocused(false);
+    }
+  };
+
   return (
     <>
-      <section className="my-2 flex bg-cop-5 p-2 justify-evenly rounded-xl w-11/12 md:w-full mx-auto" aria-label="Message input area">
+      <section
+        className="my-4 flex justify-evenly bg-cop-5 p-2 rounded-xl w-11/12 md:w-10/12 mx-auto relative"
+        aria-label="Message input area"
+      >
         {/* TODO: ADD files interation */}
         {/* <span className="text-white mt-2 cursor-pointer">
           <PlusIcon />
         </span> */}
-        <label htmlFor="messageInput" className="sr-only">Type a message</label>
+        <label htmlFor="messageInput" className="sr-only">
+          Type a message
+        </label>
         <textarea
           id="messageInput"
-          className="input py-2 px-4 overflow-y-auto"
+          className="input py-2 px-4 overflow-y-auto w-10/12 transition-all duration-200"
           style={{
-        height: `${inputHeight}rem`,
-        scrollbarWidth: "none" /* Firefox */,
-        msOverflowStyle: "none" /* IE and Edge */,
+            height: `${inputHeight}rem`,
+            scrollbarWidth: "none" /* Firefox */,
+            msOverflowStyle: "none" /* IE and Edge */,
           }}
           ref={textarea}
           placeholder="Message MyAIChat"
@@ -109,15 +129,23 @@ export const InputSection = ({ onEnter }: InputSectionProps) => {
           aria-label="Message input"
           role="textbox"
           aria-multiline="true"
+          onFocus={onFocusTextarea}
+          onBlur={onBlurTextarea}
         ></textarea>
-        <button 
-          className="text-white mt-2 cursor-pointer"
-          aria-label="Activate voice input"
-          type="button"
-          onClick={() => {/* Voice input handler */}}
-        >
-          <MicrophoneIcon />
-        </button>
+        <div className="overflow-hidden">
+          <button
+            className={`text-white mt-2 cursor-pointer relative -top-1 transition-all duration-500 ${
+              isInputFocused ? "translate-x-6 w-0" : ""
+            }`}
+            aria-label="Activate voice input"
+            type="button"
+            onClick={() => {
+              /* Voice input handler */
+            }}
+          >
+            <MicrophoneIcon />
+          </button>
+        </div>
       </section>
     </>
   );
