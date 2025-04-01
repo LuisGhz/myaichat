@@ -2,13 +2,43 @@ import { ArrowLeftCircleIcon } from "assets/icons/ArrowLeftCircleIcon";
 import { ArrowRightCircleIcon } from "assets/icons/ArrowRightCircleIcon";
 import { PencilSquareIcon } from "assets/icons/PencilSquareIcon";
 import { TrashIcon } from "assets/icons/TrashIcon";
+import { ScreensWidth } from "consts/ScreensWidth";
 import { AppContext } from "context/AppContext";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { Link } from "react-router";
 
 export const ChatsList = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(true);
   const { chats, deleteChatById } = useContext(AppContext);
+  const navRef = useRef<HTMLElement>(null);
+  const openRef = useRef<HTMLButtonElement>(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (window.innerWidth >= ScreensWidth.tablet) return;
+      const isMenuOpenMobile =
+        window.innerWidth < ScreensWidth.tablet ? !isMenuOpen : isMenuOpen;
+      if (
+        !!navRef.current &&
+        !!openRef.current &&
+        !navRef.current.contains(event.target as Node) &&
+        !openRef.current?.contains(event.target as Node) &&
+        isMenuOpenMobile
+      ) {
+        setIsMenuOpen(() => !isMenuOpen);
+      }
+    };
+
+    document.addEventListener("click", handleClickOutside);
+
+    return () => {
+      document.removeEventListener("click", handleClickOutside);
+    };
+  }, [isMenuOpen]);
+
+  const toggleMenu = () => {
+    setIsMenuOpen((prev) => !prev);
+  };
 
   return (
     <>
@@ -17,11 +47,13 @@ export const ChatsList = () => {
           MyAIChat
         </Link>
         <button
+          className="cursor-pointer"
           type="button"
           aria-expanded={isMenuOpen}
           aria-controls="sidebar-menu"
-          aria-label={isMenuOpen ? "Close sidebar menu" : "Open sidebar menu"}
-          onClick={() => setIsMenuOpen(!isMenuOpen)}
+          aria-label={"Open sidebar menu"}
+          onClick={toggleMenu}
+          ref={openRef}
         >
           <ArrowRightCircleIcon className="size-4" />
         </button>
@@ -39,6 +71,7 @@ export const ChatsList = () => {
         } transition-width duration-500 relative bg-cop-4 `}
         role="navigation"
         aria-label="Chat navigation"
+        ref={navRef}
       >
         <ul
           className={`bg-cop-4 text-white h-full px-3 overflow-y-auto overflow-x-hidden hide-scrollbar fixed md:relative top-0 left-0 z-50 transition-all duration-500 w-64 ${
@@ -53,7 +86,7 @@ export const ChatsList = () => {
             </Link>
             <button
               type="button"
-              onClick={() => setIsMenuOpen(!isMenuOpen)}
+              onClick={toggleMenu}
               aria-label="Close sidebar menu"
             >
               <ArrowLeftCircleIcon className="size-4 cursor-pointer text-white hover:text-gray-300 transition-colors duration-300" />
