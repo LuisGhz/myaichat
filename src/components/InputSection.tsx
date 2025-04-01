@@ -12,7 +12,6 @@ type InputSectionProps = {
 export const InputSection = ({ onEnter }: InputSectionProps) => {
   const [userInput, setUserInput] = useState("");
   const [inputHeight, setInputHeight] = useState(2.5);
-  const [isInputFocused, setIsInputFocused] = useState(false);
   const textarea = useRef<HTMLTextAreaElement>(null);
   const cursorPositionRef = useRef<number | null>(null);
   const params = useParams();
@@ -89,14 +88,12 @@ export const InputSection = ({ onEnter }: InputSectionProps) => {
   const onFocusTextarea = () => {
     if (window.innerWidth < ScreensWidth.tablet) {
       textarea.current?.classList.add("w-full");
-      setIsInputFocused(true);
     }
   };
 
   const onBlurTextarea = () => {
     if (window.innerWidth < ScreensWidth.tablet) {
       textarea.current?.classList.remove("w-full");
-      setIsInputFocused(false);
     }
   };
 
@@ -115,7 +112,7 @@ export const InputSection = ({ onEnter }: InputSectionProps) => {
         </label>
         <textarea
           id="messageInput"
-          className="input py-2 px-4 overflow-y-auto w-10/12 transition-all duration-200"
+          className="input py-2 px-4 overflow-y-auto w-10/12 transition-all duration-200 z-10"
           style={{
             height: `${inputHeight}rem`,
             scrollbarWidth: "none" /* Firefox */,
@@ -134,9 +131,7 @@ export const InputSection = ({ onEnter }: InputSectionProps) => {
         ></textarea>
         <div className="overflow-hidden">
           <button
-            className={`text-white mt-2 cursor-pointer relative -top-1 transition-all duration-500 ${
-              isInputFocused ? "translate-x-6 w-0" : ""
-            }`}
+            className={`text-white hover:bg-cop-6 md:py-2 md:px-3 my-2 md:my-0 rounded-lg transition-all duration-300 cursor-pointer absolute right-4 md:relative md:right-0`}
             aria-label="Activate voice input"
             type="button"
             onClick={() => {
