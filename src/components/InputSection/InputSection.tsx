@@ -1,9 +1,9 @@
 import { KeyboardEvent, useEffect, useRef, useState } from "react";
 import "./InputSection.css";
 // import { PlusIcon } from "assets/icons/PlusIcon";
-import { MicrophoneIcon } from "assets/icons/MicrophoneIcon";
 import { useParams } from "react-router";
 import { ScreensWidth } from "consts/ScreensWidth";
+import { Microphone } from "./Microphone";
 
 type InputSectionProps = {
   onEnter: (newUserMessage: string) => void;
@@ -12,6 +12,7 @@ type InputSectionProps = {
 export const InputSection = ({ onEnter }: InputSectionProps) => {
   const [userInput, setUserInput] = useState("");
   const [inputHeight, setInputHeight] = useState(2.5);
+  const [isTextAreaFocused, setIsTextAreaFocused] = useState(false);
   const textarea = useRef<HTMLTextAreaElement>(null);
   const cursorPositionRef = useRef<number | null>(null);
   const params = useParams();
@@ -88,19 +89,25 @@ export const InputSection = ({ onEnter }: InputSectionProps) => {
   const onFocusTextarea = () => {
     if (window.innerWidth < ScreensWidth.tablet) {
       textarea.current?.classList.add("w-full");
+      setIsTextAreaFocused(true);
     }
   };
-
+  
   const onBlurTextarea = () => {
     if (window.innerWidth < ScreensWidth.tablet) {
       textarea.current?.classList.remove("w-full");
+      setIsTextAreaFocused(false);
     }
+  };
+
+  const onTranscription = (text: string) => {
+    setUserInput(text);
   };
 
   return (
     <>
       <section
-        className="my-4 flex justify-evenly bg-cop-5 p-2 rounded-xl w-11/12 md:w-10/12 mx-auto relative"
+        className="my-4 flex justify-evenly bg-cop-5 p-2 rounded-xl w-10/12 md:w-11/12 mx-auto relative"
         aria-label="Message input area"
       >
         {/* TODO: ADD files interation */}
@@ -129,18 +136,7 @@ export const InputSection = ({ onEnter }: InputSectionProps) => {
           onFocus={onFocusTextarea}
           onBlur={onBlurTextarea}
         ></textarea>
-        <div className="overflow-hidden">
-          <button
-            className={`text-white hover:bg-cop-6 md:py-2 md:px-3 my-2 md:my-0 rounded-lg transition-all duration-300 cursor-pointer absolute right-4 md:relative md:right-0`}
-            aria-label="Activate voice input"
-            type="button"
-            onClick={() => {
-              /* Voice input handler */
-            }}
-          >
-            <MicrophoneIcon />
-          </button>
-        </div>
+        <Microphone onTranscription={onTranscription} isTextAreaFocused={isTextAreaFocused} />
       </section>
     </>
   );
