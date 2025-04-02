@@ -13,14 +13,13 @@ type InputSectionProps = {
 
 export const InputSection = ({ onEnter }: InputSectionProps) => {
   const [userInput, setUserInput] = useState("");
-  const [isTextAreaFocused, setIsTextAreaFocused] = useState(false);
-  const textarea = useRef<HTMLTextAreaElement>(null);
+  const textareaContainerRef = useRef<HTMLDivElement>(null);
   const params = useParams();
 
   useEffect(() => {
     const windowWidth = window.innerWidth;
     if (params.id && windowWidth >= ScreensWidth.smallDesktop)
-      textarea.current?.focus();
+      textareaContainerRef.current?.focus();
   }, [params.id]);
 
   const onMessageKeyDown = (event: KeyboardEvent<HTMLTextAreaElement>) => {
@@ -38,17 +37,13 @@ export const InputSection = ({ onEnter }: InputSectionProps) => {
   };
 
   const onFocusTextarea = () => {
-    if (window.innerWidth < ScreensWidth.tablet) {
-      textarea.current?.classList.add("w-full");
-      setIsTextAreaFocused(true);
-    }
+    if (window.innerWidth < ScreensWidth.tablet)
+      textareaContainerRef.current?.classList.add("w-full");
   };
 
   const onBlurTextarea = () => {
-    if (window.innerWidth < ScreensWidth.tablet) {
-      textarea.current?.classList.remove("w-full");
-      setIsTextAreaFocused(false);
-    }
+    if (window.innerWidth < ScreensWidth.tablet)
+      textareaContainerRef.current?.classList.remove("w-full");
   };
 
   const onTranscription = (text: string) => {
@@ -58,18 +53,20 @@ export const InputSection = ({ onEnter }: InputSectionProps) => {
   return (
     <>
       <section
-        className="my-4 flex justify-evenly items-end bg-cop-5 p-2 rounded-xl w-10/12 md:w-11/12 mx-auto relative"
+        className="my-4 flex justify-center items-end bg-cop-5 p-2 rounded-xl w-10/12 md:w-11/12 mx-auto relative overflow-hidden min-h-16"
         aria-label="Message input area"
       >
         <AttachFile />
-        <label htmlFor="messageInput" className="sr-only">
-          Type a message
-        </label>
-        <div className="input py-2 px-4 overflow-y-auto w-11/12 transition-all duration-200 z-10 flex justify-between hide-scrollbar">
+        <div
+          className={`input w-9/12 md:w-10/12 transition-all duration-500 z-10 py-2 px-4 overflow-y-auto flex justify-between hide-scrollbar`}
+          ref={textareaContainerRef}
+        >
+          <label htmlFor="messageInput" className="sr-only">
+            Type a message
+          </label>
           <TextareaAutosize
             className="outline-none w-10/12 mt-0.5 hide-scrollbar resize-none"
             id="messageInput"
-            ref={textarea}
             placeholder="Message MyAIChat"
             onKeyDown={onMessageKeyDown}
             value={userInput}
@@ -93,10 +90,7 @@ export const InputSection = ({ onEnter }: InputSectionProps) => {
             )}
           </div>
         </div>
-        <Microphone
-          onTranscription={onTranscription}
-          isTextAreaFocused={isTextAreaFocused}
-        />
+        <Microphone onTranscription={onTranscription} />
       </section>
     </>
   );

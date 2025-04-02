@@ -5,13 +5,5 @@
   border-color: #282f42;
   border-width: 1px;
   border-style: solid;
-  border-radius: .5rem;
-  resize: none;
-  &:focus-within {
-    outline: none;
-  }
-
-  &::placeholder {
-    color: #64575e;
-  }
+  border-radius: 0.5rem;
 }
