@@ -1,9 +1,11 @@
 import { KeyboardEvent, useEffect, useRef, useState } from "react";
+import TextareaAutosize from "react-textarea-autosize";
 import "./InputSection.css";
-// import { PlusIcon } from "assets/icons/PlusIcon";
 import { useParams } from "react-router";
 import { ScreensWidth } from "consts/ScreensWidth";
 import { Microphone } from "./Microphone";
+import { ArrowUpIcon } from "assets/icons/ArrowUpIcon";
+import { AttachFile } from "./AttachFile";
 
 type InputSectionProps = {
   onEnter: (newUserMessage: string) => void;
@@ -11,74 +13,9 @@ type InputSectionProps = {
 
 export const InputSection = ({ onEnter }: InputSectionProps) => {
   const [userInput, setUserInput] = useState("");
-  const [inputHeight, setInputHeight] = useState(2.5);
   const [isTextAreaFocused, setIsTextAreaFocused] = useState(false);
   const textarea = useRef<HTMLTextAreaElement>(null);
-  const cursorPositionRef = useRef<number | null>(null);
   const params = useParams();
-
-  useEffect(() => {
-    const lines = userInput.split("\n").length;
-    const basePx = 16;
-    const windowHeight = window.innerHeight;
-
-    // Set a minimum height
-    const baseHeight = 2.5;
-    // Only add extra height for additional lines
-    const extraLinesHeight = (lines - 1) * 1.5;
-    const newInputHeight = baseHeight + extraLinesHeight;
-    // Only restore cursor position if we have a saved position
-    // (from Shift+Enter operation)
-    if (cursorPositionRef.current !== null && textarea.current) {
-      // Scroll to the bottom of the textarea
-      const textareaTextLength = textarea.current.textLength;
-      if (
-        inputHeight !== newInputHeight &&
-        textareaTextLength === cursorPositionRef.current
-      ) {
-        textarea.current.scrollTop = newInputHeight * basePx;
-      }
-      const pos = cursorPositionRef.current;
-      textarea.current.selectionStart = pos;
-      textarea.current.selectionEnd = pos;
-      textarea.current.focus();
-      cursorPositionRef.current = null; // Reset after use
-    }
-
-    if (newInputHeight * basePx > windowHeight * 0.8) return;
-    setInputHeight(newInputHeight);
-    // Don't auto-scroll when user is editing - let the browser handle it naturally
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [userInput]);
-
-  const onMessageKeyDown = (event: KeyboardEvent<HTMLTextAreaElement>) => {
-    if (event.key === "Enter") {
-      if (event.shiftKey) {
-        // Handle Shift+Enter action
-        event.preventDefault();
-
-        const textareaC = textarea.current;
-        if (textareaC) {
-          const start = textareaC.selectionStart;
-          const end = textareaC.selectionEnd;
-
-          // Insert new line at cursor position
-          const newValue =
-            userInput.substring(0, start) + "\n" + userInput.substring(end);
-
-          // Save the position where the cursor should be after the update
-          cursorPositionRef.current = start + 1;
-
-          setUserInput(newValue);
-        }
-        return;
-      }
-      event.preventDefault();
-      if (userInput.trim().length === 0) return;
-      onEnter(userInput);
-      setUserInput("");
-    }
-  };
 
   useEffect(() => {
     const windowWidth = window.innerWidth;
@@ -86,13 +23,27 @@ export const InputSection = ({ onEnter }: InputSectionProps) => {
       textarea.current?.focus();
   }, [params.id]);
 
+  const onMessageKeyDown = (event: KeyboardEvent<HTMLTextAreaElement>) => {
+    if (event.key === "Enter") {
+      if (event.shiftKey) return;
+      event.preventDefault();
+      sendMessage();
+    }
+  };
+
+  const sendMessage = () => {
+    if (userInput.trim().length === 0) return;
+    onEnter(userInput);
+    setUserInput("");
+  };
+
   const onFocusTextarea = () => {
     if (window.innerWidth < ScreensWidth.tablet) {
       textarea.current?.classList.add("w-full");
       setIsTextAreaFocused(true);
     }
   };
-  
+
   const onBlurTextarea = () => {
     if (window.innerWidth < ScreensWidth.tablet) {
       textarea.current?.classList.remove("w-full");
@@ -107,36 +58,45 @@ export const InputSection = ({ onEnter }: InputSectionProps) => {
   return (
     <>
       <section
-        className="my-4 flex justify-evenly bg-cop-5 p-2 rounded-xl w-10/12 md:w-11/12 mx-auto relative"
+        className="my-4 flex justify-evenly items-end bg-cop-5 p-2 rounded-xl w-10/12 md:w-11/12 mx-auto relative"
         aria-label="Message input area"
       >
-        {/* TODO: ADD files interation */}
-        {/* <span className="text-white mt-2 cursor-pointer">
-          <PlusIcon />
-        </span> */}
+        <AttachFile />
         <label htmlFor="messageInput" className="sr-only">
           Type a message
         </label>
-        <textarea
-          id="messageInput"
-          className="input py-2 px-4 overflow-y-auto w-10/12 transition-all duration-200 z-10"
-          style={{
-            height: `${inputHeight}rem`,
-            scrollbarWidth: "none" /* Firefox */,
-            msOverflowStyle: "none" /* IE and Edge */,
-          }}
-          ref={textarea}
-          placeholder="Message MyAIChat"
-          onKeyDown={onMessageKeyDown}
-          value={userInput}
-          onChange={(e) => setUserInput(e.target.value)}
-          aria-label="Message input"
-          role="textbox"
-          aria-multiline="true"
-          onFocus={onFocusTextarea}
-          onBlur={onBlurTextarea}
-        ></textarea>
-        <Microphone onTranscription={onTranscription} isTextAreaFocused={isTextAreaFocused} />
+        <div className="input py-2 px-4 overflow-y-auto w-11/12 transition-all duration-200 z-10 flex justify-between hide-scrollbar">
+          <TextareaAutosize
+            className="outline-none w-10/12 mt-0.5 hide-scrollbar resize-none"
+            id="messageInput"
+            ref={textarea}
+            placeholder="Message MyAIChat"
+            onKeyDown={onMessageKeyDown}
+            value={userInput}
+            onChange={(e) => setUserInput(e.target.value)}
+            aria-label="Message input"
+            role="textbox"
+            aria-multiline="true"
+            onFocus={onFocusTextarea}
+            onBlur={onBlurTextarea}
+          />
+          <div className="flex items-end">
+            {userInput.length > 0 && (
+              <button
+                className="mb-1 bg-cop-7 hover:bg-cop-8 transition-colors duration-200 rounded-lg p-1 cursor-pointer"
+                type="button"
+                aria-label="Send message"
+                onClick={sendMessage}
+              >
+                <ArrowUpIcon className="size-5 " />
+              </button>
+            )}
+          </div>
+        </div>
+        <Microphone
+          onTranscription={onTranscription}
+          isTextAreaFocused={isTextAreaFocused}
+        />
       </section>
     </>
   );

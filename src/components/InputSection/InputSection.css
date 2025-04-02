@@ -1,5 +1,6 @@
 .input {
   background-color: #0c101c;
+  max-height: calc(100vh - 15rem);
   color: white;
   border-color: #282f42;
   border-width: 1px;
