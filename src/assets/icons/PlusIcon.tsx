@@ -1,4 +1,8 @@
-export const PlusIcon = () => {
+import { SVGProps } from "react";
+
+type Props = SVGProps<SVGSVGElement>;
+
+export const PlusIcon = (props: Props) => {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -7,6 +11,7 @@ export const PlusIcon = () => {
       strokeWidth={1.5}
       stroke="currentColor"
       className="size-6"
+      {...props}
     >
       <path
         strokeLinecap="round"
