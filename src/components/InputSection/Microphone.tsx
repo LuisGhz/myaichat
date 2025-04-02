@@ -70,7 +70,7 @@ export const Microphone = ({ onTranscription, isTextAreaFocused }: Props) => {
       <button
         className={`text-white ${
           isRecording ? "bg-red-500 hover:bg-red-600" : "hover:bg-cop-6"
-        } md:py-2 md:px-3 my-2 md:my-0 rounded-lg transition-all duration-300 cursor-pointer absolute right-4 md:relative md:right-0`}
+        } md:py-2 md:px-3 my-2 md:my-0 rounded-lg transition-all duration-300 cursor-pointer absolute right-4 md:relative md:right-0 bottom-2 md:bottom-0`}
         aria-label={
           isRecording ? "Recording in progress" : "Activate voice input"
         }
