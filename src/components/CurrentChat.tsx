@@ -16,7 +16,7 @@ export const CurrentChat = () => {
   const [currentModel, setCurrentModel] = useState("");
   const params = useParams();
   const navigate = useNavigate();
-  const { getChatMessages, sendNewMessage } = useChats();
+  const { getChatMessages, sendNewMessage, isSending } = useChats();
 
   useEffect(() => {
     (async () => {
@@ -85,7 +85,7 @@ export const CurrentChat = () => {
             <MessagesList messages={messages} />
           </section>
         )}
-        <InputSection onEnter={onEnter} />
+        <InputSection onEnter={onEnter} isSending={isSending} />
       </div>
     </>
   );

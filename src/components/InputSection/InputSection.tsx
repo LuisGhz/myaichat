@@ -9,9 +9,10 @@ import { AttachFile } from "./AttachFile";
 
 type InputSectionProps = {
   onEnter: (newUserMessage: string) => void;
+  isSending: boolean;
 };
 
-export const InputSection = ({ onEnter }: InputSectionProps) => {
+export const InputSection = ({ onEnter, isSending }: InputSectionProps) => {
   const [userInput, setUserInput] = useState("");
   const textareaContainerRef = useRef<HTMLDivElement>(null);
   const params = useParams();
@@ -31,7 +32,7 @@ export const InputSection = ({ onEnter }: InputSectionProps) => {
   };
 
   const sendMessage = () => {
-    if (userInput.trim().length === 0) return;
+    if (userInput.trim().length === 0 || isSending) return;
     onEnter(userInput);
     setUserInput("");
   };
@@ -80,7 +81,7 @@ export const InputSection = ({ onEnter }: InputSectionProps) => {
           <div className="flex items-end">
             {userInput.length > 0 && (
               <button
-                className="mb-1 bg-cop-7 hover:bg-cop-8 transition-colors duration-200 rounded-lg p-1 cursor-pointer"
+                className="bg-cop-7 hover:bg-cop-8 transition-colors duration-200 rounded-lg p-1 cursor-pointer"
                 type="button"
                 aria-label="Send message"
                 onClick={sendMessage}
