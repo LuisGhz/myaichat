@@ -5,13 +5,15 @@ import { TrashIcon } from "assets/icons/TrashIcon";
 import { ScreensWidth } from "consts/ScreensWidth";
 import { AppContext } from "context/AppContext";
 import { useContext, useEffect, useRef, useState } from "react";
-import { Link } from "react-router";
+import { Link, useNavigate, useParams } from "react-router";
 
 export const ChatsList = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(true);
   const { chats, deleteChatById } = useContext(AppContext);
   const navRef = useRef<HTMLElement>(null);
   const openRef = useRef<HTMLButtonElement>(null);
+  const params = useParams();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -38,6 +40,11 @@ export const ChatsList = () => {
 
   const toggleMenu = () => {
     setIsMenuOpen((prev) => !prev);
+  };
+
+  const handleDeleteChat = (id: string) => {
+    deleteChatById(id);
+    if (params.id === id) navigate("/chat");
   };
 
   return (
@@ -117,7 +124,7 @@ export const ChatsList = () => {
                 </Link>
                 <button
                   type="button"
-                  onClick={() => deleteChatById(chat.id)}
+                  onClick={() => handleDeleteChat(chat.id)}
                   aria-label={`Delete chat: ${chat.title}`}
                 >
                   <TrashIcon className="w-4 min-w-4 text-white cursor-pointer hover:text-gray-600 transition-colors duration-300" />
