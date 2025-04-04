@@ -7,11 +7,6 @@ export const AttachFile = () => {
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      console.log(
-        !!buttonRef.current,
-        !buttonRef.current?.contains(event.target as Node),
-        !optionsRef.current?.classList.contains("hidden")
-      );
       if (
         buttonRef.current &&
         !buttonRef.current.contains(event.target as Node) &&
