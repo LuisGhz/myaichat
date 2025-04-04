@@ -22,16 +22,25 @@ export const CurrentChat = () => {
     (async () => {
       if (params.id) {
         const res = await getChatMessages(params.id);
+        if (!res) {
+          navigate("/chat");
+          resetState();
+          return;
+        }
         setMessages(res?.historyMessages || []);
         setCurrentModel(res?.model || "");
         return;
       }
-      setCurrentModel("");
-      setModel("gpt-4o-mini");
-      setMessages([]);
+      resetState();
     })();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [params.id]);
+
+  const resetState = () => {
+    setMessages([]);
+    setModel("gpt-4o-mini");
+    setCurrentModel("");
+  };
 
   const sendMessage = async (newUserMessage: string) => {
     const req: NewMessageReq = {
