@@ -47,10 +47,14 @@ export const ChatsList = () => {
     if (params.id === id) navigate("/chat");
   };
 
+  const handleRedirectToChatOnMobile = () => {
+    if (window.innerWidth < ScreensWidth.tablet) toggleMenu();
+  };
+
   return (
     <>
       <section className="absolute top-0 left-0 z-50 flex text-white gap-x-2 mt-1 -ms-1.5">
-        <Link className="mt-1" aria-label="Go to home page" to={"/"}>
+        <Link className="mt-1 ms-2.5" aria-label="Go to home page" to={"/"}>
           MyAIChat
         </Link>
         <button
@@ -119,6 +123,7 @@ export const ChatsList = () => {
                   to={`/chat/${chat.id}`}
                   className="block whitespace-nowrap overflow-hidden text-ellipsis h-11 px-2 py-2"
                   aria-label={`Open chat: ${chat.title}`}
+                  onClick={handleRedirectToChatOnMobile}
                 >
                   {chat.title}
                 </Link>
