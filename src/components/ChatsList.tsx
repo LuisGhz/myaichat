@@ -49,8 +49,8 @@ export const ChatsList = () => {
 
   return (
     <>
-      <section className="absolute top-0 left-0 z-50 flex text-white gap-x-2">
-        <Link aria-label="Go to home page" to={"/"}>
+      <section className="absolute top-0 left-0 z-50 flex text-white gap-x-2 mt-1 -ms-1.5">
+        <Link className="mt-1" aria-label="Go to home page" to={"/"}>
           MyAIChat
         </Link>
         <button
@@ -62,14 +62,14 @@ export const ChatsList = () => {
           onClick={toggleMenu}
           ref={openRef}
         >
-          <ArrowRightCircleIcon className="size-4" />
+          <ArrowRightCircleIcon className="size-6 mt-1" />
         </button>
         <Link
           className="flex justify-center"
           to={"/chat"}
           aria-label="New conversation"
         >
-          <PencilSquareIcon className="size-4 text-white me-2 mt-1" />
+          <PencilSquareIcon className="size-6 text-white me-2 mt-1" />
         </Link>
       </section>
       <nav
@@ -88,7 +88,7 @@ export const ChatsList = () => {
           } shadow-lg md:shadow-none`}
         >
           <li className="flex justify-between items-center px-2 py-1">
-            <Link to={"/"} aria-label="Go to homepage">
+            <Link className="mt-0.5" to={"/"} aria-label="Go to homepage">
               MyAIChat
             </Link>
             <button
@@ -96,7 +96,7 @@ export const ChatsList = () => {
               onClick={toggleMenu}
               aria-label="Close sidebar menu"
             >
-              <ArrowLeftCircleIcon className="size-4 cursor-pointer text-white hover:text-gray-300 transition-colors duration-300" />
+              <ArrowLeftCircleIcon className="size-6 cursor-pointer text-white hover:text-gray-300 transition-colors duration-300 mt-1" />
             </button>
           </li>
           <li className="bg-cop-1 hover:bg-cop-2 cursor-pointer text-white px-2 py-1 text-center w-10/12 mx-auto rounded-sm transition-colors duration-300 my-3">
@@ -105,7 +105,7 @@ export const ChatsList = () => {
               to={"/chat"}
               aria-label="New conversation"
             >
-              <PencilSquareIcon className="size-4 text-white me-2 mt-1" />
+              <PencilSquareIcon className="size-5 text-white me-2 mt-0.5" />
               <span>New conversation</span>
             </Link>
           </li>
@@ -127,7 +127,7 @@ export const ChatsList = () => {
                   onClick={() => handleDeleteChat(chat.id)}
                   aria-label={`Delete chat: ${chat.title}`}
                 >
-                  <TrashIcon className="w-4 min-w-4 text-white cursor-pointer hover:text-gray-600 transition-colors duration-300" />
+                  <TrashIcon className="w-5 min-w-5 text-white cursor-pointer hover:text-gray-600 transition-colors duration-300" />
                 </button>
               </li>
             ))}
