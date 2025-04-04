@@ -59,14 +59,14 @@ export const InputSection = ({ onEnter, isSending }: InputSectionProps) => {
       >
         <AttachFile />
         <div
-          className={`input w-9/12 md:w-10/12 transition-all duration-500 z-10 py-2 px-4 overflow-y-auto flex justify-between hide-scrollbar`}
+          className={`input-container w-9/12 md:w-10/12 transition-all duration-500 z-10 py-2 px-4 overflow-y-auto flex justify-between hide-scrollbar items-end bg-cop-6 border-cop-9 border rounded-lg text-white`}
           ref={textareaContainerRef}
         >
           <label htmlFor="messageInput" className="sr-only">
             Type a message
           </label>
           <TextareaAutosize
-            className="outline-none w-10/12 mt-0.5 hide-scrollbar resize-none"
+            className="message-textarea outline-none w-10/12 mt-0.5 overflow-y-auto resize-none hide-scrollbar"
             id="messageInput"
             placeholder="Message MyAIChat"
             onKeyDown={onMessageKeyDown}
