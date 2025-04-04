@@ -1,6 +1,7 @@
-import { Message } from "types/chat/Message.type";
-import { useMarkDown } from "hooks/useMarkdown";
 import { useEffect, useRef } from "react";
+import { useMarkDown } from "hooks/useMarkdown";
+import { Message } from "types/chat/Message.type";
+import "./MessagesList.css";
 
 type MessagesListProps = {
   messages: Message[];
@@ -27,7 +28,7 @@ export const MessagesList = ({ messages }: MessagesListProps) => {
             key={idx}
           >
             <article
-              className={`text-white mb-2 w-max max-w-[15rem] md:max-w-[35rem] break-words px-3 py-1 ${
+              className={`markdown-content text-white mb-2 w-max max-w-[15rem] md:max-w-[35rem] break-words px-3 py-1 ${
                 message.role === "User" ? "user-message bg-cop-10 rounded-lg" : ""
               }`}
               ref={(el) => {

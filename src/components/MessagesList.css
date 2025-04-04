@@ -1,0 +1,9 @@
+.markdown-content pre {
+  width: 100%;
+  overflow-x: auto;
+  background-color: #1e1e1e; /* Dark background for code blocks */
+  border-radius: 0.375rem;
+  padding-block: 0.5rem;
+  padding-inline: 1rem;
+  margin: 0.5rem 0;
+}
