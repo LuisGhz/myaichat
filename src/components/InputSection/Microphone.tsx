@@ -62,7 +62,7 @@ export const Microphone = ({ onTranscription }: Props) => {
     <button
       className={`text-white transition-all delay-150 duration-200 ${
         isRecording ? "bg-red-500 hover:bg-red-600" : "hover:bg-cop-6"
-      } p-2 rounded-lg cursor-pointer absolute right-[2%] md:right-6 xl:right-9`}
+      } p-2 rounded-lg cursor-pointer absolute right-[2%] md:right-5 xl:right-[2.5%]`}
       aria-label={
         isRecording ? "Recording in progress" : "Activate voice input"
       }
@@ -74,7 +74,7 @@ export const Microphone = ({ onTranscription }: Props) => {
       onTouchEnd={stopRecording}
       ref={buttonRef}
     >
-      <MicrophoneIcon />
+      <MicrophoneIcon className="size-8" />
       {isRecording && <span className="sr-only">Recording...</span>}
     </button>
   );

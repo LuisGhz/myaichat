@@ -80,7 +80,7 @@ export const CurrentChat = () => {
 
   return (
     <>
-      <div className="flex flex-col h-full max-w-full md:max-w-9/12 mx-auto pt-6.5 md:pt-2 px-2">
+      <div className="flex flex-col h-full max-w-full md:max-w-11/12 mx-auto pt-6.5 md:pt-2 lg:px-2">
         {currentModel && (
           <div className="text-gray-700 text-xs">{currentModel}</div>
         )}

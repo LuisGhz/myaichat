@@ -59,13 +59,13 @@ export const InputSection = ({ onEnter, isSending }: InputSectionProps) => {
       >
         <AttachFile />
         <div
-          className={`input-container w-9/12 md:w-10/12 transition-all duration-500 z-10 py-2 px-4 overflow-y-auto flex justify-between hide-scrollbar items-end bg-cop-6 border-cop-9 border rounded-lg text-white`}
+          className={`input-container w-8/12 lg:w-9/12 xl:w-10/12 transition-all duration-500 z-10 py-2 px-4 overflow-y-auto flex justify-between hide-scrollbar items-end bg-cop-6 border-cop-9 border rounded-lg text-white`}
           ref={textareaContainerRef}
         >
-          <label htmlFor="messageInput" className="sr-only">
+            <label htmlFor="messageInput" className="sr-only">
             Type a message
-          </label>
-          <TextareaAutosize
+            </label>
+            <TextareaAutosize
             className="message-textarea outline-none w-10/12 mt-0.5 overflow-y-auto resize-none hide-scrollbar"
             id="messageInput"
             placeholder="Message MyAIChat"
@@ -77,7 +77,7 @@ export const InputSection = ({ onEnter, isSending }: InputSectionProps) => {
             aria-multiline="true"
             onFocus={onFocusTextarea}
             onBlur={onBlurTextarea}
-          />
+            />
           <div className="flex items-end">
             {userInput.length > 0 && (
               <button
