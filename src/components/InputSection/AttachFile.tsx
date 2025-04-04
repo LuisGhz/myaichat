@@ -1,8 +1,28 @@
 import { PlusIcon } from "assets/icons/PlusIcon";
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 
 export const AttachFile = () => {
   const optionsRef = useRef<HTMLUListElement>(null);
+  const buttonRef = useRef<HTMLButtonElement>(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      console.log(
+        !!buttonRef.current,
+        !buttonRef.current?.contains(event.target as Node),
+        !optionsRef.current?.classList.contains("hidden")
+      );
+      if (
+        buttonRef.current &&
+        !buttonRef.current.contains(event.target as Node) &&
+        !optionsRef.current?.classList.contains("hidden")
+      )
+        optionsRef.current?.classList.add("hidden");
+    };
+
+    document.addEventListener("click", handleClickOutside);
+    return () => document.removeEventListener("click", handleClickOutside);
+  }, []);
 
   return (
     <button
@@ -10,10 +30,9 @@ export const AttachFile = () => {
       type="button"
       aria-label="Attach file"
       onClick={() => {
-        // Handle file attachment logic here
-        // alert("File attachment functionality is not implemented yet.");
         optionsRef.current?.classList.toggle("hidden");
       }}
+      ref={buttonRef}
     >
       <PlusIcon />
       <ul
