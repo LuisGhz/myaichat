@@ -54,7 +54,7 @@ export const InputSection = ({ onEnter, isSending }: InputSectionProps) => {
   return (
     <>
       <section
-        className="my-4 flex justify-center items-end bg-cop-5 p-2 rounded-xl w-10/12 md:w-11/12 mx-auto relative h-auto"
+        className="my-4 flex justify-center items-end bg-cop-5 p-2 rounded-xl w-11/12 md:w-10/12 mx-auto relative h-auto"
         aria-label="Message input area"
       >
         <AttachFile />
