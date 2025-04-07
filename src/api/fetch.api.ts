@@ -28,10 +28,27 @@ export const createFetchAdapter = (baseUrl: string): HttpClient => {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          ...options,
         },
-        body: data ? JSON.stringify(data) : undefined,
         ...options,
+        body: data ? JSON.stringify(data) : undefined,
+      });
+      if (!response.ok) throw Error(`Error: ${response.status}`);
+      return (await response.json()) as T;
+    } catch (error) {
+      console.error("POST request failed:", error);
+    }
+  };
+
+  const postFormData = async <T, O>(
+    path: string,
+    body: FormData,
+    options?: O
+  ): Promise<T | undefined> => {
+    try {
+      const response = await fetch(`${baseUrl}${path}`, {
+        method: "POST",
+        ...options,
+        body,
       });
       if (!response.ok) throw Error(`Error: ${response.status}`);
       return (await response.json()) as T;
@@ -59,6 +76,7 @@ export const createFetchAdapter = (baseUrl: string): HttpClient => {
   return {
     get,
     post,
+    postFormData,
     del: deleteMethod,
   };
 };
