@@ -1,5 +1,6 @@
 import { PlusIcon } from "assets/icons/PlusIcon";
 import { useEffect, useRef } from "react";
+import { Link } from "react-router";
 
 export const AttachFile = () => {
   const optionsRef = useRef<HTMLUListElement>(null);
@@ -35,7 +36,7 @@ export const AttachFile = () => {
         ref={optionsRef}
       >
         <li className="py-1.5 hover:bg-cop-6 rounded-t-lg transition-colors duration-200">
-          New conversation
+          <Link to="/chat">New conversation</Link>
         </li>
         <li className="py-1.5 hover:bg-cop-6 rounded-b-lg transition-colors duration-200">
           Upload
