@@ -8,6 +8,7 @@ import { NewMessageReq } from "types/chat/NewMessageReq.type";
 import { AppContext } from "context/AppContext";
 import { NewConversation } from "./NewConversation";
 import { Models } from "types/chat/Models.type";
+import { CurrentModelSummary } from "./CurrentModelSummary";
 
 export const CurrentChat = () => {
   const { getAllChatsForList } = useContext(AppContext);
@@ -86,7 +87,10 @@ export const CurrentChat = () => {
     <>
       <div className="flex flex-col h-full max-w-full md:max-w-11/12 mx-auto pt-6.5 md:pt-2 lg:px-2">
         {currentModel && (
-          <div className="text-gray-700 text-xs">{currentModel}</div>
+          <CurrentModelSummary
+            currentModel={currentModel}
+            messages={messages}
+          />
         )}
         {messages.length === 0 && (
           <section className="grow">
