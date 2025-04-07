@@ -20,8 +20,12 @@ export const useChats = () => {
   };
 
   const sendNewMessage = async (newMessageOps: NewMessageReq) => {
+    const formData = new FormData();
+    formData.append("prompt", newMessageOps.prompt);
+    if (newMessageOps.model) formData.append("model", newMessageOps.model);
+    if (newMessageOps.chatId) formData.append("chatId", newMessageOps.chatId);
     setIsSending(true);
-    const res = await sendNewMessageService(newMessageOps);
+    const res = await sendNewMessageService(formData);
     setTimeout(() => {
       setIsSending(false);
     }, 100);

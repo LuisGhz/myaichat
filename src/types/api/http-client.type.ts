@@ -5,5 +5,10 @@ export type HttpClient = {
     data?: object,
     options?: O
   ) => Promise<T | undefined>;
+  postFormData: <T, O>(
+    path: string,
+    data: FormData,
+    options?: O
+  ) => Promise<T | undefined>;
   del: <T, O>(path: string, options?: O) => Promise<T | undefined>;
 };
