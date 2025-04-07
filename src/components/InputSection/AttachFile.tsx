@@ -21,7 +21,7 @@ export const AttachFile = () => {
 
   return (
     <button
-      className={`text-white cursor-pointer mb-1 transition-all duration-200 delay-150 absolute top-2 left-[2%] md:left-4 xl:left-[2.5%] p-1 rounded-lg hover:bg-cop-6`}
+      className={`text-white cursor-pointer mb-1 transition-all duration-200 delay-150 absolute bottom-2 left-[2%] md:left-4 xl:left-[2.5%] p-1 rounded-lg hover:bg-cop-6`}
       type="button"
       aria-label="Attach file"
       onClick={() => {
