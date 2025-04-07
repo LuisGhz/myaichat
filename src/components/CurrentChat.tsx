@@ -51,13 +51,17 @@ export const CurrentChat = () => {
 
     const res = await sendNewMessage(req);
     if (res) {
-      setMessages((prevMessages) => [
-        ...prevMessages,
-        {
-          role: "Assistant",
-          content: res.content,
-        },
-      ]);
+      setMessages((prevMessages) => {
+        prevMessages[prevMessages.length - 1].promptTokens = res.promptTokens;
+        return [
+          ...prevMessages,
+          {
+            role: "Assistant",
+            content: res.content,
+            completionTokens: res.completionTokens,
+          },
+        ];
+      });
 
       if (!params.id && res.chatId) {
         navigate(`/chat/${res.chatId}`, { replace: true });
