@@ -1,10 +1,17 @@
 import { PlusIcon } from "assets/icons/PlusIcon";
+import { useAttachedFilesValidator } from "hooks/useAttachedFilesValidator";
 import { useEffect, useRef } from "react";
 import { Link } from "react-router";
 
-export const AttachFile = () => {
+type Props = {
+  onSelectImage: (file: File) => void;
+};
+
+export const AttachFile = ({ onSelectImage }: Props) => {
   const optionsRef = useRef<HTMLUListElement>(null);
   const buttonRef = useRef<HTMLButtonElement>(null);
+  const inputFileRef = useRef<HTMLInputElement>(null);
+  const { validateFiles } = useAttachedFilesValidator();
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -19,6 +26,23 @@ export const AttachFile = () => {
     document.addEventListener("click", handleClickOutside);
     return () => document.removeEventListener("click", handleClickOutside);
   }, []);
+
+  const makeClickToInputFile = () => {
+    inputFileRef.current?.click();
+  };
+
+  const onSelectFile = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+    const isValid = validateFiles(file);
+    if (!isValid) {
+      console.error("Invalid file type or size exceeded.");
+      event.target.value = "";
+      return;
+    }
+    onSelectImage(file);
+    event.target.value = "";
+  };
 
   return (
     <button
@@ -38,8 +62,20 @@ export const AttachFile = () => {
         <li className="py-1.5 hover:bg-cop-6 rounded-t-lg transition-colors duration-200">
           <Link to="/chat">New conversation</Link>
         </li>
-        <li className="py-1.5 hover:bg-cop-6 rounded-b-lg transition-colors duration-200">
+        <li
+          className="py-1.5 hover:bg-cop-6 rounded-b-lg transition-colors duration-200"
+          onClick={makeClickToInputFile}
+        >
           Upload
+          <input
+            className="hidden"
+            accept="image/*"
+            type="file"
+            name="attach-file"
+            id="attach-file"
+            ref={inputFileRef}
+            onChange={onSelectFile}
+          />
         </li>
       </ul>
     </button>
