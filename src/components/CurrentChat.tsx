@@ -43,10 +43,11 @@ export const CurrentChat = () => {
     setCurrentModel("");
   };
 
-  const sendMessage = async (newUserMessage: string) => {
+  const sendMessage = async (newUserMessage: string, image?: File) => {
     const req: NewMessageReq = {
       chatId: params.id,
       prompt: newUserMessage,
+      image,
     };
     req.model = params.id ? undefined : model;
 
@@ -72,15 +73,16 @@ export const CurrentChat = () => {
     }
   };
 
-  const onEnter = async (newUserMessage: string) => {
+  const onEnter = async (newUserMessage: string, image: File | undefined) => {
     setMessages((prevMessages) => [
       ...prevMessages,
       {
         role: "User",
         content: newUserMessage,
+        image: image,
       },
     ]);
-    await sendMessage(newUserMessage);
+    await sendMessage(newUserMessage, image);
   };
 
   return (
