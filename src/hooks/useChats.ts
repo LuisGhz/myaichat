@@ -24,6 +24,7 @@ export const useChats = () => {
     formData.append("prompt", newMessageOps.prompt);
     if (newMessageOps.model) formData.append("model", newMessageOps.model);
     if (newMessageOps.chatId) formData.append("chatId", newMessageOps.chatId);
+    if (newMessageOps.image) formData.append("image", newMessageOps.image);
     setIsSending(true);
     const res = await sendNewMessageService(formData);
     setTimeout(() => {
