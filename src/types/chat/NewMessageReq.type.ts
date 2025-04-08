@@ -4,4 +4,5 @@ export type NewMessageReq = {
   chatId?: string;
   prompt: string;
   model?: Models;
+  image? : File;
 }
