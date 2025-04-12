@@ -100,7 +100,7 @@ export const CurrentChat = () => {
           </section>
         )}
         {messages.length > 0 && (
-          <section className="grow overflow-y-auto hide-scrollbar px-1 md:px-5">
+          <section className="grow overflow-y-auto hide-scrollbar mt-0.5 px-1 md:px-5">
             <MessagesList messages={messages} />
           </section>
         )}
