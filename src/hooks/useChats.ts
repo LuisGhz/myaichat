@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useToast } from "hooks/useToast";
 import {
   getAllChatsService,
   getChatMessagesService,
@@ -8,6 +9,8 @@ import {
 import { NewMessageReq } from "types/chat/NewMessageReq.type";
 
 export const useChats = () => {
+  const { toastError } = useToast();
+
   const [isSending, setIsSending] = useState(false);
   const getAllChats = async () => {
     const chatRes = await getAllChatsService();
@@ -16,7 +19,11 @@ export const useChats = () => {
   };
 
   const getChatMessages = async (id: string) => {
-    return await getChatMessagesService(id);
+    try {
+      return await getChatMessagesService(id);
+    } catch {
+      toastError("Error fetching chat messages, please try again later.");
+    }
   };
 
   const sendNewMessage = async (newMessageOps: NewMessageReq) => {
@@ -26,15 +33,24 @@ export const useChats = () => {
     if (newMessageOps.chatId) formData.append("chatId", newMessageOps.chatId);
     if (newMessageOps.image) formData.append("image", newMessageOps.image);
     setIsSending(true);
-    const res = await sendNewMessageService(formData);
-    setTimeout(() => {
+    try {
+      const res = await sendNewMessageService(formData);
+      setTimeout(() => {
+        setIsSending(false);
+      }, 100);
+      return res;
+    } catch {
       setIsSending(false);
-    }, 100);
-    return res;
+      toastError("Error sending message, please try again later.");
+    }
   };
 
   const deleteChat = async (id: string) => {
-    return await deleteChatService(id);
+    try {
+      return await deleteChatService(id);
+    } catch {
+      toastError("Error deleting chat, please try again later.");
+    }
   };
 
   return {
