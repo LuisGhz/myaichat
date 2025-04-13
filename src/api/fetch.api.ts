@@ -14,7 +14,7 @@ export const createFetchAdapter = (baseUrl: string): HttpClient => {
       return (await response.json()) as T;
     } catch (error) {
       console.error("GET request failed:", error);
-      return undefined;
+      throw error;
     }
   };
 
@@ -36,9 +36,10 @@ export const createFetchAdapter = (baseUrl: string): HttpClient => {
       return (await response.json()) as T;
     } catch (error) {
       console.error("POST request failed:", error);
+      throw error;
     }
   };
-
+  
   const postFormData = async <T, O>(
     path: string,
     body: FormData,
@@ -54,9 +55,10 @@ export const createFetchAdapter = (baseUrl: string): HttpClient => {
       return (await response.json()) as T;
     } catch (error) {
       console.error("POST request failed:", error);
+      throw error;
     }
   };
-
+  
   const deleteMethod = async <T, O>(
     path: string,
     options?: O
@@ -70,6 +72,7 @@ export const createFetchAdapter = (baseUrl: string): HttpClient => {
       return (await response.json()) as T;
     } catch (error) {
       console.error("DELETE request failed:", error);
+      throw error;
     }
   };
 
