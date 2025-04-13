@@ -9,38 +9,78 @@ import { AppContext } from "context/AppContext";
 import { NewConversation } from "./NewConversation";
 import { Models } from "types/chat/Models.type";
 import { CurrentModelSummary } from "./CurrentModelSummary";
+import { ChatMessagesRes } from "types/chat/ChatMessagesRes.type";
 
 export const CurrentChat = () => {
   const { getAllChatsForList } = useContext(AppContext);
   const [messages, setMessages] = useState<Message[]>([]);
   const [model, setModel] = useState<Models>("gpt-4o-mini");
   const [currentModel, setCurrentModel] = useState("");
+  const [page, setPage] = useState(0);
+  const [isUpdatingMessagesFromScroll, setIsUpdatingMessagesFromScroll] =
+    useState(false);
   const params = useParams();
   const navigate = useNavigate();
-  const { getChatMessages, sendNewMessage, isSending } = useChats();
+  const {
+    getChatMessages,
+    sendNewMessage,
+    isSending,
+    isEmptyPage,
+    setIsEmptyPage,
+  } = useChats();
 
   useEffect(() => {
     (async () => {
-      if (params.id) {
-        const res = await getChatMessages(params.id);
-        if (!res) {
-          navigate("/chat");
-          resetState();
-          return;
-        }
-        setMessages(res?.historyMessages || []);
-        setCurrentModel(res?.model || "");
+      resetState();
+      if (!params.id) return;
+
+      const res = await getChatMessages(params.id);
+      if (!res) {
+        navigate("/chat");
+        resetState();
         return;
       }
-      resetState();
+      handleFirstPageLoad(res);
     })();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [params.id]);
+
+  useEffect(() => {
+    (async () => {
+      if (page === 0) return;
+      const res = await getChatMessages(params.id!, page);
+      if (!res) {
+        navigate("/chat");
+        resetState();
+        return;
+      }
+      handleNewPageLoad(res);
+    })();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [page]);
+
+  const handleNewPageLoad = (res: ChatMessagesRes) => {
+    setIsUpdatingMessagesFromScroll(() => true);
+    setMessages((prevMessages) => [
+      ...(res?.historyMessages || []),
+      ...prevMessages,
+    ]);
+    setTimeout(() => {
+      setIsUpdatingMessagesFromScroll(() => false);
+    }, 100);
+  };
+
+  const handleFirstPageLoad = (res: ChatMessagesRes) => {
+    setMessages(res?.historyMessages || []);
+    setCurrentModel(res?.model || "");
+  };
 
   const resetState = () => {
     setMessages([]);
     setModel("gpt-4o-mini");
     setCurrentModel("");
+    setPage(() => 0);
+    setIsEmptyPage(() => false);
   };
 
   const sendMessage = async (newUserMessage: string, image?: File) => {
@@ -85,6 +125,12 @@ export const CurrentChat = () => {
     await sendMessage(newUserMessage, image);
   };
 
+  const incrementPageOnScrollTop = (event: React.UIEvent<HTMLDivElement>) => {
+    const target = event.target as HTMLDivElement;
+    if (target.scrollTop < 5 && !isEmptyPage)
+      setPage((prevPage) => prevPage + 1);
+  };
+
   return (
     <>
       <div className="flex flex-col h-full max-w-full md:max-w-11/12 mx-auto pt-6.5 md:pt-2 lg:px-2">
@@ -100,8 +146,14 @@ export const CurrentChat = () => {
           </section>
         )}
         {messages.length > 0 && (
-          <section className="grow overflow-y-auto hide-scrollbar mt-0.5 px-1 md:px-5">
-            <MessagesList messages={messages} />
+          <section
+            className="grow overflow-y-auto hide-scrollbar mt-0.5 px-1 md:px-5"
+            onScroll={incrementPageOnScrollTop}
+          >
+            <MessagesList
+              messages={messages}
+              isUpdatingMessagesFromScroll={isUpdatingMessagesFromScroll}
+            />
           </section>
         )}
         <InputSection onEnter={onEnter} isSending={isSending} />

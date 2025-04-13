@@ -6,16 +6,19 @@ import { ImageViewer } from "./ImageViewer";
 
 type MessagesListProps = {
   messages: Message[];
+  isUpdatingMessagesFromScroll: boolean;
 };
 
-export const MessagesList = ({ messages }: MessagesListProps) => {
+export const MessagesList = ({ messages, isUpdatingMessagesFromScroll }: MessagesListProps) => {
   const formatToMarkDown = useMarkDown();
   const messagesEndRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
+    if (isUpdatingMessagesFromScroll) return;
     messagesEndRef.current?.scrollIntoView({
       behavior: "smooth",
     });
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [messages]);
 
   return (

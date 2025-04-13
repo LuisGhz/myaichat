@@ -7,8 +7,8 @@ export const getAllChatsService = async () => {
   return await apiClient.get<ChatsRes>("/chat/all");
 };
 
-export const getChatMessagesService = async (id: string) => {
-  return await apiClient.get<ChatMessagesRes>(`/chat/${id}/messages`);
+export const getChatMessagesService = async (id: string, page: number = 0) => {
+  return await apiClient.get<ChatMessagesRes>(`/chat/${id}/messages?page=${page}`);
 };
 
 export const sendNewMessageService = async (newMessageReq: FormData) => {
