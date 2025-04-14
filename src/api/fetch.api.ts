@@ -39,7 +39,7 @@ export const createFetchAdapter = (baseUrl: string): HttpClient => {
       throw error;
     }
   };
-  
+
   const postFormData = async <T, O>(
     path: string,
     body: FormData,
@@ -58,18 +58,17 @@ export const createFetchAdapter = (baseUrl: string): HttpClient => {
       throw error;
     }
   };
-  
-  const deleteMethod = async <T, O>(
+
+  const deleteMethod = async <O>(
     path: string,
     options?: O
-  ): Promise<T | undefined> => {
+  ): Promise<void> => {
     try {
       const response = await fetch(`${baseUrl}${path}`, {
         method: "DELETE",
         ...options,
       });
       if (!response.ok) throw Error(`Error: ${response.status}`);
-      return (await response.json()) as T;
     } catch (error) {
       console.error("DELETE request failed:", error);
       throw error;

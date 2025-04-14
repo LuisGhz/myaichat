@@ -51,7 +51,7 @@ export const useChats = () => {
 
   const deleteChat = async (id: string) => {
     try {
-      return await deleteChatService(id);
+      await deleteChatService(id);
     } catch {
       toastError("Error deleting chat, please try again later.");
     }

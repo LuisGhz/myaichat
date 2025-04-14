@@ -10,5 +10,5 @@ export type HttpClient = {
     data: FormData,
     options?: O
   ) => Promise<T | undefined>;
-  del: <T, O>(path: string, options?: O) => Promise<T | undefined>;
+  del: <O>(path: string, options?: O) => Promise<void>;
 };
