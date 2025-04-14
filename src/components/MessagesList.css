@@ -6,6 +6,25 @@
   padding-block: 0.5rem;
   padding-inline: 1rem;
   margin: 0.5rem 0;
+  
+  /* Custom scrollbar styles */
+  scrollbar-width: thin; /* Firefox */
+  scrollbar-color: #666 #1e1e1e; /* Firefox: thumb and track colors */
+}
+
+/* Webkit browsers (Chrome, Safari, newer Edge) */
+.markdown-content pre::-webkit-scrollbar {
+  height: 6px; /* for horizontal scrollbar */
+  width: 6px; /* for vertical scrollbar */
+}
+
+.markdown-content pre::-webkit-scrollbar-thumb {
+  background-color: #666;
+  border-radius: 3px;
+}
+
+.markdown-content pre::-webkit-scrollbar-track {
+  background-color: #1e1e1e;
 }
 
 .markdown-content a {

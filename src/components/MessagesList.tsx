@@ -35,7 +35,7 @@ export const MessagesList = ({ messages, isUpdatingMessagesFromScroll }: Message
               <ImageViewer image={message.image} />
             )}
             <article
-              className={`markdown-content text-white mb-2 w-max max-w-[20rem] md:max-w-[35rem] lg:max-w-[60rem] break-words px-3 py-1 relative ${
+              className={`markdown-content text-white mb-2 w-max max-w-[20rem] md:max-w-[30rem] lg:max-w-[40rem] xl:max-w-[50rem] break-words px-3 py-1 relative ${
                 message.role === "User"
                   ? "user-message bg-cop-10 rounded-lg"
                   : ""
