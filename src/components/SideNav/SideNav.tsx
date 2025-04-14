@@ -7,7 +7,7 @@ import { AppContext } from "context/AppContext";
 import { useContext, useEffect, useRef, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router";
 
-export const ChatsList = () => {
+export const SideNav = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(true);
   const { chats, deleteChatById } = useContext(AppContext);
   const navRef = useRef<HTMLElement>(null);
