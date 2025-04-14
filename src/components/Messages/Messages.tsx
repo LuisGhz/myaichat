@@ -1,16 +1,21 @@
 import { useEffect, useRef } from "react";
-import { useMarkDown } from "hooks/useMarkdown";
 import { Message } from "types/chat/Message.type";
 import "./Messages.css";
 import { ImageViewer } from "../ImageViewer";
+import { SingleMessage } from "./SingleMessage";
+import { AssistantTyping } from "./AssistantTyping";
 
 type MessagesListProps = {
   messages: Message[];
   isUpdatingMessagesFromScroll: boolean;
+  isSending: boolean;
 };
 
-export const Messages = ({ messages, isUpdatingMessagesFromScroll }: MessagesListProps) => {
-  const formatToMarkDown = useMarkDown();
+export const Messages = ({
+  messages,
+  isUpdatingMessagesFromScroll,
+  isSending,
+}: MessagesListProps) => {
   const messagesEndRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
@@ -18,7 +23,7 @@ export const Messages = ({ messages, isUpdatingMessagesFromScroll }: MessagesLis
     messagesEndRef.current?.scrollIntoView({
       behavior: "smooth",
     });
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [messages]);
 
   return (
@@ -34,33 +39,22 @@ export const Messages = ({ messages, isUpdatingMessagesFromScroll }: MessagesLis
             {message.image && message.role === "User" && (
               <ImageViewer image={message.image} />
             )}
-            <article
-              className={`markdown-content text-white mb-2 w-max max-w-[20rem] md:max-w-[30rem] lg:max-w-[40rem] xl:max-w-[50rem] break-words px-3 py-1 relative ${
-                message.role === "User"
-                  ? "user-message bg-cop-10 rounded-lg"
-                  : ""
-              }`}
-              ref={(el) => {
-                if (el && idx === arr.length - 1) messagesEndRef.current = el;
-              }}
-            >
-              {formatToMarkDown(message.content)}
-              {message.promptTokens && (
-                <span className="text-xs text-gray-600">
-                  Tokens: {message.promptTokens}
-                </span>
-              )}
-              {message.completionTokens && (
-                <span className="text-xs text-gray-600">
-                  Tokens: {message.completionTokens}
-                </span>
-              )}
-            </article>
+            <SingleMessage
+              arr={arr}
+              idx={idx}
+              message={message}
+              messagesEndRef={messagesEndRef}
+            />
             {message.image && message.role === "Assistant" && (
               <ImageViewer image={message.image} />
             )}
           </li>
         ))}
+        {isSending && (
+          <li className="flex flex-col w-full">
+            <AssistantTyping />
+          </li>
+        )}
       </ul>
     </>
   );
