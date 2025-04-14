@@ -28,8 +28,21 @@ vi.mock("./AssistantTyping", () => ({
   )),
 }));
 
-describe("Messages", () => {
+// Mock de useRef
+const scrollIntoViewMock = vi.fn();
+vi.mock("react", async () => {
+  const originalModule = await vi.importActual("react");
+  return {
+    ...originalModule,
+    useRef: vi.fn(() => ({
+      current: {
+        scrollIntoView: scrollIntoViewMock, // Simulamos el método focus
+      },
+    })),
+  };
+});
 
+describe("Messages", () => {
   beforeEach(() => {
     vi.clearAllMocks();
 
@@ -65,7 +78,9 @@ describe("Messages", () => {
         idx: 0,
         arr: messages,
         messagesEndRef: {
-          current: null,
+          current: {
+            scrollIntoView: expect.any(Function),
+          },
         },
       }),
       undefined
@@ -77,7 +92,9 @@ describe("Messages", () => {
         idx: 1,
         arr: messages,
         messagesEndRef: {
-          current: null,
+          current: {
+            scrollIntoView: expect.any(Function),
+          },
         },
       }),
       undefined
@@ -195,5 +212,69 @@ describe("Messages", () => {
     const listItems = container.querySelectorAll("li");
     expect(listItems).toHaveLength(0);
     expect(SingleMessage).not.toHaveBeenCalled();
+  });
+
+  it("scrolls to bottom when messages change and isUpdatingMessagesFromScroll is false", () => {
+    const messages: Message[] = [{ role: "User", content: "Hello" }];
+
+    const { rerender } = render(
+      <Messages
+        messages={messages}
+        isUpdatingMessagesFromScroll={false}
+        isSending={false}
+      />
+    );
+
+    // Initial render should call scrollIntoView
+    expect(scrollIntoViewMock).toHaveBeenCalledWith({
+      behavior: "smooth",
+    });
+
+    // Reset mock to check if it's called again
+    scrollIntoViewMock.mockClear();
+
+    // Update messages to trigger the effect
+    rerender(
+      <Messages
+        messages={[...messages, { role: "Assistant", content: "Hi there" }]}
+        isUpdatingMessagesFromScroll={false}
+        isSending={false}
+      />
+    );
+
+    // Should be called again after messages update
+    expect(scrollIntoViewMock).toHaveBeenCalledWith({
+      behavior: "smooth",
+    });
+  });
+
+  it("doesn't scroll to bottom when isUpdatingMessagesFromScroll is true", () => {
+    const messages: Message[] = [{ role: "User", content: "Hello" }];
+
+    const { rerender } = render(
+      <Messages
+        messages={messages}
+        isUpdatingMessagesFromScroll={true}
+        isSending={false}
+      />
+    );
+
+    // Initial render should not call scrollIntoView since isUpdatingMessagesFromScroll is true
+    expect(scrollIntoViewMock).not.toHaveBeenCalled();
+
+    // Reset mock to check if it's called
+    scrollIntoViewMock.mockClear();
+
+    // Update messages but keep isUpdatingMessagesFromScroll true
+    rerender(
+      <Messages
+        messages={[...messages, { role: "Assistant", content: "Hi there" }]}
+        isUpdatingMessagesFromScroll={true}
+        isSending={false}
+      />
+    );
+
+    // Should still not be called
+    expect(scrollIntoViewMock).not.toHaveBeenCalled();
   });
 });
