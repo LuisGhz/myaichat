@@ -75,6 +75,7 @@ export const AttachFile = ({ onSelectImage }: Props) => {
             id="attach-file"
             ref={inputFileRef}
             onChange={onSelectFile}
+            data-testid="file-input"
           />
         </li>
       </ul>
