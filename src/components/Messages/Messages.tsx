@@ -1,15 +1,15 @@
 import { useEffect, useRef } from "react";
 import { useMarkDown } from "hooks/useMarkdown";
 import { Message } from "types/chat/Message.type";
-import "./MessagesList.css";
-import { ImageViewer } from "./ImageViewer";
+import "./Messages.css";
+import { ImageViewer } from "../ImageViewer";
 
 type MessagesListProps = {
   messages: Message[];
   isUpdatingMessagesFromScroll: boolean;
 };
 
-export const MessagesList = ({ messages, isUpdatingMessagesFromScroll }: MessagesListProps) => {
+export const Messages = ({ messages, isUpdatingMessagesFromScroll }: MessagesListProps) => {
   const formatToMarkDown = useMarkDown();
   const messagesEndRef = useRef<HTMLElement>(null);
 

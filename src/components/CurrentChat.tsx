@@ -2,7 +2,7 @@ import { useChats } from "hooks/useChats";
 import { useEffect, useState, useContext } from "react";
 import { useNavigate, useParams } from "react-router";
 import { Message } from "types/chat/Message.type";
-import { MessagesList } from "./MessagesList";
+import { Messages } from "./Messages/Messages";
 import { InputSection } from "./InputSection/InputSection";
 import { NewMessageReq } from "types/chat/NewMessageReq.type";
 import { AppContext } from "context/AppContext";
@@ -150,7 +150,7 @@ export const CurrentChat = () => {
             className="grow overflow-y-auto hide-scrollbar mt-0.5 px-1 md:px-5"
             onScroll={incrementPageOnScrollTop}
           >
-            <MessagesList
+            <Messages
               messages={messages}
               isUpdatingMessagesFromScroll={isUpdatingMessagesFromScroll}
             />
