@@ -8,7 +8,7 @@ type Props = {
 export const CurrentModelSummary = ({ currentModel, messages }: Props) => {
   return (
     <>
-      <div className="text-gray-700 text-xs">
+      <div className="text-gray-700 text-xs text-end mb-1">
         {currentModel} - PromptTokens:
         {messages.length > 0 &&
           messages.reduce(
