@@ -153,6 +153,7 @@ export const CurrentChat = () => {
             <Messages
               messages={messages}
               isUpdatingMessagesFromScroll={isUpdatingMessagesFromScroll}
+              isSending={isSending}
             />
           </section>
         )}
