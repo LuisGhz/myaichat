@@ -8,7 +8,8 @@
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "generate-pwa-icons": "node scripts/generate-pwa-icons.js"
+    "generate-pwa-icons": "node scripts/generate-pwa-icons.js",
+    "test": "vitest"
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.0.17",
@@ -23,6 +24,8 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.21.0",
+    "@testing-library/jest-dom": "^6.6.3",
+    "@testing-library/react": "^16.3.0",
     "@types/dom-speech-recognition": "^0.0.6",
     "@types/react": "^19.0.10",
     "@types/react-dom": "^19.0.4",
@@ -31,10 +34,12 @@
     "eslint-plugin-react-hooks": "^5.1.0",
     "eslint-plugin-react-refresh": "^0.4.19",
     "globals": "^15.15.0",
+    "jsdom": "^26.1.0",
     "sharp": "^0.34.1",
     "typescript": "~5.7.2",
     "typescript-eslint": "^8.24.1",
     "vite": "^6.2.0",
-    "vite-plugin-pwa": "^1.0.0"
+    "vite-plugin-pwa": "^1.0.0",
+    "vitest": "^3.1.1"
   }
 }

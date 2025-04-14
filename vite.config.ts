@@ -1,4 +1,6 @@
-import { defineConfig } from "vite";
+/// <reference types="vitest" />
+// import { defineConfig } from "vite";
+import { defineConfig } from "vitest/config";
 import react from "@vitejs/plugin-react-swc";
 import tsConfigPaths from "vite-tsconfig-paths";
 import tailwindcss from '@tailwindcss/vite'
@@ -6,6 +8,11 @@ import { VitePWA } from 'vite-plugin-pwa'
 
 // https://vite.dev/config/
 export default defineConfig({
+  test: {
+    globals: true,
+    environment: 'jsdom',
+    setupFiles: './setupTests.js',
+  },
   plugins: [
     react(), 
     tsConfigPaths(), 
