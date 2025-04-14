@@ -17,7 +17,7 @@ export default defineConfig({
         name: 'My AI Chat',
         short_name: 'MyAIChat',
         description: 'An AI chat application',
-        theme_color: '#ffffff',
+        theme_color: '#000000',
         icons: [
           {
             src: 'pwa-192x192.png',
