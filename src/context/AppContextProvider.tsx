@@ -9,6 +9,7 @@ type Props = {
 
 export const AppContextProvider = ({ children }: Props) => {
   const [chats, setChats] = useState<ChatSummary[]>([]);
+  const [isMenuOpen, setIsMenuOpen] = useState(true);
 
   const { getAllChats, deleteChat } = useChats();
 
@@ -29,7 +30,15 @@ export const AppContextProvider = ({ children }: Props) => {
   };
 
   return (
-    <AppContext.Provider value={{ chats, getAllChatsForList, deleteChatById }}>
+    <AppContext.Provider
+      value={{
+        chats,
+        getAllChatsForList,
+        deleteChatById,
+        isMenuOpen,
+        setIsMenuOpen,
+      }}
+    >
       {children}
     </AppContext.Provider>
   );
