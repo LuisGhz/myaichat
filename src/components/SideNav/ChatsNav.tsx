@@ -1,18 +1,11 @@
-import { ArrowLeftCircleIcon } from "assets/icons/ArrowLeftCircleIcon";
-import { PencilSquareIcon } from "assets/icons/PencilSquareIcon";
 import { TrashIcon } from "assets/icons/TrashIcon";
 import { ScreensWidth } from "consts/ScreensWidth";
 import { AppContext } from "context/AppContext";
 import { useContext } from "react";
 import { Link, useNavigate, useParams } from "react-router";
 
-type Props = {
-  isMenuOpen: boolean;
-  toggleMenu: () => void;
-};
-
-export const ChatsNav = ({ isMenuOpen, toggleMenu }: Props) => {
-  const { chats, deleteChatById } = useContext(AppContext);
+export const ChatsNav = () => {
+  const { chats, deleteChatById, setIsMenuOpen } = useContext(AppContext);
   const navigate = useNavigate();
   const params = useParams();
 
@@ -22,40 +15,12 @@ export const ChatsNav = ({ isMenuOpen, toggleMenu }: Props) => {
   };
 
   const handleRedirectToChatOnMobile = () => {
-    if (window.innerWidth < ScreensWidth.tablet) toggleMenu();
+    if (window.innerWidth < ScreensWidth.tablet) setIsMenuOpen((prev) => !prev);
   };
 
   return (
     <>
-      <ul
-        className={`bg-cop-4 text-white h-full px-3 overflow-y-auto overflow-x-hidden hide-scrollbar fixed md:relative top-0 left-0 z-50 transition-all duration-500 w-64 ${
-          isMenuOpen
-            ? "-translate-x-full md:translate-x-0"
-            : "translate-x-0 md:-translate-x-full"
-        } shadow-lg md:shadow-none`}
-      >
-        <li className="flex justify-between items-center px-2 py-1">
-          <Link className="mt-0.5" to={"/"} aria-label="Go to homepage">
-            MyAIChat
-          </Link>
-          <button
-            type="button"
-            onClick={toggleMenu}
-            aria-label="Close sidebar menu"
-          >
-            <ArrowLeftCircleIcon className="size-6 cursor-pointer text-white hover:text-gray-300 transition-colors duration-300 mt-1" />
-          </button>
-        </li>
-        <li className="bg-cop-1 hover:bg-cop-2 cursor-pointer text-white px-2 py-1 text-center w-10/12 mx-auto rounded-sm transition-colors duration-300 my-3">
-          <Link
-            className="flex justify-center"
-            to={"/chat"}
-            aria-label="New conversation"
-          >
-            <PencilSquareIcon className="size-5 text-white me-2 mt-0.5" />
-            <span>New conversation</span>
-          </Link>
-        </li>
+      <ul className={`px-2`}>
         {chats.length > 0 &&
           chats.map((chat) => (
             <li
