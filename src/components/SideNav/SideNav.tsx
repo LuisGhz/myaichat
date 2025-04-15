@@ -1,12 +1,14 @@
-import { useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useRef } from "react";
 import { Link } from "react-router";
 import { ArrowRightCircleIcon } from "assets/icons/ArrowRightCircleIcon";
 import { PencilSquareIcon } from "assets/icons/PencilSquareIcon";
 import { ScreensWidth } from "consts/ScreensWidth";
 import { ChatsNav } from "./ChatsNav";
+import { AppContext } from "context/AppContext";
+import { HeaderNav } from "./HeaderNav";
 
 export const SideNav = () => {
-  const [isMenuOpen, setIsMenuOpen] = useState(true);
+  const { isMenuOpen, setIsMenuOpen } = useContext(AppContext);
   const navRef = useRef<HTMLElement>(null);
   const openRef = useRef<HTMLButtonElement>(null);
   useEffect(() => {
@@ -30,6 +32,7 @@ export const SideNav = () => {
     return () => {
       document.removeEventListener("click", handleClickOutside);
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isMenuOpen]);
 
   const toggleMenu = () => {
@@ -38,7 +41,7 @@ export const SideNav = () => {
 
   return (
     <>
-      <section className="absolute top-0 left-0 z-50 flex text-white gap-x-2 mt-1 -ms-1.5">
+      <section className="absolute top-0 left-0 z-10 flex text-white gap-x-2 mt-1 -ms-1.5">
         <Link className="mt-1 ms-2.5" aria-label="Go to home page" to={"/"}>
           MyAIChat
         </Link>
@@ -62,14 +65,17 @@ export const SideNav = () => {
         </Link>
       </section>
       <nav
-        className={`${
-          isMenuOpen ? "w-0 md:w-64" : "w-0"
-        } transition-width duration-500 relative bg-cop-4 `}
+        className={`fixed h-full top-0 ${
+          isMenuOpen
+            ? "-translate-x-full md:translate-x-0"
+            : "translate-x-0 md:-translate-x-full"
+        } transition-all duration-500 w-64 z-20 bg-cop-4 text-white`}
         role="navigation"
         aria-label="Chat navigation"
         ref={navRef}
       >
-        <ChatsNav isMenuOpen={isMenuOpen} toggleMenu={toggleMenu} />
+        <HeaderNav />
+        <ChatsNav />
       </nav>
     </>
   );
