@@ -69,7 +69,7 @@ export const SideNav = () => {
           isMenuOpen
             ? "-translate-x-full md:translate-x-0"
             : "translate-x-0 md:-translate-x-full"
-        } transition-all duration-500 w-64 z-20 bg-cop-4 text-white`}
+        } transition-all duration-500 w-64 z-20 bg-cop-4 text-white overflow-y-auto hide-scrollbar`}
         role="navigation"
         aria-label="Chat navigation"
         ref={navRef}
