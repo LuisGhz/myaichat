@@ -15,6 +15,7 @@ export const AppRouter = () => {
           <Route path="chat/:id" element={<CurrentChat />}></Route>
           <Route path="prompts" element={<Prompts />}></Route>
           <Route path="prompts/form" element={<PromptsForm />}></Route>
+          <Route path="prompts/form/:id" element={<PromptsForm />}></Route>
         </Route>
       </Routes>
     </BrowserRouter>
