@@ -36,7 +36,7 @@ export const MessagesForm = ({ register, errors, setValue }: Props) => {
         <div className="text-gray-400 text-sm">No messages added.</div>
       )}
       {messages.map((message, idx) => (
-        <div key={idx} className="flex flex-col gap-2 mb-2 items-start">
+        <section key={idx} className="flex flex-col gap-2 mb-2 items-start relative">
           <select
             className="p-2 bg-gray-800 text-white rounded-md w-32"
             value={message.role}
@@ -64,7 +64,7 @@ export const MessagesForm = ({ register, errors, setValue }: Props) => {
           />
           <button
             type="button"
-            className="bg-red-600 hover:bg-red-700 text-white px-2 py-1 rounded text-sm"
+            className="bg-red-600 hover:bg-red-700 text-white px-2 py-1 rounded text-sm absolute top-2 right-2"
             onClick={() => {
               const newMessages = messages.filter((_, i) => i !== idx);
               setMessages(newMessages);
@@ -74,7 +74,7 @@ export const MessagesForm = ({ register, errors, setValue }: Props) => {
           >
             ✕
           </button>
-        </div>
+        </section>
       ))}
       {/* Show field-level errors for messages */}
       {Array.isArray(errors.messages) &&
