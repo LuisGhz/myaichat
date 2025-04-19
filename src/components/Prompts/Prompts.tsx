@@ -5,6 +5,7 @@ import { InputName } from "./inputs/InputName";
 import { InputContent } from "./inputs/InputContent";
 import { MessagesForm } from "./inputs/MessagesForm";
 import { ParamsForm } from "./inputs/ParamsForm";
+import { usePromptForm } from "hooks/usePromptForm";
 
 export const Prompts = () => {
   const {
@@ -16,10 +17,10 @@ export const Prompts = () => {
     resolver: zodResolver(promptSchema),
     defaultValues: { params: [], messages: [] },
   });
+  const { onPromptFormSubmit } = usePromptForm();
 
   const onSubmit = (data: PromptForm) => {
-    // Handle form submission (e.g., save prompt)
-    console.log(data);
+    onPromptFormSubmit(data);
   };
 
   return (
