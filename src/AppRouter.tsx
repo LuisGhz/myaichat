@@ -1,6 +1,6 @@
 import App from "App";
 import { CurrentChat } from "components/CurrentChat";
-import { Prompts } from "components/Prompts";
+import { Prompts } from "components/Prompts/Prompts";
 import { Welcome } from "components/Welcome";
 import { BrowserRouter, Routes, Route } from "react-router";
 
