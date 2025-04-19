@@ -28,7 +28,7 @@ export const InputSection = ({ onEnter, isSending }: InputSectionProps) => {
 
   const onMessageKeyDown = (event: KeyboardEvent<HTMLTextAreaElement>) => {
     if (event.key === "Enter") {
-      if (event.shiftKey) return;
+      if (event.shiftKey || window.innerWidth < ScreensWidth.smallDesktop) return;
       event.preventDefault();
       sendMessage();
     }
