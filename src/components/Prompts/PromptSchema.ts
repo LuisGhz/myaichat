@@ -6,6 +6,7 @@ export const promptSchema = z.object({
   messages: z
     .array(
       z.object({
+        id: z.string().optional(),
         role: z.enum(["User", "Assistant"]),
         content: z.string().min(1, "Is required"),
       })
@@ -14,6 +15,7 @@ export const promptSchema = z.object({
   params: z
     .array(
       z.object({
+        id: z.string().optional(),
         name: z.string().min(1, "Is required"),
         defaultValue: z.string().min(1, "Is required"),
       })
