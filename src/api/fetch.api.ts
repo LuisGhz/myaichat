@@ -1,6 +1,23 @@
+import { ApiErrorRes } from "types/api/ApiErrorRes.type";
 import { HttpClient } from "types/api/http-client.type";
 
 export const createFetchAdapter = (baseUrl: string): HttpClient => {
+  const handleResponse = async (response: Response) => {
+    if (!response.ok) {
+      let errorMsg = `Error: ${response.status}`;
+      try {
+        const errorData: ApiErrorRes = await response.json();
+        if (errorData && errorData.message) {
+          errorMsg = errorData.message;
+        }
+      } catch {
+        // ignore JSON parse error, use default errorMsg
+      }
+      throw new Error(errorMsg);
+    }
+    return response;
+  };
+
   const get = async <T>(
     path: string,
     options?: object
@@ -10,7 +27,7 @@ export const createFetchAdapter = (baseUrl: string): HttpClient => {
         method: "GET",
         ...options,
       });
-      if (!response.ok) throw Error(`Error: ${response.status}`);
+      await handleResponse(response);
       return (await response.json()) as T;
     } catch (error) {
       console.error("GET request failed:", error);
@@ -32,7 +49,7 @@ export const createFetchAdapter = (baseUrl: string): HttpClient => {
         ...options,
         body: data ? JSON.stringify(data) : undefined,
       });
-      if (!response.ok) throw Error(`Error: ${response.status}`);
+      await handleResponse(response);
       return (await response.json()) as T;
     } catch (error) {
       console.error("POST request failed:", error);
@@ -51,7 +68,7 @@ export const createFetchAdapter = (baseUrl: string): HttpClient => {
         ...options,
         body,
       });
-      if (!response.ok) throw Error(`Error: ${response.status}`);
+      await handleResponse(response);
       return (await response.json()) as T;
     } catch (error) {
       console.error("POST request failed:", error);
@@ -59,16 +76,14 @@ export const createFetchAdapter = (baseUrl: string): HttpClient => {
     }
   };
 
-  const deleteMethod = async <O>(
-    path: string,
-    options?: O
-  ): Promise<void> => {
+  const deleteMethod = async <O>(path: string, options?: O): Promise<void> => {
     try {
       const response = await fetch(`${baseUrl}${path}`, {
         method: "DELETE",
         ...options,
       });
-      if (!response.ok) throw Error(`Error: ${response.status}`);
+      await handleResponse(response);
+      // No need to parse body for DELETE
     } catch (error) {
       console.error("DELETE request failed:", error);
       throw error;
