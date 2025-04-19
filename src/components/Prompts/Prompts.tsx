@@ -1,4 +1,5 @@
 import { usePrompts } from "hooks/usePrompts";
+import { Link } from "react-router";
 
 export const Prompts = () => {
   const { prompts } = usePrompts();
@@ -14,7 +15,7 @@ export const Prompts = () => {
           <ul className="list-disc pl-5">
             {prompts.prompts.map((prompt) => (
               <li key={prompt.id} className="text-gray-300 cursor-pointer">
-                {prompt.name}
+                <Link to={`/prompts/form/${prompt.id}`}>{prompt.name}</Link>
               </li>
             ))}
           </ul>
