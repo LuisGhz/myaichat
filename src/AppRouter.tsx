@@ -1,6 +1,6 @@
 import App from "App";
 import { CurrentChat } from "components/CurrentChat";
-import { Prompts } from "components/Prompts/Prompts";
+import { PromptsForm } from "components/Prompts/PromptsForm";
 import { Welcome } from "components/Welcome";
 import { BrowserRouter, Routes, Route } from "react-router";
 
@@ -12,7 +12,7 @@ export const AppRouter = () => {
           <Route index element={<Welcome />}></Route>
           <Route path="chat" element={<CurrentChat />}></Route>
           <Route path="chat/:id" element={<CurrentChat />}></Route>
-          <Route path="prompts" element={<Prompts />}></Route>
+          <Route path="prompts" element={<PromptsForm />}></Route>
         </Route>
       </Routes>
     </BrowserRouter>
