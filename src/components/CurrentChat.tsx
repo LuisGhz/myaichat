@@ -15,6 +15,7 @@ export const CurrentChat = () => {
   const { getAllChatsForList } = useContext(AppContext);
   const [messages, setMessages] = useState<Message[]>([]);
   const [model, setModel] = useState<Models>("gpt-4o-mini");
+  const [promptId, setPromptId] = useState<string>("");
   const [currentModel, setCurrentModel] = useState("");
   const [page, setPage] = useState(0);
   const [isUpdatingMessagesFromScroll, setIsUpdatingMessagesFromScroll] =
@@ -78,6 +79,7 @@ export const CurrentChat = () => {
   const resetState = () => {
     setMessages([]);
     setModel("gpt-4o-mini");
+    setPromptId("");
     setCurrentModel("");
     setPage(() => 0);
     setIsEmptyPage(() => false);
@@ -88,6 +90,7 @@ export const CurrentChat = () => {
       chatId: params.id,
       prompt: newUserMessage,
       image,
+      promptId,
     };
     req.model = params.id ? undefined : model;
 
@@ -142,7 +145,12 @@ export const CurrentChat = () => {
         )}
         {messages.length === 0 && (
           <section className="grow">
-            <NewConversation model={model} setModel={setModel} />
+            <NewConversation
+              model={model}
+              setModel={setModel}
+              promptId={promptId}
+              setPromptId={setPromptId}
+            />
           </section>
         )}
         {messages.length > 0 && (

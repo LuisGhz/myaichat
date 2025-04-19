@@ -5,4 +5,5 @@ export type NewMessageReq = {
   prompt: string;
   model?: Models;
   image? : File;
+  promptId?: string;
 }
