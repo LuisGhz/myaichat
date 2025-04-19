@@ -6,6 +6,7 @@ import { InputContent } from "./inputs/InputContent";
 import { MessagesForm } from "./inputs/MessagesForm";
 import { ParamsForm } from "./inputs/ParamsForm";
 import { usePromptForm } from "hooks/usePromptForm";
+import { Link } from "react-router";
 
 export const PromptsForm = () => {
   const {
@@ -37,10 +38,18 @@ export const PromptsForm = () => {
         <MessagesForm register={register} errors={errors} setValue={setValue} />
         {/* Dynamic Params Section */}
         <ParamsForm register={register} errors={errors} setValue={setValue} />
-        <section>
+        <section className="flex gap-5">
           <button
+            className="mt-8 w-36 p-2 bg-blue-600 hover:bg-blue-700 rounded-md font-semibold"
+            type="button"
+          >
+            <Link to={"/prompts"} className="text-white">
+              Go back
+            </Link>
+          </button>
+          <button
+            className="mt-8 w-36 p-2 bg-blue-600 hover:bg-blue-700 rounded-md font-semibold"
             type="submit"
-            className="mt-8 w-96 p-2 bg-blue-600 hover:bg-blue-700 rounded-md font-semibold"
           >
             Save Prompt
           </button>
