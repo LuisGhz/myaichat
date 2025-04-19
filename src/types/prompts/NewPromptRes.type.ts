@@ -1,8 +1,11 @@
+import { PromptMessages } from "./PromptMessages.type";
+import { PromptParams } from "./PromptParams.type";
+
 export type NewPromptRes = {
   id: string;
-  title: string;
-  model: string;
-  prompt: string;
+  name: string;
+  content: string;
   createdAt: Date;
-  updatedAt: Date;
+  messages?: PromptMessages[];
+  params?: PromptParams[];
 };
