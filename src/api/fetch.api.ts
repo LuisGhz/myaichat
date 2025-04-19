@@ -90,11 +90,34 @@ export const createFetchAdapter = (baseUrl: string): HttpClient => {
     }
   };
 
+  const patch = async <T, O>(
+    path: string,
+    data?: object,
+    options?: O
+  ): Promise<T | undefined> => {
+    try {
+      const response = await fetch(`${baseUrl}${path}`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        ...options,
+        body: data ? JSON.stringify(data) : undefined,
+      });
+      await handleResponse(response);
+      return (await response.json()) as T;
+    } catch (error) {
+      console.error("PATCH request failed:", error);
+      throw error;
+    }
+  };
+
   return {
     get,
     post,
     postFormData,
     del: deleteMethod,
+    patch,
   };
 };
 

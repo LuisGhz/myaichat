@@ -5,6 +5,11 @@ export type HttpClient = {
     data?: object,
     options?: O
   ) => Promise<T | undefined>;
+  patch: <T, O>(
+    path: string,
+    data?: object,
+    options?: O
+  ) => Promise<T | undefined>;
   postFormData: <T, O>(
     path: string,
     data: FormData,
