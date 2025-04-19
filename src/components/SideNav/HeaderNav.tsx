@@ -1,5 +1,6 @@
 import { ArrowLeftCircleIcon } from "assets/icons/ArrowLeftCircleIcon";
 import { PencilSquareIcon } from "assets/icons/PencilSquareIcon";
+import { ScreensWidth } from "consts/ScreensWidth";
 import { AppContext } from "context/AppContext";
 import { useContext } from "react";
 import { Link } from "react-router";
@@ -9,6 +10,10 @@ export const HeaderNav = () => {
 
   const toggleMenu = () => {
     setIsMenuOpen((prev) => !prev);
+  };
+
+  const toggleMenuMobile = () => {
+    if (window.innerWidth < ScreensWidth.tablet) setIsMenuOpen((prev) => !prev);
   };
 
   return (
@@ -31,6 +36,7 @@ export const HeaderNav = () => {
             className="flex justify-center"
             to={"/chat"}
             aria-label="New conversation"
+            onClick={toggleMenuMobile}
           >
             <PencilSquareIcon className="size-5 text-white me-2 mt-0.5" />
             <span>New conversation</span>
@@ -41,6 +47,7 @@ export const HeaderNav = () => {
             className="flex justify-center"
             to={"/prompts"}
             aria-label="New conversation"
+            onClick={toggleMenuMobile}
           >
             <span>Prompts</span>
           </Link>
