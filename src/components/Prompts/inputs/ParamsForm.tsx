@@ -38,7 +38,7 @@ export const ParamsForm = ({ register, errors, setValue }: Props) => {
   };
 
   return (
-    <div className="mt-6 w-96">
+    <div className="mt-6 w-11/12 md:w-7/12 max-w-[40rem]">
       <div className="flex justify-between items-center mb-2">
         <span className="font-semibold">Params</span>
         <button
