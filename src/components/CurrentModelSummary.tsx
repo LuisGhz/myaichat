@@ -1,26 +1,31 @@
-import { Message } from "types/chat/Message.type";
+import { MODELS } from "consts/Models";
 
 type Props = {
   currentModel: string;
-  messages: Message[];
+  totalPromptTokens?: number;
+  totalCompletionTokens?: number;
 };
 
-export const CurrentModelSummary = ({ currentModel, messages }: Props) => {
+export const CurrentModelSummary = ({
+  currentModel,
+  totalPromptTokens,
+  totalCompletionTokens,
+}: Props) => {
+
+  const model = MODELS.find((model) => model.value === currentModel)?.name || currentModel;
+
   return (
     <>
-      <div className="text-gray-700 text-xs text-end mb-1">
-        {currentModel} - PromptTokens:
-        {messages.length > 0 &&
-          messages.reduce(
-            (sum, message) => sum + (message.promptTokens ?? 0),
-            0
-          )}
-        - ComplentionTokens:
-        {messages.length > 0 &&
-          messages.reduce(
-            (sum, message) => sum + (message.completionTokens ?? 0),
-            0
-          )}
+      <div className="text-gray-700 text-xs flex justify-end gap-1.5 mb-1">
+        <span>Model: {model} -</span>
+        <span>
+          PT:
+          {totalPromptTokens} -{" "}
+        </span>
+        <span>
+          CT:
+          {totalCompletionTokens}
+        </span>
       </div>
     </>
   );

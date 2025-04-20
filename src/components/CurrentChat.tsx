@@ -15,6 +15,8 @@ export const CurrentChat = () => {
   const { getAllChatsForList } = useContext(AppContext);
   const [messages, setMessages] = useState<Message[]>([]);
   const [model, setModel] = useState<Models>("gpt-4o-mini");
+  const [totalPromptTokens, setTotalPromptTokens] = useState(0);
+  const [totalCompletionTokens, setTotalCompletionTokens] = useState(0);
   const [promptId, setPromptId] = useState<string>("");
   const [currentModel, setCurrentModel] = useState("");
   const [page, setPage] = useState(0);
@@ -74,6 +76,8 @@ export const CurrentChat = () => {
   const handleFirstPageLoad = (res: ChatMessagesRes) => {
     setMessages(res?.historyMessages || []);
     setCurrentModel(res?.model || "");
+    setTotalPromptTokens(res?.totalPromptTokens || 0);
+    setTotalCompletionTokens(res?.totalCompletionTokens || 0);
   };
 
   const resetState = () => {
@@ -83,6 +87,8 @@ export const CurrentChat = () => {
     setCurrentModel("");
     setPage(() => 0);
     setIsEmptyPage(() => false);
+    setTotalPromptTokens(() => 0);
+    setTotalCompletionTokens(() => 0);
   };
 
   const sendMessage = async (newUserMessage: string, image?: File) => {
@@ -140,7 +146,8 @@ export const CurrentChat = () => {
         {currentModel && (
           <CurrentModelSummary
             currentModel={currentModel}
-            messages={messages}
+            totalCompletionTokens={totalCompletionTokens}
+            totalPromptTokens={totalPromptTokens}
           />
         )}
         {messages.length === 0 && (
