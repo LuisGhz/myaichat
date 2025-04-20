@@ -164,7 +164,7 @@ export const CurrentChat = () => {
         )}
         {messages.length > 0 && (
           <section
-            className="grow overflow-y-auto hide-scrollbar mt-0.5 px-1 md:px-5"
+            className="grow overflow-y-auto hide-scrollbar mt-0.5 px-1 md:px-5 flex items-end"
             onScroll={incrementPageOnScrollTop}
           >
             <Messages
