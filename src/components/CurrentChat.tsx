@@ -164,14 +164,16 @@ export const CurrentChat = () => {
         )}
         {messages.length > 0 && (
           <section
-            className="grow overflow-y-auto hide-scrollbar mt-0.5 px-1 md:px-5 flex items-end"
+            className="grow overflow-y-auto hide-scrollbar mt-0.5 px-1 md:px-5"
             onScroll={incrementPageOnScrollTop}
           >
-            <Messages
-              messages={messages}
-              isUpdatingMessagesFromScroll={isUpdatingMessagesFromScroll}
-              isSending={isSending}
-            />
+            <div className="min-h-full flex flex-col justify-end">
+              <Messages
+                messages={messages}
+                isUpdatingMessagesFromScroll={isUpdatingMessagesFromScroll}
+                isSending={isSending}
+              />
+            </div>
           </section>
         )}
         <InputSection onEnter={onEnter} isSending={isSending} />
