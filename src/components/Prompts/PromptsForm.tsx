@@ -6,12 +6,13 @@ import { InputContent } from "./inputs/InputContent";
 import { MessagesForm } from "./inputs/MessagesForm";
 import { ParamsForm } from "./inputs/ParamsForm";
 import { usePromptForm } from "hooks/usePromptForm";
-import { Link, useParams } from "react-router";
+import { Link, useNavigate, useParams } from "react-router";
 import { usePrompts } from "hooks/usePrompts";
 import { useEffect } from "react";
 
 export const PromptsForm = () => {
   const params = useParams<{ id?: string }>();
+  const navigate = useNavigate();
   const {
     register,
     handleSubmit,
@@ -42,14 +43,17 @@ export const PromptsForm = () => {
 
   const onSubmit = async (data: PromptForm) => {
     if (params.id) {
-      await onPromptUpdateFormSubmit(params.id!, data);
+      const res = await onPromptUpdateFormSubmit(params.id!, data);
+      if (res) naviageAfterRequest();
       return;
     }
     const res = await onPromptFormSubmit(data);
-    if (res) {
-      console.log("Prompt created successfully:", res);
-    }
+    if (res) naviageAfterRequest();
   };
+
+  const naviageAfterRequest = () => {
+    setTimeout(() => navigate("/prompts"), 500);
+  }
 
   return (
     <>
