@@ -55,9 +55,10 @@ export const PromptsForm = () => {
     <>
       {params.id && loading && <p>loading</p>}
       <form onSubmit={handleSubmit(onSubmit)}>
-        <div className="flex flex-col h-full items-center justify-center text-white">
+        <div className="flex flex-col h-full items-center justify-center text-white pt-4">
           <h1 className="text-2xl font-bold">Prompt</h1>
-          <p className="text-lg mt-4">Create/Edit a prompt here.</p>
+          {!params.id  && <p className="text-lg mt-4 text-cop-7">Create a prompt here.</p>}
+          {params.id  && <p className="text-lg mt-4 text-cop-7">Edit your prompt here.</p>}
           <InputName register={register} errors={errors} />
           <InputContent register={register} errors={errors} />
           {/* Messages Section */}
