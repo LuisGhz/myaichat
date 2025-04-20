@@ -10,11 +10,11 @@ type Props = {
 
 export const ParamsForm = ({ register, errors, setValue }: Props) => {
   const [params, setParams] = useState<
-    { name: string; defaultValue: string }[]
+    { name: string; value: string }[]
   >([]);
 
   const handleAddParam = () => {
-    const newParams = [...params, { name: "", defaultValue: "" }];
+    const newParams = [...params, { name: "", value: "" }];
     setParams(newParams);
     setValue("params", newParams);
   };
@@ -27,7 +27,7 @@ export const ParamsForm = ({ register, errors, setValue }: Props) => {
 
   const handleParamChange = (
     idx: number,
-    field: "name" | "defaultValue",
+    field: "name" | "value",
     value: string
   ) => {
     const newParams = params.map((param, i) =>
@@ -66,12 +66,12 @@ export const ParamsForm = ({ register, errors, setValue }: Props) => {
             type="text"
             className="p-2 bg-gray-800 text-white rounded-md flex-1"
             placeholder="Default value"
-            {...register(`params.${idx}.defaultValue` as const, {
+            {...register(`params.${idx}.value` as const, {
               required: true,
             })}
-            value={param.defaultValue}
+            value={param.value}
             onChange={(e) =>
-              handleParamChange(idx, "defaultValue", e.target.value)
+              handleParamChange(idx, "value", e.target.value)
             }
           />
           <button
@@ -93,9 +93,9 @@ export const ParamsForm = ({ register, errors, setValue }: Props) => {
                 Param {idx + 1} name: {err.name.message}
               </div>
             )}
-            {err?.defaultValue?.message && (
+            {err?.value?.message && (
               <div>
-                Param {idx + 1} value: {err.defaultValue.message}
+                Param {idx + 1} value: {err.value.message}
               </div>
             )}
           </div>

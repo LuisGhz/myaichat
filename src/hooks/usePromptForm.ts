@@ -17,7 +17,7 @@ export const usePromptForm = () => {
       })),
       params: data.params?.map((param) => ({
         name: param.name,
-        defaultValue: param.defaultValue,
+        value: param.value,
       })),
     };
 
@@ -40,7 +40,7 @@ export const usePromptForm = () => {
       })),
       params: data.params?.map((param) => ({
         name: param.name,
-        defaultValue: param.defaultValue,
+        value: param.value,
       })),
     };
 
