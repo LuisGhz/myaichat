@@ -102,6 +102,8 @@ export const CurrentChat = () => {
 
     const res = await sendNewMessage(req);
     if (res) {
+      setTotalPromptTokens(res.totalChatPromptTokens);
+      setTotalCompletionTokens(res.totalChatCompletionTokens);
       setMessages((prevMessages) => {
         prevMessages[prevMessages.length - 1].promptTokens = res.promptTokens;
         return [

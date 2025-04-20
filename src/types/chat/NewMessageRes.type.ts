@@ -4,4 +4,6 @@ export type NewMessageRes = {
   promptTokens: number;
   completionTokens: number;
   totalTokens: number;
+  totalChatPromptTokens: number;
+  totalChatCompletionTokens: number;
 };
