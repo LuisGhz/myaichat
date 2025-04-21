@@ -8,16 +8,19 @@ import { ParamsForm } from "./inputs/ParamsForm";
 import { usePromptForm } from "hooks/usePromptForm";
 import { Link, useNavigate, useParams } from "react-router";
 import { usePrompts } from "hooks/usePrompts";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import { PromptsURLParams } from "types/prompts/PromptsUrlParams.type";
 
 export const PromptsForm = () => {
-  const params = useParams<{ id?: string }>();
+  const [isLoaded, setIsLoaded] = useState(false);
+  const params = useParams<PromptsURLParams>();
   const navigate = useNavigate();
   const {
     register,
     handleSubmit,
     setValue,
     formState: { errors },
+    getValues,
   } = useForm<PromptForm>({
     resolver: zodResolver(promptSchema),
     defaultValues: { params: [], messages: [] },
@@ -35,8 +38,10 @@ export const PromptsForm = () => {
           setValue("messages", prompt.messages || []);
           setValue("params", prompt.params || []);
         }
+        setIsLoaded(true);
       }
     };
+    if (!params.id) setIsLoaded(true);
     fetchPrompt();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [params.id]);
@@ -53,7 +58,7 @@ export const PromptsForm = () => {
 
   const naviageAfterRequest = () => {
     setTimeout(() => navigate("/prompts"), 500);
-  }
+  };
 
   return (
     <>
@@ -61,18 +66,32 @@ export const PromptsForm = () => {
       <form onSubmit={handleSubmit(onSubmit)}>
         <div className="flex flex-col h-full items-center justify-center text-white pt-4">
           <h1 className="text-2xl font-bold">Prompt</h1>
-          {!params.id  && <p className="text-lg mt-4 text-cop-7">Create a prompt here.</p>}
-          {params.id  && <p className="text-lg mt-4 text-cop-7">Edit your prompt here.</p>}
+          {!params.id && (
+            <p className="text-lg mt-4 text-cop-7">Create a prompt here.</p>
+          )}
+          {params.id && (
+            <p className="text-lg mt-4 text-cop-7">Edit your prompt here.</p>
+          )}
           <InputName register={register} errors={errors} />
           <InputContent register={register} errors={errors} />
           {/* Messages Section */}
-          <MessagesForm
-            register={register}
-            errors={errors}
-            setValue={setValue}
-          />
+          {isLoaded && (
+            <MessagesForm
+              register={register}
+              errors={errors}
+              setValue={setValue}
+            />
+          )}
           {/* Dynamic Params Section */}
-          <ParamsForm register={register} errors={errors} setValue={setValue} />
+          {isLoaded && (
+            <ParamsForm
+              register={register}
+              errors={errors}
+              setValue={setValue}
+              getValues={getValues}
+            />
+          )}
+
           <section className="flex gap-5">
             <button
               className="mt-8 w-36 p-2 bg-blue-600 hover:bg-blue-700 rounded-md font-semibold"
