@@ -22,3 +22,7 @@ export const updatePromptService = (req: UpdatePromptReq) => {
   const { id, ...rest } = req;
   return apiClient.patch<UpdatedPromptRes, unknown>(`/custom-prompts/${id}/update`, rest);
 }
+
+export const deletePromptParamService = (promptId: string, paramId: string) => {
+  return apiClient.del(`/custom-prompts/${promptId}/${paramId}/delete-param`);
+}
