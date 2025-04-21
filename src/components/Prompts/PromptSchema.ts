@@ -6,11 +6,11 @@ export const promptSchema = z.object({
   name: z
     .string()
     .min(1, "Name is required")
-    .length(15, "Must be 15 characters or less"),
+    .max(15, "Must be 15 characters or less"),
   content: z
     .string()
     .min(1, "Content is required")
-    .length(contentLength, `Must be ${contentLength} characters or less`),
+    .max(contentLength, `Must be ${contentLength} characters or less`),
   messages: z
     .array(
       z.object({
@@ -19,7 +19,7 @@ export const promptSchema = z.object({
         content: z
           .string()
           .min(1, "Is required")
-          .length(contentLength, `Must be ${contentLength} characters or less`),
+          .max(contentLength, `Must be ${contentLength} characters or less`),
       })
     )
     .optional(),
@@ -30,11 +30,11 @@ export const promptSchema = z.object({
         name: z
           .string()
           .min(1, "Is required")
-          .length(15, "Must be 15 characters or less"),
+          .max(15, "Must be 15 characters or less"),
         value: z
           .string()
           .min(1, "Is required")
-          .length(100, "Must be 100 characters or less"),
+          .max(100, "Must be 100 characters or less"),
       })
     )
     .optional()
