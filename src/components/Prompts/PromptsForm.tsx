@@ -19,7 +19,7 @@ export const PromptsForm = () => {
     register,
     handleSubmit,
     setValue,
-    formState: { errors },
+    formState: { errors, isValid },
     getValues,
   } = useForm<PromptForm>({
     resolver: zodResolver(promptSchema),
@@ -47,6 +47,7 @@ export const PromptsForm = () => {
   }, [params.id]);
 
   const onSubmit = async (data: PromptForm) => {
+    if (!isValid) return;
     if (params.id) {
       const res = await onPromptUpdateFormSubmit(params.id!, data);
       if (res) naviageAfterRequest();
