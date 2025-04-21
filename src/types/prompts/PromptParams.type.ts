@@ -1,5 +1,5 @@
 export type PromptParams = {
-  id?: string;
+  id: string;
   name: string;
   value: string;
 }
