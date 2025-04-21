@@ -19,6 +19,7 @@ export const PromptsForm = () => {
     register,
     handleSubmit,
     setValue,
+    control,
     formState: { errors, isValid },
     getValues,
   } = useForm<PromptForm>({
@@ -88,11 +89,10 @@ export const PromptsForm = () => {
             <ParamsForm
               register={register}
               errors={errors}
-              setValue={setValue}
+              control={control}
               getValues={getValues}
             />
           )}
-
           <section className="flex gap-5">
             <button
               className="mt-8 w-36 p-2 bg-blue-600 hover:bg-blue-700 rounded-md font-semibold cursor-pointer"
