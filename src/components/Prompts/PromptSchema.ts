@@ -16,8 +16,14 @@ export const promptSchema = z.object({
     .array(
       z.object({
         id: z.string(),
-        name: z.string().min(1, "Is required"),
-        value: z.string().min(1, "Is required"),
+        name: z
+          .string()
+          .min(1, "Is required")
+          .length(15, "Must be 15 characters or less"),
+        value: z
+          .string()
+          .min(1, "Is required")
+          .length(100, "Must be 100 characters or less"),
       })
     )
     .optional()
