@@ -20,7 +20,15 @@ export const promptSchema = z.object({
         value: z.string().min(1, "Is required"),
       })
     )
-    .optional(),
+    .optional()
+    .refine(
+      (params) => {
+        if (!params) return true;
+        const names = params.map((param) => param.name);
+        return new Set(names).size === names.length;
+      },
+      { message: "Duplicate param names are not allowed" }
+    ),
 });
 
 export type PromptForm = z.infer<typeof promptSchema>;
