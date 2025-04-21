@@ -15,7 +15,7 @@ export const promptSchema = z.object({
   params: z
     .array(
       z.object({
-        id: z.string().optional(),
+        id: z.string(),
         name: z.string().min(1, "Is required"),
         value: z.string().min(1, "Is required"),
       })
