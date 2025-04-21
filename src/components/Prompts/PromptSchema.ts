@@ -1,14 +1,25 @@
 import { z } from "zod";
 
+const contentLength = 10_000;
+
 export const promptSchema = z.object({
-  name: z.string().min(1, "Name is required"),
-  content: z.string().min(1, "Content is required"),
+  name: z
+    .string()
+    .min(1, "Name is required")
+    .length(15, "Must be 15 characters or less"),
+  content: z
+    .string()
+    .min(1, "Content is required")
+    .length(contentLength, `Must be ${contentLength} characters or less`),
   messages: z
     .array(
       z.object({
         id: z.string().optional(),
         role: z.enum(["User", "Assistant"]),
-        content: z.string().min(1, "Is required"),
+        content: z
+          .string()
+          .min(1, "Is required")
+          .length(contentLength, `Must be ${contentLength} characters or less`),
       })
     )
     .optional(),
