@@ -1,28 +1,79 @@
-import { UseFormRegister, FieldErrors, UseFormSetValue } from "react-hook-form";
+import {
+  UseFormRegister,
+  FieldErrors,
+  UseFormSetValue,
+  UseFormGetValues,
+} from "react-hook-form";
+import { v4 } from "uuid";
 import { PromptForm } from "../PromptSchema";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { usePrompts } from "hooks/usePrompts";
+import { useParams } from "react-router";
+import { PromptsURLParams } from "types/prompts/PromptsUrlParams.type";
+import { ConfirmDialog } from "components/Dialogs/ConfirmDialog";
+import { PromptParams } from "types/prompts/PromptParams.type";
 
 type Props = {
   register: UseFormRegister<PromptForm>;
   errors: FieldErrors<PromptForm>;
   setValue: UseFormSetValue<PromptForm>;
+  getValues: UseFormGetValues<PromptForm>;
 };
 
-export const ParamsForm = ({ register, errors, setValue }: Props) => {
-  const [params, setParams] = useState<
-    { name: string; value: string }[]
-  >([]);
+export const ParamsForm = ({
+  register,
+  errors,
+  setValue,
+  getValues,
+}: Props) => {
+  const { deletePromptParam } = usePrompts();
+  const [params, setParams] = useState<PromptParams[]>([]);
+  const urlParams = useParams<PromptsURLParams>();
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [paramToDelete, setParamToDelete] = useState<string | null>(null);
+  const dialogMessage = [
+    "Are you sure you want to delete this parameter?",
+    "This action cannot be undone.",
+  ];
+
+  useEffect(() => {
+    const initialParams = getValues("params") || [];
+    setParams(initialParams);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const handleAddParam = () => {
-    const newParams = [...params, { name: "", value: "" }];
+    const id = `${v4()}-default`;
+    const newParams = [...params, { id, name: "", value: "" }];
     setParams(newParams);
     setValue("params", newParams);
   };
 
-  const handleRemoveParam = (idx: number) => {
-    const newParams = params.filter((_, i) => i !== idx);
+  const removeParamFromForm = (id: string) => {
+    const newParams = params.filter((p) => p.id !== id);
     setParams(newParams);
     setValue("params", newParams);
+    setParamToDelete(null);
+  };
+
+  const handleRemoveParam = async (id: string) => {
+    setParamToDelete(() => id);
+    if (!id.includes("-default")) {
+      setIsDialogOpen(true);
+      return;
+    }
+    removeParamFromForm(id);
+  };
+
+  const onConfirmDialogClose = async () => {
+    await deletePromptParam(urlParams.id!, paramToDelete!);
+    removeParamFromForm(paramToDelete!);
+    setIsDialogOpen(false);
+  };
+
+  const onCancelDialogClose = () => {
+    setIsDialogOpen(false);
+    setParamToDelete(null);
   };
 
   const handleParamChange = (
@@ -39,6 +90,12 @@ export const ParamsForm = ({ register, errors, setValue }: Props) => {
 
   return (
     <div className="mt-6 w-11/12 md:w-7/12 max-w-[40rem]">
+      <ConfirmDialog
+        isOpen={isDialogOpen}
+        message={dialogMessage}
+        onConfirm={onConfirmDialogClose}
+        onCancel={onCancelDialogClose}
+      />
       <div className="flex justify-between items-center mb-2">
         <span className="font-semibold">Params</span>
         <button
@@ -53,7 +110,7 @@ export const ParamsForm = ({ register, errors, setValue }: Props) => {
         <div className="text-gray-400 text-sm">No params added.</div>
       )}
       {params.map((param, idx) => (
-        <div key={idx} className="flex gap-2 mb-2 items-center">
+        <div key={param.id} className="flex gap-2 mb-2 items-center">
           <input
             type="text"
             className="p-2 bg-gray-800 text-white rounded-md flex-1"
@@ -70,14 +127,12 @@ export const ParamsForm = ({ register, errors, setValue }: Props) => {
               required: true,
             })}
             value={param.value}
-            onChange={(e) =>
-              handleParamChange(idx, "value", e.target.value)
-            }
+            onChange={(e) => handleParamChange(idx, "value", e.target.value)}
           />
           <button
             type="button"
             className="bg-red-600 hover:bg-red-700 text-white px-2 py-1 rounded text-sm"
-            onClick={() => handleRemoveParam(idx)}
+            onClick={() => handleRemoveParam(param.id)}
             aria-label="Delete param"
           >
             ✕
