@@ -11,7 +11,7 @@ export const InputContent = ({ register, errors }: Props) => {
     <>
       <div className="mt-6 w-11/12 md:w-7/12 max-w-[40rem]">
         <textarea
-          className="w-full h-48 p-2 bg-gray-800 text-white rounded-md"
+          className="w-full h-48 p-2 bg-cop-10 text-white rounded-md"
           placeholder="Type your prompt here..."
           {...register("content")}
         ></textarea>

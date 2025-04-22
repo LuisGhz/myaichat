@@ -95,13 +95,13 @@ export const ParamsForm = ({ register, errors, control, getValues }: Props) => {
         <div key={field.id} className="flex gap-2 mb-2 items-center">
           <input
             type="text"
-            className="p-2 bg-gray-800 text-white rounded-md flex-1"
+            className="p-2 bg-cop-10 text-white rounded-md flex-1"
             placeholder="Param name"
             {...register(`params.${idx}.name` as const)}
           />
           <input
             type="text"
-            className="p-2 bg-gray-800 text-white rounded-md flex-1"
+            className="p-2 bg-cop-10 text-white rounded-md flex-1"
             placeholder="Default value"
             {...register(`params.${idx}.value` as const)}
           />
