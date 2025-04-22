@@ -52,7 +52,7 @@ export const NewConversation = ({ model, setModel, promptId, setPromptId }: Prop
           value={promptId}
           onChange={updatePrompt}
         >
-          <option value="">Select a custom prompt if you wish</option>
+          <option value="">Select a prompt if you wish</option>
           {prompts?.prompts.map((prompt) => (
             <option
               key={prompt.id}
