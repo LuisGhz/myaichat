@@ -26,3 +26,7 @@ export const updatePromptService = (req: UpdatePromptReq) => {
 export const deletePromptParamService = (promptId: string, paramId: string) => {
   return apiClient.del(`/custom-prompts/${promptId}/${paramId}/delete-param`);
 }
+
+export const deletePromptMessageService = (promptId: string, messageId: string) => {
+  return apiClient.del(`/custom-prompts/${promptId}/${messageId}/delete-message`);
+}
