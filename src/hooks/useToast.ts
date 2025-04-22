@@ -1,13 +1,14 @@
 import { toast } from "react-toastify";
 
 export const useToast = () => {
-  const autoClose = 2000;
+  const autoCloseError = 2000;
+  const autoCloseSuccess = 1000;
   const position = "top-right";
   const theme = "dark";
 
   const toastSuccess = (message: string) => {
     toast.success(message, {
-      autoClose,
+      autoClose: autoCloseSuccess,
       position,
       theme,
     });
@@ -15,7 +16,7 @@ export const useToast = () => {
 
   const toastError = (message: string) => {
     toast.error(message, {
-      autoClose,
+      autoClose: autoCloseError,
       position,
       theme,
     });
