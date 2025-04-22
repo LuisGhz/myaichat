@@ -26,6 +26,7 @@ export const ChatsNav = () => {
             <li
               className="my-3 hover:bg-cop-6 transition-colors duration-300 rounded-lg flex justify-between"
               key={chat.id}
+              title={chat.title}
             >
               <Link
                 to={`/chat/${chat.id}`}
