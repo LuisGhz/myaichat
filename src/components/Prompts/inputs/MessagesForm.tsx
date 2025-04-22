@@ -1,51 +1,113 @@
-import { UseFormRegister, FieldErrors, UseFormSetValue } from "react-hook-form";
+import {
+  UseFormRegister,
+  FieldErrors,
+  UseFormSetValue,
+  Control,
+  UseFormGetValues,
+  useFieldArray,
+} from "react-hook-form";
+import { v4 } from "uuid";
 import { PromptForm } from "../PromptSchema";
 import { useState } from "react";
+import { ConfirmDialog } from "components/Dialogs/ConfirmDialog";
+import { XMarkIcon } from "assets/icons/XMarkIcon";
+import { usePrompts } from "hooks/usePrompts";
+import { PromptsURLParams } from "types/prompts/PromptsUrlParams.type";
+import { useParams } from "react-router";
 
 type Props = {
   register: UseFormRegister<PromptForm>;
   errors: FieldErrors<PromptForm>;
   setValue: UseFormSetValue<PromptForm>;
+  control: Control<PromptForm>;
+  getValues: UseFormGetValues<PromptForm>;
 };
 
-export const MessagesForm = ({ register, errors, setValue }: Props) => {
-  const [messages, setMessages] = useState<
-    { role: "User" | "Assistant"; content: string }[]
-  >([]);
+export const MessagesForm = ({
+  register,
+  errors,
+  control,
+  getValues,
+}: Props) => {
+  const { fields, append, remove } = useFieldArray({
+    control,
+    name: "messages",
+  });
+  const urlParams = useParams<PromptsURLParams>();
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [messageToDelete, setMessageToDelete] = useState<{
+    index: number;
+    id: string | null;
+  }>({ index: -1, id: null });
+  const { deletePromptMessage } = usePrompts();
+
+  const dialogMessage = [
+    "Are you sure you want to delete this message?",
+    "This action cannot be undone.",
+  ];
+
+  const handleAddMessage = () => {
+    append({ id: `${v4()}-default`, role: "User", content: "" });
+  };
+
+  const handleRemoveMessage = (idx: number) => {
+    const messages = getValues("messages");
+    const messageData = messages?.[idx];
+    // eslint-disable-next-line @typescript-eslint/no-non-null-asserted-optional-chain
+    const messageId = messageData?.id!;
+    setMessageToDelete({ index: idx, id: messageId });
+    if (messageId.includes("-default")) {
+      remove(idx);
+      return;
+    }
+
+    setIsDialogOpen(true);
+  };
+
+  const onConfirmDialogClose = async () => {
+    if (messageToDelete.id && messageToDelete.index !== -1) {
+      await deletePromptMessage(urlParams.id!, messageToDelete.id);
+      remove(messageToDelete.index);
+      setMessageToDelete({ index: -1, id: null });
+    }
+
+    setIsDialogOpen(false);
+  };
+
+  const onCancelDialogClose = () => {
+    setMessageToDelete({ index: -1, id: null });
+    setIsDialogOpen(false);
+  };
 
   return (
     <div className="mt-6 w-11/12 md:w-7/12 max-w-[40rem]">
+      <ConfirmDialog
+        message={dialogMessage}
+        onConfirm={onConfirmDialogClose}
+        onCancel={onCancelDialogClose}
+        isOpen={isDialogOpen}
+      />
       <div className="flex justify-between items-center mb-2">
         <span className="font-semibold">Messages</span>
         <button
           type="button"
           className="bg-green-600 hover:bg-green-700 text-white px-2 py-1 rounded text-sm"
-          onClick={() => {
-            const newMessages = [
-              ...messages,
-              { role: "User" as const, content: "" },
-            ];
-            setMessages(newMessages);
-            setValue("messages", newMessages);
-          }}
+          onClick={handleAddMessage}
         >
           + Add Message
         </button>
       </div>
-      {messages.length === 0 && (
+      {fields.length === 0 && (
         <div className="text-gray-400 text-sm">No messages added.</div>
       )}
-      {messages.map((message, idx) => (
-        <section key={idx} className="flex flex-col gap-2 mb-2 items-start relative">
+      {fields.map((field, idx) => (
+        <section
+          key={field.id}
+          className="flex flex-col gap-2 mb-2 items-start relative"
+        >
           <select
             className="p-2 bg-gray-800 text-white rounded-md w-32"
-            value={message.role}
-            onChange={(e) => {
-              const newMessages = [...messages];
-              newMessages[idx].role = e.target.value as "User" | "Assistant";
-              setMessages(newMessages);
-              setValue("messages", newMessages);
-            }}
+            {...register(`messages.${idx}.role` as const)}
           >
             <option value="User">User</option>
             <option value="Assistant">Assistant</option>
@@ -53,26 +115,15 @@ export const MessagesForm = ({ register, errors, setValue }: Props) => {
           <textarea
             className="p-2 bg-gray-800 text-white rounded-md flex-1 min-h-[80px] resize-y w-full"
             placeholder="Message content"
-            value={message.content}
             {...register(`messages.${idx}.content` as const)}
-            onChange={(e) => {
-              const newMessages = [...messages];
-              newMessages[idx].content = e.target.value;
-              setMessages(newMessages);
-              setValue("messages", newMessages);
-            }}
           />
           <button
             type="button"
-            className="bg-red-600 hover:bg-red-700 text-white px-2 py-1 rounded text-sm absolute top-2 right-2"
-            onClick={() => {
-              const newMessages = messages.filter((_, i) => i !== idx);
-              setMessages(newMessages);
-              setValue("messages", newMessages);
-            }}
+            className="text-red-700 bg-transparent font-bold rounded-4xl text-sm cursor-pointer absolute top-2 right-2"
+            onClick={() => handleRemoveMessage(idx)}
             aria-label="Delete message"
           >
-            ✕
+            <XMarkIcon />
           </button>
         </section>
       ))}
