@@ -22,6 +22,7 @@ export const PromptsForm = () => {
     control,
     formState: { errors, isValid },
     getValues,
+    reset,
   } = useForm<PromptForm>({
     resolver: zodResolver(promptSchema),
     defaultValues: { params: [], messages: [] },
@@ -34,10 +35,12 @@ export const PromptsForm = () => {
       if (params.id) {
         const prompt = await getPromptById(params.id);
         if (prompt) {
-          setValue("name", prompt.name);
-          setValue("content", prompt.content);
-          setValue("messages", prompt.messages || []);
-          setValue("params", prompt.params || []);
+          reset({
+            name: prompt.name,
+            content: prompt.content,
+            messages: prompt.messages || [],
+            params: prompt.params || [],
+          });
         }
         setIsLoaded(true);
       }
@@ -82,6 +85,8 @@ export const PromptsForm = () => {
               register={register}
               errors={errors}
               setValue={setValue}
+              control={control}
+              getValues={getValues}
             />
           )}
           {/* Dynamic Params Section */}
