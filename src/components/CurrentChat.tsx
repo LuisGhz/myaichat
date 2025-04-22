@@ -19,6 +19,7 @@ export const CurrentChat = () => {
   const [totalCompletionTokens, setTotalCompletionTokens] = useState(0);
   const [promptId, setPromptId] = useState<string>("");
   const [currentModel, setCurrentModel] = useState("");
+  const [isFirstLoaded, setIsFirstLoaded] = useState(false);
   const [page, setPage] = useState(0);
   const [isUpdatingMessagesFromScroll, setIsUpdatingMessagesFromScroll] =
     useState(false);
@@ -78,6 +79,9 @@ export const CurrentChat = () => {
     setCurrentModel(res?.model || "");
     setTotalPromptTokens(res?.totalPromptTokens || 0);
     setTotalCompletionTokens(res?.totalCompletionTokens || 0);
+    setTimeout(() => {
+      setIsFirstLoaded(() => true);
+    }, 250);
   };
 
   const resetState = () => {
@@ -138,7 +142,7 @@ export const CurrentChat = () => {
 
   const incrementPageOnScrollTop = (event: React.UIEvent<HTMLDivElement>) => {
     const target = event.target as HTMLDivElement;
-    if (target.scrollTop < 5 && !isEmptyPage)
+    if (target.scrollTop === 0 && !isEmptyPage && isFirstLoaded)
       setPage((prevPage) => prevPage + 1);
   };
 
