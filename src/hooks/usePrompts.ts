@@ -1,4 +1,5 @@
 import {
+  deletePromptMessageService,
   deletePromptParamService,
   getPromptByIdService,
   getPromptsService,
@@ -51,5 +52,22 @@ export const usePrompts = () => {
     }
   };
 
-  return { prompts, loading, getPromptById, deletePromptParam };
+  const deletePromptMessage = async (promptId: string, messageId: string) => {
+    try {
+      setLoading(true);
+      await deletePromptMessageService(promptId, messageId);
+    } catch {
+      toastError("Failed to delete prompt message. Please try again later.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return {
+    prompts,
+    loading,
+    getPromptById,
+    deletePromptParam,
+    deletePromptMessage,
+  };
 };
