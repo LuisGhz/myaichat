@@ -1,5 +1,8 @@
 import { PromptForm } from "components/Prompts/PromptSchema";
-import { createPromptService, updatePromptService } from "services/prompts.service";
+import {
+  createPromptService,
+  updatePromptService,
+} from "services/prompts.service";
 import { NewPromptReq } from "types/prompts/NewPromptReq.type";
 import { useToast } from "./useToast";
 import { UpdatePromptReq } from "types/prompts/UpdatePromptReq.type";
@@ -16,6 +19,7 @@ export const usePromptForm = () => {
         content: message.content,
       })),
       params: data.params?.map((param) => ({
+        id: cleanDefaultParamId(param.id),
         name: param.name,
         value: param.value,
       })),
@@ -39,6 +43,7 @@ export const usePromptForm = () => {
         content: message.content,
       })),
       params: data.params?.map((param) => ({
+        id: cleanDefaultParamId(param.id),
         name: param.name,
         value: param.value,
       })),
@@ -50,7 +55,12 @@ export const usePromptForm = () => {
     } catch (error) {
       toastError(`${error}`);
     }
-  }
+  };
+
+  const cleanDefaultParamId = (id: string) => {
+    if (id.includes("default")) return "";
+    return id;
+  };
 
   return { onPromptFormSubmit, onPromptUpdateFormSubmit };
 };
