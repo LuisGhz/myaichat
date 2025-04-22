@@ -19,7 +19,7 @@ export const usePromptForm = () => {
         content: message.content,
       })),
       params: data.params?.map((param) => ({
-        id: cleanDefaultParamId(param.id),
+        id: cleanDefaultsIds(param.id),
         name: param.name,
         value: param.value,
       })),
@@ -39,11 +39,12 @@ export const usePromptForm = () => {
       name: data.name,
       content: data.content,
       messages: data.messages?.map((message) => ({
+        id: cleanDefaultsIds(message.id),
         role: message.role,
         content: message.content,
       })),
       params: data.params?.map((param) => ({
-        id: cleanDefaultParamId(param.id),
+        id: cleanDefaultsIds(param.id),
         name: param.name,
         value: param.value,
       })),
@@ -57,7 +58,7 @@ export const usePromptForm = () => {
     }
   };
 
-  const cleanDefaultParamId = (id: string) => {
+  const cleanDefaultsIds = (id: string) => {
     if (id.includes("default")) return "";
     return id;
   };
