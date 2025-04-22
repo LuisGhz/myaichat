@@ -14,7 +14,7 @@ export const promptSchema = z.object({
   messages: z
     .array(
       z.object({
-        id: z.string().optional(),
+        id: z.string(),
         role: z.enum(["User", "Assistant"]),
         content: z
           .string()
