@@ -10,6 +10,7 @@ import { NewConversation } from "./NewConversation";
 import { Models } from "types/chat/Models.type";
 import { CurrentModelSummary } from "./CurrentModelSummary";
 import { ChatMessagesRes } from "types/chat/ChatMessagesRes.type";
+import { ChatsLoading } from "./ChatsLoading";
 
 export const CurrentChat = () => {
   const { getAllChatsForList } = useContext(AppContext);
@@ -31,6 +32,7 @@ export const CurrentChat = () => {
     isSending,
     isEmptyPage,
     setIsEmptyPage,
+    isChatLoading,
   } = useChats();
 
   useEffect(() => {
@@ -156,7 +158,8 @@ export const CurrentChat = () => {
             totalPromptTokens={totalPromptTokens}
           />
         )}
-        {messages.length === 0 && (
+        {isChatLoading ? "is" : "not"}
+        {messages.length === 0 && !isChatLoading && (
           <section className="grow">
             <NewConversation
               model={model}
@@ -166,6 +169,7 @@ export const CurrentChat = () => {
             />
           </section>
         )}
+        {isChatLoading && <ChatsLoading />}
         {messages.length > 0 && (
           <section
             className="grow overflow-y-auto hide-scrollbar mt-0.5 px-1 md:px-5"
