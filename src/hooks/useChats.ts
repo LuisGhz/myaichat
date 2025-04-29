@@ -11,8 +11,8 @@ import { NewMessageReq } from "types/chat/NewMessageReq.type";
 export const useChats = () => {
   const [isEmptyPage, setIsEmptyPage] = useState(false);
   const { toastError } = useToast();
-
   const [isSending, setIsSending] = useState(false);
+  const [isChatLoading, setIsChatLoading] = useState(false);
   const getAllChats = async () => {
     const chatRes = await getAllChatsService();
     const chats = chatRes?.chats || [];
@@ -21,9 +21,11 @@ export const useChats = () => {
 
   const getChatMessages = async (id: string, page?: number) => {
     try {
+      setIsChatLoading(() => true);
       const res = await getChatMessagesService(id, page);
       if (res?.historyMessages.length === 0 && page && page > 0)
         setIsEmptyPage(() => true);
+      setIsChatLoading(() => false);
       return res;
     } catch {
       toastError("Error fetching chat messages, please try again later.");
@@ -66,5 +68,6 @@ export const useChats = () => {
     isSending,
     isEmptyPage,
     setIsEmptyPage,
+    isChatLoading,
   };
 };
