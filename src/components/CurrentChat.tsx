@@ -169,7 +169,7 @@ export const CurrentChat = () => {
             />
           </section>
         )}
-        {isChatLoading && <ChatsLoading />}
+        {isChatLoading && page === 0 && <ChatsLoading />}
         {messages.length > 0 && (
           <section
             className="grow overflow-y-auto hide-scrollbar mt-0.5 px-1 md:px-5"
