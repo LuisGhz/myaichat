@@ -1,3 +1,4 @@
+import { createPortal } from "react-dom";
 import { TrashIcon } from "assets/icons/TrashIcon";
 import { ChatSummary } from "types/chat/ChatSummary.type";
 
@@ -16,9 +17,9 @@ export const ContextMenu = ({
   top,
   left,
 }: Props) => {
-  return (
+  return createPortal(
     <ul
-      className={`context-menu absolute w-36 h-auto z-50 bg-cop-5 hidden rounded-sm ${
+      className={`context-menu absolute w-36 h-auto z-20 bg-cop-5 hidden rounded-sm ${
         currentContextMenu === chat.id ? "block!" : ""
       }`}
       style={{
@@ -39,5 +40,5 @@ export const ContextMenu = ({
         </button>
       </li>
     </ul>
-  );
+  , document.body);
 };
