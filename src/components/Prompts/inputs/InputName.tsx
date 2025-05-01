@@ -12,7 +12,7 @@ export const InputName = ({ register, errors }: Props) => {
       <div className="mt-6 w-11/12 md:w-7/12 max-w-[40rem]">
         <input
           type="text"
-          className="w-full p-2 bg-cop-10 text-white rounded-md"
+          className="w-full p-2 bg-cop-1 focus:bg-cop-2 text-white rounded-md"
           placeholder="Enter prompt name..."
           {...register("name")}
         />

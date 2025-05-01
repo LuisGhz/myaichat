@@ -106,14 +106,14 @@ export const MessagesForm = ({
           className="flex flex-col gap-2 mb-2 items-start relative"
         >
           <select
-            className="p-2 bg-cop-10 text-white rounded-md w-32"
+            className="p-2 bg-cop-1 focus:bg-cop-2 text-white rounded-md w-32"
             {...register(`messages.${idx}.role` as const)}
           >
             <option value="User">User</option>
             <option value="Assistant">Assistant</option>
           </select>
           <textarea
-            className="p-2 bg-cop-10 text-white rounded-md flex-1 min-h-[80px] resize-y w-full"
+            className="p-2 bg-cop-1 focus:bg-cop-2 text-white rounded-md flex-1 min-h-[80px] resize-y w-full"
             placeholder="Message content"
             {...register(`messages.${idx}.content` as const)}
           />
