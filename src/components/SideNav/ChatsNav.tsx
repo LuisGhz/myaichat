@@ -13,9 +13,9 @@ export const ChatsNav = () => {
     contextMenuLeft,
     contextMenuTop,
     currentContextMenu,
-    setContextMenuLeft,
-    setContextMenuTop,
-    setCurrentContextMenu,
+    onContextMenu,
+    onTouchStart,
+    onTouchEnd,
   } = useChatsNavContextMenu();
 
   const handleDeleteChat = (id: string) => {
@@ -44,12 +44,9 @@ export const ChatsNav = () => {
                 }`}
                 aria-label={`Open chat: ${chat.title}`}
                 onClick={handleRedirectToChatOnMobile}
-                onContextMenu={(e) => {
-                  e.preventDefault();
-                  setContextMenuTop(e.pageY);
-                  setContextMenuLeft(e.pageX);
-                  setCurrentContextMenu(() => chat.id);
-                }}
+                onTouchStart={(e) => onTouchStart(e, chat.id)}
+                onTouchEnd={(e) => onTouchEnd(e)}
+                onContextMenu={(e) => onContextMenu(e, chat.id)}
               >
                 {chat.title}
               </Link>

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 
 export const useChatsNavContextMenu = () => {
   const [currentContextMenu, setCurrentContextMenu] = useState<string>("");
@@ -36,7 +36,30 @@ export const useChatsNavContextMenu = () => {
       document.removeEventListener("click", handleClickOutside);
       document.removeEventListener("contextmenu", handleContextMenuOutside);
     };
-  }, [currentContextMenu]); // Add currentContextMenu as a dependency
+  }, [currentContextMenu]);
+
+  const onContextMenu = (
+    e: React.MouseEvent<HTMLElement, MouseEvent>,
+    id: string
+  ) => {
+    e.preventDefault();
+    setContextMenuTop(e.pageY);
+    setContextMenuLeft(e.pageX);
+    setCurrentContextMenu(() => id);
+  };
+
+  const onTouchStart = (e: React.TouchEvent<HTMLElement>, id: string) => {
+    const timeout = setTimeout(() => {
+      setContextMenuTop(e.touches[0].pageY);
+      setContextMenuLeft(e.touches[0].pageX);
+      setCurrentContextMenu(() => id);
+    }, 500); // 500ms for long press
+    (e.target as HTMLElement).dataset.longPressTimeout = String(timeout);
+  };
+
+  const onTouchEnd = (e: React.TouchEvent<HTMLElement>) => {
+    clearTimeout(Number((e.target as HTMLElement).dataset.longPressTimeout));
+  };
 
   return {
     currentContextMenu,
@@ -45,5 +68,8 @@ export const useChatsNavContextMenu = () => {
     setContextMenuTop,
     contextMenuLeft,
     setContextMenuLeft,
+    onContextMenu,
+    onTouchStart,
+    onTouchEnd,
   };
 };
