@@ -41,8 +41,8 @@ export const SideNav = () => {
 
   return (
     <>
-      <section className="absolute top-0 left-0 z-10 flex text-white gap-x-2 mt-1 -ms-1.5">
-        <Link className="mt-1 ms-2.5" aria-label="Go to home page" to={"/"}>
+      <section className="absolute top-0 left-0 z-10 flex text-white gap-x-3 mt-1 -ms-1.5">
+        <Link className="mt-1 ms-2.5 text-lg" aria-label="Go to home page" to={"/"}>
           MyAIChat
         </Link>
         <button
@@ -54,14 +54,14 @@ export const SideNav = () => {
           onClick={toggleMenu}
           ref={openRef}
         >
-          <ArrowRightCircleIcon className="size-6 mt-1" />
+          <ArrowRightCircleIcon className="size-7 mt-1" />
         </button>
         <Link
           className="flex justify-center"
           to={"/chat"}
           aria-label="New conversation"
         >
-          <PencilSquareIcon className="size-6 text-white me-2 mt-1" />
+          <PencilSquareIcon className="size-7 text-white me-2 mt-1" />
         </Link>
       </section>
       <nav

@@ -28,7 +28,7 @@ export const HeaderNav = () => {
             onClick={toggleMenu}
             aria-label="Close sidebar menu"
           >
-            <ArrowLeftCircleIcon className="size-6 cursor-pointer text-white hover:text-gray-300 transition-colors duration-300 mt-1" />
+            <ArrowLeftCircleIcon className="size-7 cursor-pointer text-white hover:text-gray-300 transition-colors duration-300 mt-1" />
           </button>
         </li>
         <li className="bg-cop-1 hover:bg-cop-2 cursor-pointer text-white px-2 py-1 text-center w-10/12 mx-auto rounded-sm transition-colors duration-300 my-3">
