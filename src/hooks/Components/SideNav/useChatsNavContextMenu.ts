@@ -61,6 +61,12 @@ export const useChatsNavContextMenu = () => {
     clearTimeout(Number((e.target as HTMLElement).dataset.longPressTimeout));
   };
 
+  const closeContextMenu = () => {
+    setCurrentContextMenu("");
+    setContextMenuTop(0);
+    setContextMenuLeft(0);
+  };
+
   return {
     currentContextMenu,
     setCurrentContextMenu,
@@ -71,5 +77,6 @@ export const useChatsNavContextMenu = () => {
     onContextMenu,
     onTouchStart,
     onTouchEnd,
+    closeContextMenu,
   };
 };

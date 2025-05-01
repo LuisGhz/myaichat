@@ -16,12 +16,19 @@ export const ChatsNav = () => {
     onContextMenu,
     onTouchStart,
     onTouchEnd,
+    closeContextMenu,
   } = useChatsNavContextMenu();
 
   const handleDeleteChat = (id: string) => {
     deleteChatById(id);
     if (params.id === id) navigate("/chat");
   };
+
+  const handleRenameChat = (id: string) => {
+    console.log("Rename chat", id);
+    alert("Not available yet.");
+    closeContextMenu();
+  }
 
   const handleRedirectToChatOnMobile = () => {
     if (window.innerWidth < ScreensWidth.tablet) setIsMenuOpen((prev) => !prev);
@@ -52,10 +59,11 @@ export const ChatsNav = () => {
               </Link>
               <ContextMenu
                 chat={chat}
-                handleDeleteChat={handleDeleteChat}
                 currentContextMenu={currentContextMenu}
                 top={contextMenuTop}
                 left={contextMenuLeft}
+                handleDeleteChat={handleDeleteChat}
+                handleRenameChat={handleRenameChat}
               />
             </li>
           ))}

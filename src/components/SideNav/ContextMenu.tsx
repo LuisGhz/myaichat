@@ -1,6 +1,7 @@
 import { createPortal } from "react-dom";
 import { TrashIcon } from "assets/icons/TrashIcon";
 import { ChatSummary } from "types/chat/ChatSummary.type";
+import { PencilIcon } from "assets/icons/PencilIcon";
 
 type Props = {
   chat: ChatSummary;
@@ -8,14 +9,16 @@ type Props = {
   top: number;
   left: number;
   handleDeleteChat: (id: string) => void;
+  handleRenameChat: (id: string) => void;
 };
 
 export const ContextMenu = ({
   chat,
-  handleDeleteChat,
   currentContextMenu,
   top,
   left,
+  handleDeleteChat,
+  handleRenameChat,
 }: Props) => {
   return createPortal(
     <ul
@@ -27,7 +30,7 @@ export const ContextMenu = ({
         left: `${chat.id === currentContextMenu ? left : 0}px`,
       }}
     >
-      <li className="hover:bg-cop-10 transition-colors duration-300 ps-2 py-1">
+      <li className="hover:bg-cop-10 transition-colors duration-300 ps-2 py-1 border-b border-cop-6">
         <button
           className="cursor-pointer w-full text-red-700 flex gap-2"
           type="button"
@@ -39,6 +42,18 @@ export const ContextMenu = ({
           <span>Delete</span>
         </button>
       </li>
-    </ul>
-  , document.body);
+      <li className="hover:bg-cop-10 transition-colors duration-300 ps-2 py-1">
+        <button
+          className="cursor-pointer w-full text-white flex gap-2"
+          type="button"
+          aria-label="Rename chat"
+          onClick={() => handleRenameChat(chat.id)}
+        >
+          <PencilIcon className="w-5 min-w-5" />
+          <span>Rename</span>
+        </button>
+      </li>
+    </ul>,
+    document.body
+  );
 };
