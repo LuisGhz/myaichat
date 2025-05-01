@@ -14,6 +14,7 @@ import { XMarkIcon } from "assets/icons/XMarkIcon";
 import { usePrompts } from "hooks/usePrompts";
 import { PromptsURLParams } from "types/prompts/PromptsUrlParams.type";
 import { useParams } from "react-router";
+import { PlusIcon } from "assets/icons/PlusIcon";
 
 type Props = {
   register: UseFormRegister<PromptForm>;
@@ -91,10 +92,10 @@ export const MessagesForm = ({
         <span className="font-semibold">Messages</span>
         <button
           type="button"
-          className="bg-green-600 hover:bg-green-700 text-white px-2 py-1 rounded text-sm"
+          className="text-green-700 hover:text-green-500 p-2 text-sm cursor-pointer transition-colors duration-200 rounded-full hover:bg-cop-2"
           onClick={handleAddMessage}
         >
-          + Add Message
+          <PlusIcon />
         </button>
       </div>
       {fields.length === 0 && (
