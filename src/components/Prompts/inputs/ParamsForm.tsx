@@ -13,6 +13,7 @@ import { useParams } from "react-router";
 import { PromptsURLParams } from "types/prompts/PromptsUrlParams.type";
 import { ConfirmDialog } from "components/Dialogs/ConfirmDialog";
 import { XMarkIcon } from "assets/icons/XMarkIcon";
+import { PlusIcon } from "assets/icons/PlusIcon";
 
 type Props = {
   register: UseFormRegister<PromptForm>;
@@ -82,10 +83,10 @@ export const ParamsForm = ({ register, errors, control, getValues }: Props) => {
         <span className="font-semibold">Params</span>
         <button
           type="button"
-          className="bg-green-600 hover:bg-green-700 text-white px-2 py-1 rounded text-sm"
+          className="text-green-700 hover:text-green-500 hover:bg-cop-2 transition-colors duration-200 rounded-full p-1 text-sm cursor-pointer"
           onClick={handleAddParam}
         >
-          + Add Param
+          <PlusIcon />
         </button>
       </div>
       {fields.length === 0 && (
@@ -106,7 +107,7 @@ export const ParamsForm = ({ register, errors, control, getValues }: Props) => {
             {...register(`params.${idx}.value` as const)}
           />
           <button
-            className="text-red-700 bg-transparent font-bold rounded-4xl text-sm cursor-pointer"
+            className="text-red-700 hover:text-red-500 hover:bg-cop-2 transition-colors duration-200 p-1 font-bold rounded-4xl text-sm cursor-pointer"
             type="button"
             onClick={() => handleRemoveParam(idx)}
             aria-label="Delete param"

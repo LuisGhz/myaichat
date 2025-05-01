@@ -120,7 +120,7 @@ export const MessagesForm = ({
           />
           <button
             type="button"
-            className="text-red-700 hover:text-red-500 transition-colors hover:bg-cop-2 p-1 duration-200 bg-transparent font-bold rounded-full text-sm cursor-pointer absolute top-2 right-2"
+            className="text-red-700 hover:text-red-500 transition-colors hover:bg-cop-2 p-1 duration-200 bg-transparent font-bold rounded-full text-sm cursor-pointer absolute top-2 right-0"
             onClick={() => handleRemoveMessage(idx)}
             aria-label="Delete message"
           >
