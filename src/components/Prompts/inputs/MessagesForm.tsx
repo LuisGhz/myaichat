@@ -92,7 +92,7 @@ export const MessagesForm = ({
         <span className="font-semibold">Messages</span>
         <button
           type="button"
-          className="text-green-700 hover:text-green-500 p-2 text-sm cursor-pointer transition-colors duration-200 rounded-full hover:bg-cop-2"
+          className="text-green-700 hover:text-green-500 p-1 text-sm cursor-pointer transition-colors duration-200 rounded-full hover:bg-cop-2"
           onClick={handleAddMessage}
         >
           <PlusIcon />
