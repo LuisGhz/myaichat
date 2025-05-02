@@ -27,7 +27,7 @@ export const ConfirmDialog = ({
 
   return (
     <dialog
-      className="py-8 px-6 rounded-lg border-none shadow-lg w-11/12 min-w-[320px] max-w-[500px] text-center transition-opacity bg-cop-10 text-white fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50"
+      className="py-8 px-6 rounded-lg border-none shadow-lg w-11/12 min-w-[320px] max-w-[500px] text-center transition-opacity bg-cop-1 text-white fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50"
       ref={dialogRef}
       onClose={onCancel}
     >
