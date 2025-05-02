@@ -28,7 +28,8 @@ export const InputSection = ({ onEnter, isSending }: InputSectionProps) => {
 
   const onMessageKeyDown = (event: KeyboardEvent<HTMLTextAreaElement>) => {
     if (event.key === "Enter") {
-      if (event.shiftKey || window.innerWidth < ScreensWidth.smallDesktop) return;
+      if (event.shiftKey || window.innerWidth < ScreensWidth.smallDesktop)
+        return;
       event.preventDefault();
       sendMessage();
     }
@@ -72,12 +73,11 @@ export const InputSection = ({ onEnter, isSending }: InputSectionProps) => {
   return (
     <>
       <section
-        className="my-4 flex justify-center items-end bg-cop-5 p-2 rounded-xl w-11/12 md:w-10/12 mx-auto relative h-auto"
+        className="my-4 flex-col bg-cop-1 p-2 rounded-b-xl rounded-t-2xl w-11/12 md:w-10/12 mx-auto relative h-auto"
         aria-label="Message input area"
       >
-        <AttachFile onSelectImage={onSelectImage} />
         <div
-          className={`input-container w-8/12 lg:w-9/12 xl:w-10/12 transition-all duration-500 z-10 py-2 px-4 overflow-y-auto bg-cop-6 border-cop-9 border rounded-lg text-white hide-scrollbar`}
+          className={`input-container w-full transition-all duration-500 z-10 py-2 px-4 overflow-y-auto bg-cop-1 text-white hide-scrollbar`}
           ref={textareaContainerRef}
         >
           {selectedImage && (
@@ -127,7 +127,10 @@ export const InputSection = ({ onEnter, isSending }: InputSectionProps) => {
             </div>
           </div>
         </div>
-        <Microphone onTranscription={onTranscription} />
+        <div className="flex justify-between w-full px-2 mt-1">
+          <AttachFile onSelectImage={onSelectImage} />
+          <Microphone onTranscription={onTranscription} />
+        </div>
       </section>
     </>
   );

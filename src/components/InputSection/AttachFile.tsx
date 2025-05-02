@@ -46,7 +46,7 @@ export const AttachFile = ({ onSelectImage }: Props) => {
 
   return (
     <button
-      className={`text-white cursor-pointer mb-1 transition-all duration-200 delay-150 absolute bottom-2 left-[2%] md:left-4 xl:left-[2.5%] p-1 rounded-lg hover:bg-cop-6`}
+      className={`text-white cursor-pointer mb-1 transition-all duration-200 delay-150 p-1 rounded-full hover:bg-cop-6 relative`}
       type="button"
       aria-label="Attach file"
       onClick={() => {
@@ -54,9 +54,9 @@ export const AttachFile = ({ onSelectImage }: Props) => {
       }}
       ref={buttonRef}
     >
-      <PlusIcon className="size-8" />
+      <PlusIcon className="size-5" />
       <ul
-        className="absolute hidden bg-cop-4 text-white rounded-lg mt-2 w-40 shadow-lg transition-all duration-200 delay-150 bottom-full -right-28 md:-right-2 z-50"
+        className="hidden bg-cop-4 text-white rounded-lg mt-2 w-40 shadow-lg transition-all duration-200 delay-150 absolute z-10 bottom-full"
         ref={optionsRef}
       >
         <li className="py-1.5 hover:bg-cop-6 rounded-t-lg transition-colors duration-200">
