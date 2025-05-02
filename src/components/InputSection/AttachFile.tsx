@@ -28,6 +28,8 @@ export const AttachFile = ({ onSelectImage }: Props) => {
   }, []);
 
   const makeClickToInputFile = () => {
+    if (!optionsRef.current?.classList.contains("hidden"))
+      optionsRef.current?.classList.add("hidden");
     inputFileRef.current?.click();
   };
 
