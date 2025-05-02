@@ -2,7 +2,7 @@ import { ScreensWidth } from "consts/ScreensWidth";
 import { AppContext } from "context/AppContext";
 import { useContext } from "react";
 import { Link, useNavigate, useParams } from "react-router";
-import { ContextMenu } from "./ContextMenu";
+import { ChatsContextMenu } from "./ChatsContextMenu";
 import { useChatsNavContextMenu } from "hooks/Components/SideNav/useChatsNavContextMenu";
 
 export const ChatsNav = () => {
@@ -57,7 +57,7 @@ export const ChatsNav = () => {
               >
                 {chat.title}
               </Link>
-              <ContextMenu
+              <ChatsContextMenu
                 chat={chat}
                 currentContextMenu={currentContextMenu}
                 top={contextMenuTop}

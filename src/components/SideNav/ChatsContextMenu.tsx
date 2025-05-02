@@ -12,7 +12,7 @@ type Props = {
   handleRenameChat: (id: string) => void;
 };
 
-export const ContextMenu = ({
+export const ChatsContextMenu = ({
   chat,
   currentContextMenu,
   top,
