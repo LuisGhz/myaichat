@@ -101,7 +101,7 @@ export const InputSection = ({ onEnter, isSending }: InputSectionProps) => {
               Type a message
             </label>
             <TextareaAutosize
-              className="message-textarea outline-none w-10/12 mt-0.5 overflow-y-auto resize-none hide-scrollbar"
+              className="message-textarea outline-none w-11/12 mt-0.5 overflow-y-auto resize-none hide-scrollbar"
               id="messageInput"
               placeholder="Message MyAIChat"
               onKeyDown={onMessageKeyDown}
