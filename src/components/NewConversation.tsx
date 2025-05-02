@@ -10,7 +10,12 @@ type Props = {
   setPromptId: Dispatch<SetStateAction<string>>;
 };
 
-export const NewConversation = ({ model, setModel, promptId, setPromptId }: Props) => {
+export const NewConversation = ({
+  model,
+  setModel,
+  promptId,
+  setPromptId,
+}: Props) => {
   const { prompts } = usePrompts();
 
   const updateModel = (e: ChangeEvent<HTMLSelectElement>) => {
@@ -20,7 +25,6 @@ export const NewConversation = ({ model, setModel, promptId, setPromptId }: Prop
   const updatePrompt = (e: ChangeEvent<HTMLSelectElement>) => {
     setPromptId(e.target.value);
   };
-
 
   return (
     <div className="text-white text-center mt-10">
@@ -35,11 +39,7 @@ export const NewConversation = ({ model, setModel, promptId, setPromptId }: Prop
           className="bg-cop-1 text-white border border-gray-700 rounded px-4 py-2 focus:outline-none focus:ring-0 focus:bg-cop-2 cursor-pointer"
         >
           {MODELS.map(({ name, value }) => (
-            <option
-              key={value}
-              value={value}
-              className="bg-gray-800 text-white"
-            >
+            <option key={value} value={value} className="text-white">
               {name}
             </option>
           ))}
@@ -54,11 +54,7 @@ export const NewConversation = ({ model, setModel, promptId, setPromptId }: Prop
         >
           <option value="">Select a prompt if you wish</option>
           {prompts?.prompts.map((prompt) => (
-            <option
-              key={prompt.id}
-              value={prompt.id}
-              className="bg-gray-800 text-white"
-            >
+            <option key={prompt.id} value={prompt.id} className="text-white">
               {prompt.name}
             </option>
           ))}
