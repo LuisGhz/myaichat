@@ -26,8 +26,9 @@ export const usePromptForm = () => {
     };
 
     try {
+      const res = await createPromptService(req);
       toastSuccess("Prompt created successfully!");
-      return await createPromptService(req);
+      return res;
     } catch (error) {
       toastError(`${error}`);
     }
