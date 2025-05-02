@@ -1,6 +1,6 @@
 import React from "react";
 
-export const useChatsNavContextMenu = () => {
+export const useContextMenu = () => {
   const onTouchStart = (
     e: React.TouchEvent<HTMLElement>,
     callback: () => void
