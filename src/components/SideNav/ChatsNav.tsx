@@ -2,7 +2,7 @@ import { ScreensWidth } from "consts/ScreensWidth";
 import { AppContext } from "context/AppContext";
 import { ReactNode, useContext, useRef, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router";
-import { useChatsNavContextMenu } from "hooks/useContextMenu";
+import { useContextMenu } from "hooks/useContextMenu";
 import { ContextMenu } from "components/ContextMenu";
 import { TrashIcon } from "assets/icons/TrashIcon";
 import { PencilIcon } from "assets/icons/PencilIcon";
@@ -12,7 +12,7 @@ export const ChatsNav = () => {
   const { chats, deleteChatById, setIsMenuOpen } = useContext(AppContext);
   const navigate = useNavigate();
   const params = useParams();
-  const { onTouchStart, onTouchEnd } = useChatsNavContextMenu();
+  const { onTouchStart, onTouchEnd } = useContextMenu();
   const [elements, setElements] = useState<ReactNode[]>([]);
   const [isContextMenuOpen, setIsContextMenuOpen] = useState(false);
   const triggeredContextMenu = useRef<HTMLElement>(null);
