@@ -1,11 +1,11 @@
+import { useState } from "react";
+import { useToast } from "./useToast";
 import {
   deletePromptMessageService,
   deletePromptParamService,
   getPromptByIdService,
   getPromptsService,
 } from "services/prompts.service";
-import { useToast } from "./useToast";
-import { useEffect, useState } from "react";
 import { GetAllPromptsRes } from "types/prompts/GetAllPromptsRes.type";
 
 export const usePrompts = () => {
@@ -14,11 +14,6 @@ export const usePrompts = () => {
     undefined
   );
   const [loading, setLoading] = useState(false);
-
-  useEffect(() => {
-    getPrompts();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
 
   const getPrompts = async () => {
     try {
@@ -69,5 +64,6 @@ export const usePrompts = () => {
     getPromptById,
     deletePromptParam,
     deletePromptMessage,
+    getPrompts,
   };
 };

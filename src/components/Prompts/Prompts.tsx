@@ -2,15 +2,20 @@ import { TrashIcon } from "assets/icons/TrashIcon";
 import { ContextMenu } from "components/ContextMenu";
 import { useContextMenu } from "hooks/useContextMenu";
 import { usePrompts } from "hooks/usePrompts";
-import React, { useState, ReactNode, useRef } from "react";
+import React, { useState, ReactNode, useRef, useEffect } from "react";
 import { Link } from "react-router";
 
 export const Prompts = () => {
   const [isContextMenuOpen, setIsContextMenuOpen] = useState(false);
   const [elements, setElements] = useState<ReactNode[]>([]);
   const triggeredContextMenu = useRef<HTMLElement>(null);
-  const { prompts } = usePrompts();
+  const { prompts, getPrompts } = usePrompts();
   const { onTouchStart, onTouchEnd } = useContextMenu();
+
+  useEffect(() => {
+    getPrompts();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const handleDeletePrompt = (id: string) => () => {
     console.log("Delete prompt", id);
