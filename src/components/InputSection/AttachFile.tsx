@@ -61,8 +61,14 @@ export const AttachFile = ({ onSelectImage }: Props) => {
         className="hidden bg-cop-4 text-white rounded-lg mt-2 w-40 shadow-lg transition-all duration-200 delay-150 absolute z-10 bottom-full"
         ref={optionsRef}
       >
-        <li className="py-1.5 hover:bg-cop-6 rounded-t-lg transition-colors duration-200">
-          <Link to="/chat">New conversation</Link>
+        <li className="hover:bg-cop-6 rounded-t-lg transition-colors duration-200">
+          <Link
+            className="block py-1.5"
+            to="/chat"
+            onClick={() => console.log("asd")}
+          >
+            <span>New conversation</span>
+          </Link>
         </li>
         <li
           className="py-1.5 hover:bg-cop-6 rounded-b-lg transition-colors duration-200"
