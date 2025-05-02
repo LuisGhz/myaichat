@@ -7,6 +7,7 @@ import {
   useState,
 } from "react";
 import { createPortal } from "react-dom";
+import { v1 } from "uuid";
 
 type Props = {
   elements: ReactNode[];
@@ -23,7 +24,16 @@ export const ContextMenu = ({
 }: Props) => {
   const [top, setTop] = useState<number>(0);
   const [left, setLeft] = useState<number>(0);
+  const [uuid, setUuid] = useState<string>(`context-menu-${v1()}`);
   const ulRef = useRef<HTMLUListElement>(null);
+
+  useEffect(() => {
+    const uuid = v1().split("-")[0];
+    const className = `context-menu-${uuid}`;
+    if (ulRef.current) {
+      setUuid(className);
+    }
+  }, []);
 
   useEffect(() => {
     if (!isOpen) {
@@ -44,7 +54,7 @@ export const ContextMenu = ({
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (event.target instanceof HTMLElement) {
-        const isContextMenu = event.target.closest(".global-context-menu");
+        const isContextMenu = event.target.closest(uuid);
         const isTriggeredElement = triggered?.contains(event.target);
         if (!isContextMenu && !isTriggeredElement) setIsOpen(false);
       }
@@ -53,7 +63,7 @@ export const ContextMenu = ({
     const handleContextMenuOutside = (event: MouseEvent) => {
       if (event.target instanceof HTMLElement) {
         // Check if the right-click target is inside the currently open context menu
-        const isContextMenu = event.target.closest(".global-context-menu");
+        const isContextMenu = event.target.closest(uuid);
         // Check if the right-click target is the element that triggered the menu
         const isTriggeredElement = triggered?.contains(event.target);
         // If the right-click is neither on the link that opened the menu nor inside the menu itself, close it.
@@ -68,11 +78,11 @@ export const ContextMenu = ({
       document.removeEventListener("click", handleClickOutside);
       document.removeEventListener("contextmenu", handleContextMenuOutside);
     };
-  }, [setIsOpen, triggered]);
+  }, [setIsOpen, triggered, uuid]);
 
   return createPortal(
     <ul
-      className={`global-context-menu absolute w-36 h-auto z-20 bg-cop-5 hidden rounded-sm ${
+      className={`${uuid} absolute w-36 h-auto z-20 bg-cop-5 hidden rounded-sm ${
         isOpen ? "block!" : ""
       }`}
       style={{
