@@ -8,25 +8,37 @@ import { UpdatePromptReq } from "types/prompts/UpdatePromptReq.type";
 
 export const getPromptsService = () => {
   return apiClient.get<GetAllPromptsRes>("/custom-prompts/all");
-}
+};
 
 export const getPromptByIdService = (id: string) => {
   return apiClient.get<CustomPrompt>(`/custom-prompts/${id}`);
-}
+};
 
 export const createPromptService = (req: NewPromptReq) => {
   return apiClient.post<NewPromptRes, NewPromptReq>("/custom-prompts", req);
-}
+};
 
 export const updatePromptService = (req: UpdatePromptReq) => {
   const { id, ...rest } = req;
-  return apiClient.patch<UpdatedPromptRes, unknown>(`/custom-prompts/${id}/update`, rest);
-}
+  return apiClient.patch<UpdatedPromptRes, unknown>(
+    `/custom-prompts/${id}/update`,
+    rest
+  );
+};
+
+export const deletePromptService = (promptId: string) => {
+  return apiClient.del(`/custom-prompts/${promptId}/delete`);
+};
 
 export const deletePromptParamService = (promptId: string, paramId: string) => {
   return apiClient.del(`/custom-prompts/${promptId}/${paramId}/delete-param`);
-}
+};
 
-export const deletePromptMessageService = (promptId: string, messageId: string) => {
-  return apiClient.del(`/custom-prompts/${promptId}/${messageId}/delete-message`);
-}
+export const deletePromptMessageService = (
+  promptId: string,
+  messageId: string
+) => {
+  return apiClient.del(
+    `/custom-prompts/${promptId}/${messageId}/delete-message`
+  );
+};

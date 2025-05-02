@@ -3,6 +3,7 @@ import { useToast } from "./useToast";
 import {
   deletePromptMessageService,
   deletePromptParamService,
+  deletePromptService,
   getPromptByIdService,
   getPromptsService,
 } from "services/prompts.service";
@@ -58,6 +59,17 @@ export const usePrompts = () => {
     }
   };
 
+  const deletePrompt = async (promptId: string) => {
+    try {
+      setLoading(true);
+      await deletePromptService(promptId);
+    } catch (error) {
+      toastError(`${error}`);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return {
     prompts,
     loading,
@@ -65,5 +77,6 @@ export const usePrompts = () => {
     deletePromptParam,
     deletePromptMessage,
     getPrompts,
+    deletePrompt,
   };
 };

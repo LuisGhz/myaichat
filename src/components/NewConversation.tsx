@@ -1,6 +1,6 @@
 import { MODELS } from "consts/Models";
 import { usePrompts } from "hooks/usePrompts";
-import { ChangeEvent, Dispatch, SetStateAction } from "react";
+import { ChangeEvent, Dispatch, SetStateAction, useEffect } from "react";
 import { Models } from "types/chat/Models.type";
 
 type Props = {
@@ -16,7 +16,15 @@ export const NewConversation = ({
   promptId,
   setPromptId,
 }: Props) => {
-  const { prompts } = usePrompts();
+  const { prompts, getPrompts } = usePrompts();
+
+  useEffect(() => {
+    const fetchPrompts = async () => {
+      await getPrompts();
+    };
+    fetchPrompts();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const updateModel = (e: ChangeEvent<HTMLSelectElement>) => {
     setModel(e.target.value as Models);

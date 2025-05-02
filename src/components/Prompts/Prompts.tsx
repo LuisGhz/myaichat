@@ -9,7 +9,7 @@ export const Prompts = () => {
   const [isContextMenuOpen, setIsContextMenuOpen] = useState(false);
   const [elements, setElements] = useState<ReactNode[]>([]);
   const triggeredContextMenu = useRef<HTMLElement>(null);
-  const { prompts, getPrompts } = usePrompts();
+  const { prompts, getPrompts, deletePrompt } = usePrompts();
   const { onTouchStart, onTouchEnd } = useContextMenu();
 
   useEffect(() => {
@@ -18,7 +18,7 @@ export const Prompts = () => {
   }, []);
 
   const handleDeletePrompt = (id: string) => () => {
-    console.log("Delete prompt", id);
+    deletePrompt(id);
     setIsContextMenuOpen(false);
   };
 
