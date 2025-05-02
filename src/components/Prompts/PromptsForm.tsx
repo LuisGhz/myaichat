@@ -100,11 +100,11 @@ export const PromptsForm = () => {
           )}
           <section className="flex gap-5">
             <button
-              className="mt-8 w-36 p-2 bg-blue-600 hover:bg-blue-700 rounded-md font-semibold cursor-pointer"
+              className="mt-8 w-36 bg-blue-600 hover:bg-blue-700 rounded-md font-semibold cursor-pointer"
               type="button"
             >
-              <Link to={"/prompts"} className="text-white">
-                Go back
+              <Link className="text-white flex justify-center items-center h-full align-middle" to={"/prompts"}>
+                <span>Go back</span>
               </Link>
             </button>
             <button
