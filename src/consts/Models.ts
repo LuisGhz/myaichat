@@ -57,8 +57,8 @@ export const MODELS: Models[] = [
       output: 0.3,
     },
     metadata: {
-      contextWindow: 1_000_000,
-      maxOutputTokens: 0,
+      contextWindow: 1_048_576,
+      maxOutputTokens: 8_192,
       knowledgeCutoff: "Jun 2024",
     },
   },
@@ -71,8 +71,8 @@ export const MODELS: Models[] = [
       output: 0.4,
     },
     metadata: {
-      contextWindow: 1_000_000,
-      maxOutputTokens: 0,
+      contextWindow: 1_048_576,
+      maxOutputTokens: 8_192,
       knowledgeCutoff: "Jun 2024",
     },
   },
@@ -85,8 +85,8 @@ export const MODELS: Models[] = [
       output: 0.6,
     },
     metadata: {
-      contextWindow: 128_000,
-      maxOutputTokens: 16384,
+      contextWindow: 1_048_576,
+      maxOutputTokens: 65_536,
       knowledgeCutoff: "Jan 2025",
     },
   },
@@ -99,8 +99,8 @@ export const MODELS: Models[] = [
       output: 10,
     },
     metadata: {
-      contextWindow: 1_000_000,
-      maxOutputTokens: 0,
+      contextWindow: 1_048_576,
+      maxOutputTokens: 65_536,
       knowledgeCutoff: "Jan 2025",
     },
   },
