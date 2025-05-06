@@ -7,7 +7,7 @@ import { InputSection } from "./InputSection/InputSection";
 import { NewMessageReq } from "types/chat/NewMessageReq.type";
 import { AppContext } from "context/AppContext";
 import { NewConversation } from "./NewConversation";
-import { Models } from "types/chat/Models.type";
+import { ModelsValues } from "types/chat/ModelsValues.type";
 import { CurrentModelSummary } from "./CurrentModelSummary";
 import { ChatMessagesRes } from "types/chat/ChatMessagesRes.type";
 import { ChatsLoading } from "./ChatsLoading";
@@ -15,7 +15,7 @@ import { ChatsLoading } from "./ChatsLoading";
 export const CurrentChat = () => {
   const { getAllChatsForList } = useContext(AppContext);
   const [messages, setMessages] = useState<Message[]>([]);
-  const [model, setModel] = useState<Models>("gpt-4o-mini");
+  const [model, setModel] = useState<ModelsValues>("gemini-2.0-flash");
   const [totalPromptTokens, setTotalPromptTokens] = useState(0);
   const [totalCompletionTokens, setTotalCompletionTokens] = useState(0);
   const [promptId, setPromptId] = useState<string>("");
@@ -88,7 +88,7 @@ export const CurrentChat = () => {
 
   const resetState = () => {
     setMessages([]);
-    setModel("gpt-4o-mini");
+    setModel("gemini-2.0-flash");
     setPromptId("");
     setCurrentModel("");
     setPage(() => 0);
