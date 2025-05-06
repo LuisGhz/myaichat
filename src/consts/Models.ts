@@ -91,7 +91,7 @@ export const MODELS: ModelInfo[] = [
     },
   },
   {
-    name: "Gemini 2.5 Pro preview 03 25",
+    name: "Gemini 2.5 Pro Preview 03 25",
     value: "gemini-2.5-pro-preview-03-25",
     link: "https://cloud.google.com/vertex-ai/generative-ai/docs/models/gemini/2-5-pro?hl=es-419",
     price: {
