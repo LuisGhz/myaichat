@@ -11,7 +11,7 @@ type ModelMetadata = {
   knowledgeCutoff: string;
 }
 
-type Models = {
+export type ModelInfo = {
   name: string;
   value: ModelsValues;
   link: string;
@@ -19,7 +19,7 @@ type Models = {
   metadata: ModelMetadata;
 };
 
-export const MODELS: Models[] = [
+export const MODELS: ModelInfo[] = [
   {
     name: "GPT 4o",
     value: "gpt-4o",
