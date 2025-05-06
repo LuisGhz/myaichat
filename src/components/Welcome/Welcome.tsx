@@ -11,7 +11,7 @@ export const Welcome = () => {
         {MODELS.map((model) => (
           <li className="link-container text-lg" key={model.value}>
             <a
-              className="text-blue-500 underline cursor-pointer relative"
+              className="text-blue-500 cursor-pointer relative"
               href={model.link}
               target="_blank"
             >
