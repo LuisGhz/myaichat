@@ -1,9 +1,9 @@
-import { Models } from "./Models.type";
+import { ModelsValues } from "./ModelsValues.type";
 
 export type NewMessageReq = {
   chatId?: string;
   prompt: string;
-  model?: Models;
+  model?: ModelsValues;
   image? : File;
   promptId?: string;
 }
