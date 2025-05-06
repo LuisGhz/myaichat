@@ -1,11 +1,11 @@
 import { MODELS } from "consts/Models";
 import { usePrompts } from "hooks/usePrompts";
 import { ChangeEvent, Dispatch, SetStateAction, useEffect } from "react";
-import { Models } from "types/chat/Models.type";
+import { ModelsValues } from "types/chat/ModelsValues.type";
 
 type Props = {
-  model: Models;
-  setModel: Dispatch<SetStateAction<Models>>;
+  model: ModelsValues;
+  setModel: Dispatch<SetStateAction<ModelsValues>>;
   promptId: string;
   setPromptId: Dispatch<SetStateAction<string>>;
 };
@@ -27,7 +27,7 @@ export const NewConversation = ({
   }, []);
 
   const updateModel = (e: ChangeEvent<HTMLSelectElement>) => {
-    setModel(e.target.value as Models);
+    setModel(e.target.value as ModelsValues);
   };
 
   const updatePrompt = (e: ChangeEvent<HTMLSelectElement>) => {
