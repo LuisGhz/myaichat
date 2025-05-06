@@ -89,7 +89,7 @@ export const ChatsNav = () => {
             >
               <Link
                 to={`/chat/${chat.id}`}
-                className={`block whitespace-nowrap overflow-hidden text-ellipsis h-11 px-2 py-2 ${
+                className={`block whitespace-nowrap overflow-hidden text-ellipsis w-full h-11 px-2 py-2 ${
                   chat.id === params.id ? "font-bold" : ""
                 }`}
                 aria-label={`Open chat: ${chat.title}`}
