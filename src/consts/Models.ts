@@ -13,6 +13,7 @@ type ModelMetadata = {
 
 export type ModelInfo = {
   name: string;
+  shortName: string;
   value: ModelsValues;
   link: string;
   price: ModelPrice;
@@ -22,6 +23,7 @@ export type ModelInfo = {
 export const MODELS: ModelInfo[] = [
   {
     name: "GPT 4o",
+    shortName: "4o",
     value: "gpt-4o",
     link: "https://platform.openai.com/docs/models/gpt-4o",
     price: {
@@ -36,6 +38,7 @@ export const MODELS: ModelInfo[] = [
   },
   {
     value: "gpt-4o-mini",
+    shortName: "4oM",
     name: "GPT 4o Mini",
     link: "https://platform.openai.com/docs/models/gpt-4o-mini",
     price: {
@@ -50,6 +53,7 @@ export const MODELS: ModelInfo[] = [
   },
   {
     name: "Gemini 2.0 Flash Lite",
+    shortName: "2.0FL",
     value: "gemini-2.0-flash-lite",
     link: "https://cloud.google.com/vertex-ai/generative-ai/docs/models/gemini/2-0-flash-lite?hl=es-419",
     price: {
@@ -64,6 +68,7 @@ export const MODELS: ModelInfo[] = [
   },
   {
     name: "Gemini 2.0 Flash",
+    shortName: "2.0F",
     value: "gemini-2.0-flash",
     link: "https://cloud.google.com/vertex-ai/generative-ai/docs/models/gemini/2-0-flash?hl=es-419",
     price: {
@@ -78,6 +83,7 @@ export const MODELS: ModelInfo[] = [
   },
   {
     name: "Gemini 2.5 Flash Preview 04 17",
+    shortName: "2.5FP",
     value: "gemini-2.5-flash-preview-04-17",
     link: "https://cloud.google.com/vertex-ai/generative-ai/docs/models/gemini/2-5-flash?hl=es-419",
     price: {
@@ -92,6 +98,7 @@ export const MODELS: ModelInfo[] = [
   },
   {
     name: "Gemini 2.5 Pro Preview 03 25",
+    shortName: "2.5PP",
     value: "gemini-2.5-pro-preview-03-25",
     link: "https://cloud.google.com/vertex-ai/generative-ai/docs/models/gemini/2-5-pro?hl=es-419",
     price: {
