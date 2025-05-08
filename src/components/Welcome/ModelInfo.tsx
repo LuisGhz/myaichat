@@ -10,7 +10,6 @@ export const ModelInfoC = ({ model }: Props) => {
 
   return (
     <section className="metadata bottom-full left-0">
-      <p className="font-bold">{model.name}</p>
       <p>Context Window: {fNumber(model.metadata.contextWindow)}</p>
       <p>Max Output Tokens: {model.metadata.maxOutputTokens}</p>
       <p>Knowledge Cutoff: {model.metadata.knowledgeCutoff}</p>
