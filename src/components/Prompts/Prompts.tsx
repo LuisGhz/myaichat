@@ -64,9 +64,9 @@ export const Prompts = () => {
             <h2 className="text-xl font-semibold">Available Prompts</h2>
             {/* List of available prompts */}
             <ul className="pl-5">
-              {prompts.prompts.map((prompt) => (
+              {prompts.prompts.map((prompt, idx) => (
                 <li
-                  className="text-blue-500 cursor-pointer"
+                  className={`text-blue-500 cursor-pointer ${idx < prompts.prompts.length - 1 ? "mb-2" : ""}`}
                   key={prompt.id}
                   onContextMenu={handleContextMenu(prompt.id)}
                   onTouchStart={handleTouchStart(prompt.id)}
