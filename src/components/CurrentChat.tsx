@@ -156,7 +156,6 @@ export const CurrentChat = () => {
   return (
     <>
       <div className="flex flex-col h-full max-w-full md:max-w-11/12 mx-auto pt-6.5 md:pt-2 lg:px-2">
-        {isChatLoading ? "is" : "not"}
         {messages.length === 0 && !isChatLoading && (
           <section className="grow">
             <NewConversation
@@ -167,7 +166,9 @@ export const CurrentChat = () => {
             />
           </section>
         )}
-        {isChatLoading && page === 0 && messages.length === 0 && <ChatsLoading />}
+        {isChatLoading && page === 0 && messages.length === 0 && (
+          <ChatsLoading />
+        )}
         {messages.length > 0 && (
           <section
             className="grow overflow-y-auto hide-scrollbar mt-0.5 px-1 md:px-5"
