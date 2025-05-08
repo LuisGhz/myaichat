@@ -35,7 +35,7 @@ export const NewConversation = ({
   };
 
   return (
-    <div className="text-white text-center mt-10">
+    <div className="text-white text-center">
       <h1 className="text-2xl">Hello, what can assist you today?</h1>
       <div className="mt-5 flex flex-col gap-4 items-center">
         <select
