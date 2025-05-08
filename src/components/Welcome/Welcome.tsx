@@ -43,7 +43,7 @@ export const Welcome = () => {
             onTouchEnd={handleTouchEnd(model.value, false)}
           >
             <a
-              className="text-blue-500 cursor-pointer relative"
+              className="text-blue-500 hover:text-blue-400 transition-colors duration-100 cursor-pointer relative"
               href={model.link}
               target="_blank"
               onTouchStart={handleTouchStart(model.value, true)}
