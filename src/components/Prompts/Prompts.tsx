@@ -63,7 +63,7 @@ export const Prompts = () => {
           <div className="flex flex-col gap-2">
             <h2 className="text-xl font-semibold">Available Prompts</h2>
             {/* List of available prompts */}
-            <ul className="pl-5">
+            <ul>
               {prompts.prompts.map((prompt, idx) => (
                 <li
                   className={`text-blue-500 cursor-pointer ${idx < prompts.prompts.length - 1 ? "mb-2" : ""}`}
