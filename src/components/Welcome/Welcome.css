@@ -3,7 +3,7 @@
   width: 20rem;
   background-color: #191919;
   z-index: 20;
-  border-radius: .5rem;
+  border-radius: 0.5rem;
   max-height: 0;
   overflow: hidden;
   transition-property: max-height;
@@ -11,6 +11,12 @@
   transition-timing-function: linear;
 }
 
-.link-container:hover .metadata {
+.link-container--active .metadata {
   max-height: 10em;
+}
+
+@media (pointer: fine) and (hover: hover) and (min-width: 1200px) {
+  .link-container:hover .metadata {
+    max-height: 10em;
+  }
 }
