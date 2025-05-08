@@ -156,7 +156,7 @@ export const CurrentChat = () => {
   return (
     <>
       <div className="flex flex-col h-full max-w-full md:max-w-11/12 mx-auto pt-6.5 md:pt-2 lg:px-2">
-        {messages.length === 0 && !isChatLoading && (
+        {messages.length === 0 && !isChatLoading && !params.id && (
           <section className="grow">
             <NewConversation
               model={model}
@@ -165,6 +165,9 @@ export const CurrentChat = () => {
               setPromptId={setPromptId}
             />
           </section>
+        )}
+        {messages.length === 0 && !isChatLoading && (
+          <section className="grow"></section>
         )}
         {isChatLoading && page === 0 && messages.length === 0 && (
           <ChatsLoading />
