@@ -22,6 +22,7 @@ export const CurrentChat = () => {
   const [currentModel, setCurrentModel] = useState("");
   const [isFirstLoaded, setIsFirstLoaded] = useState(false);
   const [page, setPage] = useState(0);
+  const [isWelcomeLoaded, setIsWelcomeLoaded] = useState(false);
   const [isUpdatingMessagesFromScroll, setIsUpdatingMessagesFromScroll] =
     useState(false);
   const params = useParams();
@@ -158,17 +159,18 @@ export const CurrentChat = () => {
     <>
       <div className="flex flex-col h-full max-w-full md:max-w-11/12 mx-auto pt-6.5 md:pt-2 lg:px-2">
         {messages.length === 0 && !isChatLoading && !params.id && (
-          <section className="grow flex items-end justify-center">
+          <section className="grow flex items-center justify-center">
             <NewConversation
               model={model}
               setModel={setModel}
               promptId={promptId}
               setPromptId={setPromptId}
+              setIsWelcomeLoaded={setIsWelcomeLoaded}
             />
           </section>
         )}
         {/* Add empty to keep view constancy while ChatsLoading is showing up */}
-        {messages.length === 0 && !isChatLoading && (
+        {messages.length === 0 && !isChatLoading && !isWelcomeLoaded && (
           <div className="grow"></div>
         )}
         {isChatLoading && page === 0 && messages.length === 0 && (

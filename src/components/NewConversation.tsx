@@ -8,6 +8,7 @@ type Props = {
   setModel: Dispatch<SetStateAction<ModelsValues>>;
   promptId: string;
   setPromptId: Dispatch<SetStateAction<string>>;
+  setIsWelcomeLoaded: Dispatch<SetStateAction<boolean>>;
 };
 
 export const NewConversation = ({
@@ -15,6 +16,7 @@ export const NewConversation = ({
   setModel,
   promptId,
   setPromptId,
+  setIsWelcomeLoaded
 }: Props) => {
   const { prompts, getPrompts } = usePrompts();
 
@@ -23,6 +25,7 @@ export const NewConversation = ({
       await getPrompts();
     };
     fetchPrompts();
+    setIsWelcomeLoaded(true);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
