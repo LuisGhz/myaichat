@@ -1,5 +1,5 @@
 import { useChats } from "hooks/useChats";
-import { useEffect, useState, useContext } from "react";
+import { useEffect, useState, useContext, useRef } from "react";
 import { useNavigate, useParams } from "react-router";
 import { Message } from "types/chat/Message.type";
 import { Messages } from "./Messages/Messages";
@@ -34,11 +34,12 @@ export const CurrentChat = () => {
     setIsEmptyPage,
     isChatLoading,
   } = useChats();
+  const isSendingFirstMessage = useRef(false);
 
   useEffect(() => {
     (async () => {
-      resetState();
-      if (!params.id) return;
+      if (!isSendingFirstMessage.current) resetState();
+      if (!params.id || isSendingFirstMessage.current) return;
 
       const res = await getChatMessages(params.id);
       if (!res) {
@@ -123,9 +124,13 @@ export const CurrentChat = () => {
       });
 
       if (!params.id && res.chatId) {
+        isSendingFirstMessage.current = true;
         navigate(`/chat/${res.chatId}`, { replace: true });
         setCurrentModel(model);
         getAllChatsForList();
+        setTimeout(() => {
+          isSendingFirstMessage.current = false;
+        }, 250);
       }
     }
   };
@@ -162,7 +167,7 @@ export const CurrentChat = () => {
             />
           </section>
         )}
-        {isChatLoading && page === 0 && <ChatsLoading />}
+        {isChatLoading && page === 0 && messages.length === 0 && <ChatsLoading />}
         {messages.length > 0 && (
           <section
             className="grow overflow-y-auto hide-scrollbar mt-0.5 px-1 md:px-5"
