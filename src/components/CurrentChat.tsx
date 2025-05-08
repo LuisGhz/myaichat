@@ -128,6 +128,7 @@ export const CurrentChat = () => {
         navigate(`/chat/${res.chatId}`, { replace: true });
         setCurrentModel(model);
         getAllChatsForList();
+        // Add a small delay to ensure the state is not going to be reset on useEffect
         setTimeout(() => {
           isSendingFirstMessage.current = false;
         }, 250);
@@ -166,8 +167,9 @@ export const CurrentChat = () => {
             />
           </section>
         )}
+        {/* Add empty to keep view constancy while ChatsLoading is showing up */}
         {messages.length === 0 && !isChatLoading && (
-          <section className="grow"></section>
+          <div className="grow"></div>
         )}
         {isChatLoading && page === 0 && messages.length === 0 && (
           <ChatsLoading />
