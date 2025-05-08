@@ -14,7 +14,7 @@ export const Prompts = () => {
 
   useEffect(() => {
     getPrompts();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleDeletePrompt = (id: string) => () => {
@@ -66,7 +66,9 @@ export const Prompts = () => {
             <ul>
               {prompts.prompts.map((prompt, idx) => (
                 <li
-                  className={`text-blue-500 cursor-pointer ${idx < prompts.prompts.length - 1 ? "mb-2" : ""}`}
+                  className={`text-blue-500 hover:text-blue-400 transition-colors duration-100 cursor-pointer ${
+                    idx < prompts.prompts.length - 1 ? "mb-2" : ""
+                  }`}
                   key={prompt.id}
                   onContextMenu={handleContextMenu(prompt.id)}
                   onTouchStart={handleTouchStart(prompt.id)}
