@@ -151,13 +151,6 @@ export const CurrentChat = () => {
   return (
     <>
       <div className="flex flex-col h-full max-w-full md:max-w-11/12 mx-auto pt-6.5 md:pt-2 lg:px-2">
-        {currentModel && (
-          <CurrentModelSummary
-            currentModel={currentModel}
-            totalCompletionTokens={totalCompletionTokens}
-            totalPromptTokens={totalPromptTokens}
-          />
-        )}
         {isChatLoading ? "is" : "not"}
         {messages.length === 0 && !isChatLoading && (
           <section className="grow">
@@ -183,6 +176,13 @@ export const CurrentChat = () => {
               />
             </div>
           </section>
+        )}
+        {currentModel && messages.length > 1 && (
+          <CurrentModelSummary
+            currentModel={currentModel}
+            totalCompletionTokens={totalCompletionTokens}
+            totalPromptTokens={totalPromptTokens}
+          />
         )}
         <InputSection onEnter={onEnter} isSending={isSending} />
       </div>
