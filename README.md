@@ -17,5 +17,6 @@ Chat application integrated with AI developed with React with Vite, Tailwind CSS
 - [Spring AI VertexAI Gemini](https://docs.spring.io/spring-ai/reference/api/chat/vertexai-gemini-chat.html)
 - [OpenAI Models](https://platform.openai.com/docs/models)
 - [Gemini api models](https://ai.google.dev/gemini-api/docs/models?hl=es-419)
+- [Gemini api pricing](https://ai.google.dev/gemini-api/docs/pricing?hl=es-419)
 - [Gemini vertex models](https://cloud.google.com/vertex-ai/generative-ai/docs/models/gemini/2-5-flash?hl=es-419)
 - [Vertex Locations](https://cloud.google.com/vertex-ai/generative-ai/docs/learn/locations?hl=es-419)
