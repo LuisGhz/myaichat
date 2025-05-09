@@ -14,8 +14,8 @@ export const ModelInfoC = ({ model }: Props) => {
       <p>Max Output Tokens: {model.metadata.maxOutputTokens}</p>
       <p>Knowledge Cutoff: {model.metadata.knowledgeCutoff}</p>
       <p>
-        Price: Input: {fCurrency(model.price.input)} / Output:{" "}
-        {fCurrency(model.price.output)}
+        Price: Input: {fCurrency(model.price.input, { maximumFractionDigits: 3 })} / Output:{" "}
+        {fCurrency(model.price.output, { maximumFractionDigits: 2 })}
       </p>
     </section>
   );
