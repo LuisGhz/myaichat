@@ -157,7 +157,7 @@ export const CurrentChat = () => {
 
   return (
     <>
-      <div className="flex flex-col h-full max-w-full md:max-w-11/12 mx-auto pt-6.5 md:pt-2 lg:px-2">
+      <div className="flex flex-col h-full max-w-full md:max-w-11/12 mx-auto pt-10 lg:px-2">
         {messages.length === 0 && !isChatLoading && !params.id && (
           <section className="grow flex items-center justify-center">
             <NewConversation
