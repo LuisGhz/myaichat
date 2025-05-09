@@ -48,10 +48,13 @@ export const ContextMenu = ({
       let top = event.pageY;
       if (window.innerHeight < event.pageY + ulRef.current!.clientHeight)
         top =
-          window.innerHeight -
-          (ulRef.current!.clientHeight + additionalOffset);
+          window.innerHeight - (ulRef.current!.clientHeight + additionalOffset);
       setTop(top);
-      setLeft(event.pageX);
+      let left = event.pageX;
+      if (window.innerWidth < event.pageX + ulRef.current!.clientWidth)
+        left =
+          window.innerWidth - (ulRef.current!.clientWidth + additionalOffset);
+      setLeft(left);
     };
     document.addEventListener("contextmenu", handleContextMenu);
     return () => {
