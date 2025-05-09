@@ -10,7 +10,7 @@ function App() {
   return (
     <>
       <ToastContainer />
-      <div className="flex h-full relative">
+      <div className="flex h-dvh relative">
         <SideNav />
         <main className={`grow bg-cop-3 ms-0 transition-all duration-500 ${isMenuOpen ? "lg:ms-72" : ""}`}>
           <Outlet />
