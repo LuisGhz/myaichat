@@ -13,9 +13,9 @@ export const SideNav = () => {
   const openRef = useRef<HTMLButtonElement>(null);
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (window.innerWidth >= ScreensWidth.tablet) return;
+      if (window.innerWidth >= ScreensWidth.smallDesktop) return;
       const isMenuOpenMobile =
-        window.innerWidth < ScreensWidth.tablet ? !isMenuOpen : isMenuOpen;
+        window.innerWidth < ScreensWidth.smallDesktop ? !isMenuOpen : isMenuOpen;
       if (
         !!navRef.current &&
         !!openRef.current &&
@@ -67,9 +67,9 @@ export const SideNav = () => {
       <nav
         className={`fixed h-full top-0 ${
           isMenuOpen
-            ? "-translate-x-full md:translate-x-0"
-            : "translate-x-0 md:-translate-x-full"
-        } transition-all duration-500 w-64 z-20 bg-cop-4 text-white overflow-y-auto hide-scrollbar`}
+            ? "-translate-x-full lg:translate-x-0"
+            : "translate-x-0 lg:-translate-x-full"
+        } transition-all duration-500 w-72 z-20 bg-cop-4 text-white overflow-y-auto hide-scrollbar`}
         role="navigation"
         aria-label="Chat navigation"
         ref={navRef}
