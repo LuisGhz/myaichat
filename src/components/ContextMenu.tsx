@@ -14,6 +14,7 @@ type Props = {
   isOpen: boolean;
   setIsOpen: Dispatch<SetStateAction<boolean>>;
   triggered?: HTMLElement;
+  customClass?: string;
 };
 
 export const ContextMenu = ({
@@ -21,6 +22,7 @@ export const ContextMenu = ({
   isOpen,
   setIsOpen,
   triggered,
+  customClass,
 }: Props) => {
   const [top, setTop] = useState<number>(0);
   const [left, setLeft] = useState<number>(0);
@@ -82,7 +84,9 @@ export const ContextMenu = ({
 
   return createPortal(
     <ul
-      className={`${uuid} absolute w-36 h-auto z-20 bg-cop-5 hidden rounded-sm ${
+      className={`${uuid} ${
+        customClass ? customClass : ""
+      } absolute w-36 h-auto z-20 bg-cop-5 hidden rounded-sm ${
         isOpen ? "block!" : ""
       }`}
       style={{

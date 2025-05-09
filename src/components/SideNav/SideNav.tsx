@@ -16,11 +16,13 @@ export const SideNav = () => {
       if (window.innerWidth >= ScreensWidth.smallDesktop) return;
       const isMenuOpenMobile =
         window.innerWidth < ScreensWidth.smallDesktop ? !isMenuOpen : isMenuOpen;
+      const contextMenu = document.querySelector('.sidenav-context-menu');
       if (
         !!navRef.current &&
         !!openRef.current &&
         !navRef.current.contains(event.target as Node) &&
         !openRef.current?.contains(event.target as Node) &&
+        !contextMenu?.contains(event.target as Node) &&
         isMenuOpenMobile
       ) {
         setIsMenuOpen(() => !isMenuOpen);

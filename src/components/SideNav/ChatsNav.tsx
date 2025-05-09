@@ -108,6 +108,7 @@ export const ChatsNav = () => {
         setIsOpen={setIsContextMenuOpen}
         elements={elements}
         triggered={triggeredContextMenu.current!}
+        customClass="sidenav-context-menu"
       />
     </>
   );
