@@ -44,7 +44,13 @@ export const ContextMenu = ({
       return;
     }
     const handleContextMenu = (event: MouseEvent) => {
-      setTop(event.pageY);
+      const additionalOffset = 10;
+      let top = event.pageY;
+      if (window.innerHeight < event.pageY + ulRef.current!.clientHeight)
+        top =
+          window.innerHeight -
+          (ulRef.current!.clientHeight + additionalOffset);
+      setTop(top);
       setLeft(event.pageX);
     };
     document.addEventListener("contextmenu", handleContextMenu);
