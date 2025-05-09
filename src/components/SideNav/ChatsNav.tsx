@@ -77,6 +77,21 @@ export const ChatsNav = () => {
       });
     };
 
+  const closeContextMenuOnAnyScroll = () => {
+    const handleScroll = () => {
+      setIsContextMenuOpen(false);
+    };
+
+    window.addEventListener("scroll", handleScroll, true);
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll, true);
+    };
+  };
+
+  // Call the function to attach the scroll listener
+  closeContextMenuOnAnyScroll();
+
   return (
     <>
       <ul className={`px-2`}>
