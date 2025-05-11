@@ -1,4 +1,4 @@
-type Prompt = {
+export type Prompt = {
   id: string;
   name: string;
 }
