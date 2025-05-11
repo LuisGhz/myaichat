@@ -29,7 +29,7 @@ export const CurrentModelSummary = ({
         <span>
           CT:
           {fNumber(totalCompletionTokens || 0)} - $
-          {(((totalCompletionTokens || 0) / MILLION_TOKENS) * price.input).toFixed(2)}
+          {(((totalCompletionTokens || 0) / MILLION_TOKENS) * price.output).toFixed(2)}
         </span>
       </div>
     </>
