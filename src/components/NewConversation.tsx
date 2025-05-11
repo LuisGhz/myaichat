@@ -64,7 +64,7 @@ export const NewConversation = ({
           onChange={updatePrompt}
         >
           <option value="">Select a prompt if you wish</option>
-          {prompts?.prompts.map((prompt) => (
+          {prompts?.map((prompt) => (
             <option key={prompt.id} value={prompt.id} className="text-white">
               {prompt.name}
             </option>
