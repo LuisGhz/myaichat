@@ -41,6 +41,9 @@ export const NewConversation = ({
     <div className="text-white text-center">
       <h1 className="text-2xl">Hello, what can assist you today?</h1>
       <div className="mt-5 flex flex-col gap-4 items-center">
+        <label htmlFor="model" className="sr-only">
+          model
+        </label>
         <select
           name="model"
           id="model"
@@ -48,6 +51,7 @@ export const NewConversation = ({
           onChange={updateModel}
           autoFocus
           className="bg-cop-1 text-white border border-gray-700 rounded px-4 py-2 focus:outline-none focus:ring-0 focus:bg-cop-2 cursor-pointer"
+          aria-label="model"
         >
           {MODELS.map(({ name, value }) => (
             <option key={value} value={value} className="text-white">
@@ -55,7 +59,9 @@ export const NewConversation = ({
             </option>
           ))}
         </select>
-
+        <label htmlFor="prompt" className="sr-only">
+          prompt
+        </label>
         <select
           className="bg-cop-1 text-white border border-gray-700 rounded px-4 py-2 focus:outline-none focus:ring-0 focus:bg-cop-2 cursor-pointer"
           name="prompt"
