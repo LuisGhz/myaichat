@@ -7,11 +7,11 @@ import {
   getPromptByIdService,
   getPromptsService,
 } from "services/prompts.service";
-import { GetAllPromptsRes } from "types/prompts/GetAllPromptsRes.type";
+import { Prompt } from "types/prompts/GetAllPromptsRes.type";
 
 export const usePrompts = () => {
   const { toastError } = useToast();
-  const [prompts, setPrompts] = useState<GetAllPromptsRes | undefined>(
+  const [prompts, setPrompts] = useState<Prompt[] | undefined>(
     undefined
   );
   const [loading, setLoading] = useState(false);
@@ -19,7 +19,11 @@ export const usePrompts = () => {
   const getPrompts = async () => {
     try {
       const res = await getPromptsService();
-      setPrompts(res);
+      if (!res) {
+        throw new Error();
+        return;
+      }
+      setPrompts([...res.prompts]);
     } catch {
       toastError("Failed to fetch prompts. Please try again later.");
     }
