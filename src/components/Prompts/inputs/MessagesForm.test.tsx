@@ -75,11 +75,11 @@ vi.mock("assets/icons/PlusIcon", () => ({
 }));
 
 describe("MessagesForm Component", () => {
-  let mockRegister: any;
+  const mockRegister = vi.fn();
   let mockErrors: any;
-  let mockSetValue: any;
+  const mockSetValue = vi.fn();
   let mockControl: any;
-  let mockGetValues: any;
+  const mockGetValues = vi.fn();
   let mockUseFieldArray: any;
   let mockUsePromptsHook: any;
 
