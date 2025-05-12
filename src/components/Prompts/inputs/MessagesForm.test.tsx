@@ -2,34 +2,35 @@
 import { vi, describe, it, expect } from "vitest";
 import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { v4 } from "uuid";
-import { usePrompts } from "hooks/usePrompts";
 import { MessagesForm } from "./MessagesForm";
 
 // Mock necessary dependencies
+const reactHookFormMock = {
+  useFieldArray: vi.fn(),
+  UseFormRegister: vi.fn(),
+  FieldErrors: vi.fn(),
+  UseFormSetValue: vi.fn(),
+  Control: vi.fn(),
+  UseFormGetValues: vi.fn(),
+};
 vi.mock("react-hook-form", () => {
-  return {
-    useFieldArray: vi.fn(),
-    UseFormRegister: vi.fn(),
-    FieldErrors: vi.fn(),
-    UseFormSetValue: vi.fn(),
-    Control: vi.fn(),
-    UseFormGetValues: vi.fn(),
-  };
+  return reactHookFormMock;
 });
 
+const v4 = vi.fn().mockReturnValue("test-uuid");
 vi.mock("uuid", () => {
   return {
-    v4: vi.fn().mockReturnValue("test-uuid"),
+    v4,
   };
 });
 
+const useStateMock = vi.fn();
 vi.mock("react", () => {
   return {
     ...vi.importActual("react"),
-    useState: vi.fn(),
+    useState: useStateMock,
   };
-})
+});
 
 vi.mock("components/Dialogs/ConfirmDialog", () => ({
   ConfirmDialog: ({
@@ -81,45 +82,9 @@ describe("MessagesForm Component", () => {
   let mockGetValues: any;
   let mockUseFieldArray: any;
   let mockUsePromptsHook: any;
-  let mockForm: any;
 
-  beforeEach(() => {
-    // Mock react-hook-form functions
-    mockForm = {
-      register: vi.fn(),
-      handleSubmit: vi.fn(),
-      setValue: vi.fn(),
-      getValues: vi.fn(),
-      control: {},
-      formState: { errors: {} },
-      reset: vi.fn(),
-      watch: vi.fn(),
-      clearErrors: vi.fn(),
-      unregister: vi.fn(),
-      setError: vi.fn(),
-      trigger: vi.fn(),
-    };
-    mockRegister = mockForm.register;
-    mockSetValue = mockForm.setValue;
-    mockControl = mockForm.control;
-    mockGetValues = mockForm.getValues;
-    mockErrors = mockForm.formState.errors;
-
-    // Mock useFieldArray hook
-    mockUseFieldArray = vi.fn().mockReturnValue({
-      fields: [],
-      append: vi.fn(),
-      remove: vi.fn(),
-    });
-
-    // Mock usePrompts hook
-    mockUsePromptsHook = {
-      deletePromptMessage: vi.fn(),
-    };
-    (usePrompts as any).mockReturnValue(mockUsePromptsHook);
-
-    // Mock uuid
-    (v4 as any).mockReturnValue("test-uuid");
+  afterEach(() => {
+    vi.resetAllMocks();
   });
 
   const renderComponent = () => {
