@@ -24,16 +24,13 @@ vi.mock("uuid", () => {
   };
 });
 
+vi.mock("react", () => {
+  return {
+    ...vi.importActual("react"),
+    useState: vi.fn(),
+  };
+})
 
-
-
-
-vi.mock("hooks/usePrompts", () => ({
-  deletePromptMessage: vi.fn(),
-}));
-vi.mock("react-router", () => ({
-  useParams: vi.fn(),
-}));
 vi.mock("components/Dialogs/ConfirmDialog", () => ({
   ConfirmDialog: ({
     isOpen,
@@ -58,6 +55,22 @@ vi.mock("components/Dialogs/ConfirmDialog", () => ({
         </button>
       </div>
     ) : null,
+}));
+
+vi.mock("assets/icons/XMarkIcon", () => ({
+  XMarkIcon: () => <div>XMarkIcon</div>,
+}));
+
+vi.mock("hooks/usePrompts", () => ({
+  usePrompts: vi.fn(),
+}));
+
+vi.mock("react-router", () => ({
+  useParams: vi.fn(),
+}));
+
+vi.mock("assets/icons/PlusIcon", () => ({
+  PlusIcon: () => <div>PlusIcon</div>,
 }));
 
 describe("MessagesForm Component", () => {
