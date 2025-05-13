@@ -110,6 +110,7 @@ export const MessagesForm = ({
           <select
             className="p-2 bg-cop-1 focus:bg-cop-2 text-white rounded-md w-32"
             {...register(`messages.${idx}.role` as const)}
+            aria-label="Role"
           >
             <option value="User">User</option>
             <option value="Assistant">Assistant</option>
