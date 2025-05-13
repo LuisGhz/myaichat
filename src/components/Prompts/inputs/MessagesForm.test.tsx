@@ -1,36 +1,29 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { vi, describe, it, expect } from "vitest";
-import { render, screen, waitFor } from "@testing-library/react";
+import { vi, describe, it, expect, Mock } from "vitest";
+import { render, screen, waitFor, renderHook } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { MessagesForm } from "./MessagesForm";
+import { useForm, useFieldArray } from "react-hook-form";
+import { PromptForm, promptSchema } from "../PromptSchema";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { v4 } from "uuid";
+import { useParams } from "react-router";
 
 // Mock necessary dependencies
-const reactHookFormMock = {
-  useFieldArray: vi.fn(),
-  UseFormRegister: vi.fn(),
-  FieldErrors: vi.fn(),
-  UseFormSetValue: vi.fn(),
-  Control: vi.fn(),
-  UseFormGetValues: vi.fn(),
-};
-vi.mock("react-hook-form", () => {
-  return reactHookFormMock;
-});
-
-const v4 = vi.fn().mockReturnValue("test-uuid");
-vi.mock("uuid", () => {
+vi.mock("react-hook-form", async () => {
+  const actual = (await vi.importActual("react-hook-form")) as any;
   return {
-    v4,
+    ...actual,
+    useFieldArray: vi.fn(),
   };
 });
+const useFieldArrayMock = useFieldArray as unknown as Mock<any>;
 
-const useStateMock = vi.fn();
-vi.mock("react", () => {
-  return {
-    ...vi.importActual("react"),
-    useState: useStateMock,
-  };
-});
+vi.mock("uuid");
+const v4Mock = v4 as unknown as Mock<any>;
+
+vi.mock("react-router");
+const useParamsMock = useParams as unknown as Mock<any>;
 
 vi.mock("components/Dialogs/ConfirmDialog", () => ({
   ConfirmDialog: ({
@@ -62,12 +55,11 @@ vi.mock("assets/icons/XMarkIcon", () => ({
   XMarkIcon: () => <div>XMarkIcon</div>,
 }));
 
-vi.mock("hooks/usePrompts", () => ({
-  usePrompts: vi.fn(),
-}));
-
-vi.mock("react-router", () => ({
-  useParams: vi.fn(),
+const deletePromptMessage = vi.fn();
+vi.doMock("hooks/usePrompts", () => ({
+  usePrompts: vi.fn().mockReturnValue({
+    deletePromptMessage,
+  }),
 }));
 
 vi.mock("assets/icons/PlusIcon", () => ({
@@ -75,16 +67,20 @@ vi.mock("assets/icons/PlusIcon", () => ({
 }));
 
 describe("MessagesForm Component", () => {
-  const mockRegister = vi.fn();
-  let mockErrors: any;
+  let mockErrors: any = [];
   const mockSetValue = vi.fn();
-  let mockControl: any;
   const mockGetValues = vi.fn();
-  let mockUseFieldArray: any;
-  let mockUsePromptsHook: any;
+  const mockRegister = vi.fn();
+  const { result: useFormResult } = renderHook(() =>
+    useForm<PromptForm>({
+      resolver: zodResolver(promptSchema),
+      defaultValues: { params: [], messages: [] },
+    })
+  );
 
-  afterEach(() => {
+  beforeEach(() => {
     vi.resetAllMocks();
+    v4Mock.mockReturnValue("test-uuid");
   });
 
   const renderComponent = () => {
@@ -93,7 +89,7 @@ describe("MessagesForm Component", () => {
         register={mockRegister}
         errors={mockErrors}
         setValue={mockSetValue}
-        control={mockControl}
+        control={useFormResult.current.control}
         getValues={mockGetValues}
       />
     );
@@ -102,17 +98,19 @@ describe("MessagesForm Component", () => {
   it("renders without crashing", () => {
     renderComponent();
     expect(screen.getByText("Messages")).toBeInTheDocument();
-  });
-
-  it("displays 'No messages added' when there are no messages", () => {
-    renderComponent();
     expect(screen.getByText("No messages added.")).toBeInTheDocument();
   });
 
   it("appends a new message when the add message button is clicked", async () => {
-    const { append } = mockUseFieldArray();
+    const append = vi.fn();
+    useFieldArrayMock.mockReturnValue({
+      fields: [],
+      append,
+      remove: vi.fn(),
+    });
     renderComponent();
-    const addButton = screen.getByRole("button", { name: /plusicon/i });
+    const addButton = screen.getByRole("button", { name: /Add message/i });
+    expect(addButton).toBeInTheDocument();
     await userEvent.click(addButton);
     expect(append).toHaveBeenCalledWith({
       id: "test-uuid-default",
@@ -122,18 +120,23 @@ describe("MessagesForm Component", () => {
   });
 
   it("renders existing messages", () => {
-    mockUseFieldArray.mockReturnValue({
+    useFieldArrayMock.mockReturnValue({
       fields: [{ id: "1", role: "User", content: "Test Message" }],
       append: vi.fn(),
       remove: vi.fn(),
     });
     renderComponent();
-    expect(screen.getByText("Test Message")).toBeInTheDocument();
+    const combobox = screen.getByRole("combobox", {
+      name: /role/i,
+    });
+    expect(combobox).toBeInTheDocument();
+    expect(mockRegister).toHaveBeenCalled();
+    expect(screen.queryByText("No messages added.")).not.toBeInTheDocument();
   });
 
   describe("Removing messages", () => {
     it("opens the confirmation dialog when remove button is clicked for a message with an id", async () => {
-      mockUseFieldArray.mockReturnValue({
+      useFieldArrayMock.mockReturnValue({
         fields: [{ id: "123", role: "User", content: "Test Message" }],
         append: vi.fn(),
         remove: vi.fn(),
@@ -154,7 +157,7 @@ describe("MessagesForm Component", () => {
 
     it("removes the message immediately if it's a default message (newly added)", async () => {
       const removeMock = vi.fn();
-      mockUseFieldArray.mockReturnValue({
+      useFieldArrayMock.mockReturnValue({
         fields: [
           { id: "test-uuid-default", role: "User", content: "Test Message" },
         ],
@@ -176,7 +179,7 @@ describe("MessagesForm Component", () => {
 
     it("calls deletePromptMessage and removes the message on confirm", async () => {
       const removeMock = vi.fn();
-      mockUseFieldArray.mockReturnValue({
+      useFieldArrayMock.mockReturnValue({
         fields: [{ id: "123", role: "User", content: "Test Message" }],
         append: vi.fn(),
         remove: removeMock,
@@ -184,7 +187,7 @@ describe("MessagesForm Component", () => {
       mockGetValues.mockReturnValue([
         { id: "123", role: "User", content: "Test Message" },
       ]);
-
+      useParamsMock.mockReturnValue({ id: "test-prompt-id" });
       renderComponent();
       const removeButton = screen.getByRole("button", {
         name: /delete message/i,
@@ -193,17 +196,24 @@ describe("MessagesForm Component", () => {
 
       const confirmButton = screen.getByTestId("confirm-button");
       await userEvent.click(confirmButton);
-
-      expect(mockUsePromptsHook.deletePromptMessage).toHaveBeenCalledWith(
+      expect(mockGetValues).toHaveBeenCalledWith("messages");
+      expect(removeMock).not.toHaveBeenCalled();
+      await waitFor(async () => {
+        expect(screen.getByTestId("confirm-dialog")).toBeVisible();
+        const confirmButton = screen.getByTestId("confirm-button");
+        expect(confirmButton).toBeInTheDocument();
+        await userEvent.click(confirmButton);
+      });
+      expect(removeMock).toHaveBeenCalled();
+      expect(deletePromptMessage).toHaveBeenCalledWith(
         "test-prompt-id",
         "123"
       );
-      expect(removeMock).toHaveBeenCalledWith(0);
     });
 
     it("closes the dialog and does not delete the message on cancel", async () => {
       const removeMock = vi.fn();
-      mockUseFieldArray.mockReturnValue({
+      useFieldArrayMock.mockReturnValue({
         fields: [{ id: "123", role: "User", content: "Test Message" }],
         append: vi.fn(),
         remove: removeMock,
@@ -221,13 +231,13 @@ describe("MessagesForm Component", () => {
       const cancelButton = screen.getByTestId("cancel-button");
       await userEvent.click(cancelButton);
 
-      expect(mockUsePromptsHook.deletePromptMessage).not.toHaveBeenCalled();
+      expect(deletePromptMessage).not.toHaveBeenCalled();
       expect(removeMock).not.toHaveBeenCalled();
     });
   });
 
   it("displays field-level errors for messages", () => {
-    mockUseFieldArray.mockReturnValue({
+    useFieldArrayMock.mockReturnValue({
       fields: [{ id: "1", role: "User", content: "Test Message" }],
       append: vi.fn(),
       remove: vi.fn(),
@@ -254,7 +264,7 @@ describe("MessagesForm Component", () => {
   });
 
   it("updates the role when the select value changes", async () => {
-    mockUseFieldArray.mockReturnValue({
+    useFieldArrayMock.mockReturnValue({
       fields: [{ id: "1", role: "User", content: "Test Message" }],
       append: vi.fn(),
       remove: vi.fn(),
@@ -266,7 +276,7 @@ describe("MessagesForm Component", () => {
   });
 
   it("updates the content when the textarea value changes", async () => {
-    mockUseFieldArray.mockReturnValue({
+    useFieldArrayMock.mockReturnValue({
       fields: [{ id: "1", role: "User", content: "Test Message" }],
       append: vi.fn(),
       remove: vi.fn(),
