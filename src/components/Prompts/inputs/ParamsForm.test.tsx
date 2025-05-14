@@ -137,7 +137,8 @@ describe("ParamsForm", () => {
     expect(mockRegister).toHaveBeenCalledWith("params.1.value");
   });
 
-  it.todo("should call append when add param button is clicked", () => {
+  it("should call append when add param button is clicked", () => {
+    mockuseFieldArrayForTest([]);
     renderComponent();
 
     const plusIconButton = screen.getByTestId("plus-icon").closest("button");
@@ -147,7 +148,7 @@ describe("ParamsForm", () => {
     }
 
     expect(mockAppend).toHaveBeenCalledWith({
-      id: "specific-new-uuid-default",
+      id: "mock-uuid-default",
       name: "",
       value: "",
     });
