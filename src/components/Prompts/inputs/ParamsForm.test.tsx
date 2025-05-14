@@ -156,16 +156,12 @@ describe("ParamsForm", () => {
 
   describe("handleRemoveParam", () => {
     const paramIndex = 0;
-    const paramIdDefault = "uuid1-default";
-    const paramIdExisting = "existing-id-1";
+    const paramIdDefault = "mock-uuid-default";
+    const paramIdExisting = "mock-uuid-default";
 
-    it.todo('should call remove directly for a new param (id includes "-default")', async () => {
+    it('should call remove directly for a new param (id includes "-default")', async () => {
       const fieldsData = [{ id: paramIdDefault, name: "p1", value: "v1" }];
-      mockUseFieldArray.mockReturnValueOnce({
-        fields: fieldsData,
-        append: mockAppend,
-        remove: mockRemove,
-      });
+      mockuseFieldArrayForTest(fieldsData);
       mockGetValues.mockImplementation((name: string) => {
         if (name === "params") {
           return [{ id: paramIdDefault, name: "p1", value: "v1" }];
@@ -178,6 +174,8 @@ describe("ParamsForm", () => {
 
       await waitFor(() => {
         expect(mockRemove).toHaveBeenCalledWith(paramIndex);
+        expect(mockDeletePromptParam).not.toHaveBeenCalled();
+        expect(screen.queryByTestId("confirm-dialog")).not.toBeInTheDocument();
         expect(mockDeletePromptParam).not.toHaveBeenCalled();
       });
     });
