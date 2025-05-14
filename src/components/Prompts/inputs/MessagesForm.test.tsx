@@ -256,6 +256,10 @@ describe("MessagesForm Component", () => {
       append: vi.fn(),
       remove: vi.fn(),
     });
+    const deletePromptMessage = vi.fn();
+      usePromptsMock.mockReturnValue({
+        deletePromptMessage,
+      });
     mockErrors = {
       messages: [
         {
