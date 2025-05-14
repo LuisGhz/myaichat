@@ -68,6 +68,7 @@ describe("MessagesForm Component", () => {
   const mockSetValue = vi.fn();
   const mockGetValues = vi.fn();
   const mockRegister = vi.fn();
+  const deletePromptMessage = vi.fn();
   const { result: useFormResult } = renderHook(() =>
     useForm<PromptForm>({
       resolver: zodResolver(promptSchema),
@@ -78,6 +79,9 @@ describe("MessagesForm Component", () => {
   beforeEach(() => {
     vi.resetAllMocks();
     v4Mock.mockReturnValue("test-uuid");
+    usePromptsMock.mockReturnValue({
+      deletePromptMessage,
+    });
   });
 
   const renderComponent = () => {
@@ -93,9 +97,6 @@ describe("MessagesForm Component", () => {
   };
 
   it("renders without crashing", () => {
-    usePromptsMock.mockReturnValue({
-      deletePromptMessage: vi.fn(),
-    });
     useFieldArrayMock.mockReturnValue({
       fields: [],
       append: vi.fn(),
@@ -107,9 +108,6 @@ describe("MessagesForm Component", () => {
   });
 
   it("appends a new message when the add message button is clicked", async () => {
-    usePromptsMock.mockReturnValue({
-      deletePromptMessage: vi.fn(),
-    });
     const append = vi.fn();
     useFieldArrayMock.mockReturnValue({
       fields: [],
@@ -128,9 +126,6 @@ describe("MessagesForm Component", () => {
   });
 
   it("renders existing messages", () => {
-    usePromptsMock.mockReturnValue({
-      deletePromptMessage: vi.fn(),
-    });
     useFieldArrayMock.mockReturnValue({
       fields: [{ id: "1", role: "User", content: "Test Message" }],
       append: vi.fn(),
@@ -147,9 +142,6 @@ describe("MessagesForm Component", () => {
 
   describe("Removing messages", () => {
     it("opens the confirmation dialog when remove button is clicked for a message with an id", async () => {
-      usePromptsMock.mockReturnValue({
-        deletePromptMessage: vi.fn(),
-      });
       useFieldArrayMock.mockReturnValue({
         fields: [{ id: "123", role: "User", content: "Test Message" }],
         append: vi.fn(),
@@ -171,9 +163,6 @@ describe("MessagesForm Component", () => {
 
     it("removes the message immediately if it's a default message (newly added)", async () => {
       const removeMock = vi.fn();
-      usePromptsMock.mockReturnValue({
-        deletePromptMessage: vi.fn(),
-      });
       useFieldArrayMock.mockReturnValue({
         fields: [
           { id: "test-uuid-default", role: "User", content: "Test Message" },
@@ -205,10 +194,6 @@ describe("MessagesForm Component", () => {
         { id: "123", role: "User", content: "Test Message" },
       ]);
       useParamsMock.mockReturnValue({ id: "test-prompt-id" });
-      const deletePromptMessage = vi.fn();
-      usePromptsMock.mockReturnValue({
-        deletePromptMessage,
-      });
       renderComponent();
       const removeButton = screen.getByRole("button", {
         name: /delete message/i,
@@ -237,10 +222,6 @@ describe("MessagesForm Component", () => {
         { id: "123", role: "User", content: "Test Message" },
       ]);
       const deletePromptMessage = vi.fn();
-      usePromptsMock.mockReturnValue({
-        deletePromptMessage,
-      });
-
       renderComponent();
       const removeButton = screen.getByRole("button", {
         name: /delete message/i,
@@ -261,10 +242,6 @@ describe("MessagesForm Component", () => {
       append: vi.fn(),
       remove: vi.fn(),
     });
-    const deletePromptMessage = vi.fn();
-      usePromptsMock.mockReturnValue({
-        deletePromptMessage,
-      });
     mockErrors = {
       messages: [
         {
@@ -281,10 +258,6 @@ describe("MessagesForm Component", () => {
   });
 
   it("registers the role and content fields", () => {
-    const deletePromptMessage = vi.fn();
-    usePromptsMock.mockReturnValue({
-      deletePromptMessage,
-    });
     useFieldArrayMock.mockReturnValue({
       fields: [{ id: "1", role: "User", content: "Test Message" }],
       append: vi.fn(),
@@ -296,10 +269,6 @@ describe("MessagesForm Component", () => {
   });
 
   it.todo("updates the role when the select value changes", async () => {
-    const deletePromptMessage = vi.fn();
-    usePromptsMock.mockReturnValue({
-      deletePromptMessage,
-    });
     useFieldArrayMock.mockReturnValue({
       fields: [{ id: "1", role: "User", content: "Test Message" }],
       append: vi.fn(),
