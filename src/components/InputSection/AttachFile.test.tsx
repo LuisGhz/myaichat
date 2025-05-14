@@ -17,6 +17,29 @@ type MockedLinkProps = {
   children: React.ReactNode;
 };
 
+vi.mock("components/Dialogs/InfoDialog", () => ({
+  InfoDialog: ({
+    message,
+    isOpen,
+    onConfirm,
+  }: {
+    message: string[];
+    isOpen: boolean;
+    onConfirm: () => void;
+  }) =>
+    isOpen && (
+      <div
+        data-testid="info-dialog"
+        style={{ display: isOpen ? "block" : "none" }}
+      >
+        {message.map((msg, index) => (
+          <p key={index}>{msg}</p>
+        ))}
+        <button onClick={onConfirm}>Ok</button>
+      </div>
+    ),
+}));
+
 vi.mock("react-router", () => ({
   Link: ({ to, children }: MockedLinkProps) => <a href={to}>{children}</a>,
 }));
@@ -74,7 +97,7 @@ describe("AttachFile", () => {
 
     // Create a mock file
     const file = new File(["test"], "test.png", { type: "image/png" });
-    const input = screen.getByTestId('file-input');
+    const input = screen.getByTestId("file-input");
 
     // Simulate file selection
     fireEvent.change(input, { target: { files: [file] } });
@@ -94,7 +117,7 @@ describe("AttachFile", () => {
     render(<AttachFile onSelectImage={onSelectImageMock} />);
 
     const file = new File(["test"], "test.png", { type: "image/png" });
-    const input = screen.getByTestId('file-input');
+    const input = screen.getByTestId("file-input");
 
     fireEvent.change(input, {
       target: { files: [file] },
@@ -128,7 +151,7 @@ describe("AttachFile", () => {
     fireEvent.click(screen.getByLabelText("Attach file"));
 
     // Get and mock the input
-    const input = screen.getByTestId('file-input');
+    const input = screen.getByTestId("file-input");
     const clickSpy = vi.spyOn(input, "click").mockImplementation(() => {});
 
     // Click Upload
@@ -141,7 +164,7 @@ describe("AttachFile", () => {
   it("does nothing when no file is selected", () => {
     render(<AttachFile onSelectImage={onSelectImageMock} />);
 
-    const input = screen.getByTestId('file-input');
+    const input = screen.getByTestId("file-input");
 
     // Simulate empty file selection
     fireEvent.change(input, { target: { files: [] } });
