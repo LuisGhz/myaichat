@@ -177,6 +177,7 @@ describe("MessagesForm Component", () => {
       await userEvent.click(removeButton);
 
       expect(removeMock).toHaveBeenCalledWith(0);
+      expect(deletePromptMessage).not.toHaveBeenCalled();
     });
 
     it("calls deletePromptMessage and removes the message on confirm", async () => {
