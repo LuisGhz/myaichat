@@ -69,12 +69,22 @@ describe("MessagesForm Component", () => {
   let mockGetValues: Mock<any>;
   let mockRegister: Mock<any>;
   let deletePromptMessage: Mock<any>;
+  let appendMock: Mock<any>;
+  let removeMock: Mock<any>;
   const { result: useFormResult } = renderHook(() =>
     useForm<PromptForm>({
       resolver: zodResolver(promptSchema),
       defaultValues: { params: [], messages: [] },
     })
   );
+
+  const mockUseFieldArray = (fields: any) => {
+    useFieldArrayMock.mockReturnValue({
+      fields,
+      append: appendMock,
+      remove: removeMock,
+    });
+  };
 
   beforeEach(() => {
     vi.restoreAllMocks();
@@ -85,11 +95,9 @@ describe("MessagesForm Component", () => {
     mockGetValues = vi.fn();
     mockRegister = vi.fn();
     deletePromptMessage = vi.fn();
-    useFieldArrayMock.mockReturnValue({
-      fields: [],
-      append: vi.fn(),
-      remove: vi.fn(),
-    });
+    appendMock = vi.fn();
+    removeMock = vi.fn();
+    mockUseFieldArray([]);
     v4Mock.mockReturnValue("test-uuid");
     usePromptsMock.mockReturnValue({
       deletePromptMessage,
@@ -115,17 +123,11 @@ describe("MessagesForm Component", () => {
   });
 
   it("appends a new message when the add message button is clicked", async () => {
-    const append = vi.fn();
-    useFieldArrayMock.mockReturnValue({
-      fields: [],
-      append,
-      remove: vi.fn(),
-    });
     renderComponent();
     const addButton = screen.getByRole("button", { name: /Add message/i });
     expect(addButton).toBeInTheDocument();
     await userEvent.click(addButton);
-    expect(append).toHaveBeenCalledWith({
+    expect(appendMock).toHaveBeenCalledWith({
       id: "test-uuid-default",
       role: "User",
       content: "",
@@ -133,11 +135,7 @@ describe("MessagesForm Component", () => {
   });
 
   it("renders existing messages", () => {
-    useFieldArrayMock.mockReturnValue({
-      fields: [{ id: "1", role: "User", content: "Test Message" }],
-      append: vi.fn(),
-      remove: vi.fn(),
-    });
+    mockUseFieldArray([{ id: "1", role: "User", content: "Test Message" }]);
     renderComponent();
     const combobox = screen.getByRole("combobox", {
       name: /role/i,
@@ -149,11 +147,7 @@ describe("MessagesForm Component", () => {
 
   describe("Removing messages", () => {
     it("opens the confirmation dialog when remove button is clicked for a message with an id", async () => {
-      useFieldArrayMock.mockReturnValue({
-        fields: [{ id: "123", role: "User", content: "Test Message" }],
-        append: vi.fn(),
-        remove: vi.fn(),
-      });
+      mockUseFieldArray([{ id: "123", role: "User", content: "Test Message" }]);
       mockGetValues.mockReturnValue([
         { id: "123", role: "User", content: "Test Message" },
       ]);
@@ -169,14 +163,9 @@ describe("MessagesForm Component", () => {
     });
 
     it("removes the message immediately if it's a default message (newly added)", async () => {
-      const removeMock = vi.fn();
-      useFieldArrayMock.mockReturnValue({
-        fields: [
-          { id: "test-uuid-default", role: "User", content: "Test Message" },
-        ],
-        append: vi.fn(),
-        remove: removeMock,
-      });
+      mockUseFieldArray([
+        { id: "test-uuid-default", role: "User", content: "Test Message" },
+      ]);
       mockGetValues.mockReturnValue([
         { id: "test-uuid-default", role: "User", content: "Test Message" },
       ]);
@@ -191,12 +180,7 @@ describe("MessagesForm Component", () => {
     });
 
     it("calls deletePromptMessage and removes the message on confirm", async () => {
-      const removeMock = vi.fn();
-      useFieldArrayMock.mockReturnValue({
-        fields: [{ id: "123", role: "User", content: "Test Message" }],
-        append: vi.fn(),
-        remove: removeMock,
-      });
+      mockUseFieldArray([{ id: "123", role: "User", content: "Test Message" }]);
       mockGetValues.mockReturnValue([
         { id: "123", role: "User", content: "Test Message" },
       ]);
@@ -219,12 +203,7 @@ describe("MessagesForm Component", () => {
     });
 
     it("closes the dialog and does not delete the message on cancel", async () => {
-      const removeMock = vi.fn();
-      useFieldArrayMock.mockReturnValue({
-        fields: [{ id: "123", role: "User", content: "Test Message" }],
-        append: vi.fn(),
-        remove: removeMock,
-      });
+      mockUseFieldArray([{ id: "123", role: "User", content: "Test Message" }]);
       mockGetValues.mockReturnValue([
         { id: "123", role: "User", content: "Test Message" },
       ]);
@@ -244,11 +223,7 @@ describe("MessagesForm Component", () => {
   });
 
   it("displays field-level errors for messages", () => {
-    useFieldArrayMock.mockReturnValue({
-      fields: [{ id: "1", role: "User", content: "Test Message" }],
-      append: vi.fn(),
-      remove: vi.fn(),
-    });
+    mockUseFieldArray([{ id: "1", role: "User", content: "Test Message" }]);
     mockErrors = {
       messages: [
         {
@@ -265,22 +240,14 @@ describe("MessagesForm Component", () => {
   });
 
   it("registers the role and content fields", () => {
-    useFieldArrayMock.mockReturnValue({
-      fields: [{ id: "1", role: "User", content: "Test Message" }],
-      append: vi.fn(),
-      remove: vi.fn(),
-    });
+    mockUseFieldArray([{ id: "1", role: "User", content: "Test Message" }]);
     renderComponent();
     expect(mockRegister).toHaveBeenCalledWith("messages.0.role");
     expect(mockRegister).toHaveBeenCalledWith("messages.0.content");
   });
 
   it.todo("updates the role when the select value changes", async () => {
-    useFieldArrayMock.mockReturnValue({
-      fields: [{ id: "1", role: "User", content: "Test Message" }],
-      append: vi.fn(),
-      remove: vi.fn(),
-    });
+    mockUseFieldArray([{ id: "1", role: "User", content: "Test Message" }]);
     renderComponent();
     const selectElement = screen.getByRole("combobox");
     userEvent.selectOptions(selectElement, "Assistant");
@@ -288,11 +255,7 @@ describe("MessagesForm Component", () => {
   });
 
   it.todo("updates the content when the textarea value changes", async () => {
-    useFieldArrayMock.mockReturnValue({
-      fields: [{ id: "1", role: "User", content: "Test Message" }],
-      append: vi.fn(),
-      remove: vi.fn(),
-    });
+    mockUseFieldArray([{ id: "1", role: "User", content: "Test Message" }]);
     renderComponent();
     const textareaElement = screen.getByPlaceholderText("Message content");
     await userEvent.type(textareaElement, "New Content");
