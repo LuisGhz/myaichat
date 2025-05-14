@@ -231,6 +231,10 @@ describe("MessagesForm Component", () => {
       mockGetValues.mockReturnValue([
         { id: "123", role: "User", content: "Test Message" },
       ]);
+      const deletePromptMessage = vi.fn();
+      usePromptsMock.mockReturnValue({
+        deletePromptMessage,
+      });
 
       renderComponent();
       const removeButton = screen.getByRole("button", {
@@ -241,7 +245,7 @@ describe("MessagesForm Component", () => {
       const cancelButton = screen.getByTestId("cancel-button");
       await userEvent.click(cancelButton);
 
-      expect(usePromptsMock).not.toHaveBeenCalled();
+      expect(deletePromptMessage).not.toHaveBeenCalled();
       expect(removeMock).not.toHaveBeenCalled();
     });
   });
