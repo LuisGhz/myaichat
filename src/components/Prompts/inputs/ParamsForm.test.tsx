@@ -117,17 +117,12 @@ describe("ParamsForm", () => {
     expect(screen.getByTestId("plus-icon")).toBeInTheDocument();
   });
 
-  it.todo("should render correctly with existing params", () => {
+  it("should render correctly with existing params", () => {
     const mockFieldsData = [
       { id: "id1", name: "param1", value: "value1" },
       { id: "id2", name: "param2", value: "value2" },
     ];
-    mockUseFieldArray.mockReturnValueOnce({
-      fields: mockFieldsData,
-      append: mockAppend,
-      remove: mockRemove,
-    });
-
+    mockuseFieldArrayForTest(mockFieldsData);
     renderComponent();
 
     expect(screen.getAllByPlaceholderText("Param name")).toHaveLength(2);
