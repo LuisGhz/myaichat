@@ -202,31 +202,22 @@ describe("ParamsForm", () => {
       });
     });
 
-    it.todo(
+    it(
       "should not call deletePromptParam or remove when confirm dialog is cancelled",
       async () => {
         const fieldsData = [{ id: paramIdExisting, name: "p1", value: "v1" }];
-        mockUseFieldArray.mockReturnValue({
-          fields: fieldsData,
-          append: mockAppend,
-          remove: mockRemove,
-        });
-        mockGetValues.mockImplementation((name: string) => {
-          if (name === "params") {
-            return [{ id: paramIdExisting, name: "p1", value: "v1" }];
-          }
-          return undefined;
-        });
+        mockuseFieldArrayForTest(fieldsData);
+        mockGetValues.mockReturnValue([
+          { id: paramIdExisting, name: "p1", value: "v1" },
+        ]);
 
         renderComponent();
         fireEvent.click(screen.getByRole("button", { name: "Delete param" }));
 
         await waitFor(() => {
-          expect(
-            screen.getByTestId("confirm-dialog-cancel")
-          ).toBeInTheDocument();
+          expect(screen.getByTestId("confirm-dialog")).toBeInTheDocument();
         });
-        fireEvent.click(screen.getByTestId("confirm-dialog-cancel"));
+        fireEvent.click(screen.getByTestId("cancel-button"));
 
         await waitFor(() => {
           expect(mockDeletePromptParam).not.toHaveBeenCalled();
