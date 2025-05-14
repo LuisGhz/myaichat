@@ -65,10 +65,10 @@ vi.mock("assets/icons/PlusIcon", () => ({
 
 describe("MessagesForm Component", () => {
   let mockErrors: any = [];
-  const mockSetValue = vi.fn();
-  const mockGetValues = vi.fn();
-  const mockRegister = vi.fn();
-  const deletePromptMessage = vi.fn();
+  let mockSetValue: Mock<any>;
+  let mockGetValues: Mock<any>;
+  let mockRegister: Mock<any>;
+  let deletePromptMessage: Mock<any>;
   const { result: useFormResult } = renderHook(() =>
     useForm<PromptForm>({
       resolver: zodResolver(promptSchema),
@@ -77,7 +77,19 @@ describe("MessagesForm Component", () => {
   );
 
   beforeEach(() => {
-    vi.resetAllMocks();
+    vi.restoreAllMocks();
+  });
+
+  beforeEach(() => {
+    mockSetValue = vi.fn();
+    mockGetValues = vi.fn();
+    mockRegister = vi.fn();
+    deletePromptMessage = vi.fn();
+    useFieldArrayMock.mockReturnValue({
+      fields: [],
+      append: vi.fn(),
+      remove: vi.fn(),
+    });
     v4Mock.mockReturnValue("test-uuid");
     usePromptsMock.mockReturnValue({
       deletePromptMessage,
@@ -97,11 +109,6 @@ describe("MessagesForm Component", () => {
   };
 
   it("renders without crashing", () => {
-    useFieldArrayMock.mockReturnValue({
-      fields: [],
-      append: vi.fn(),
-      remove: vi.fn(),
-    });
     renderComponent();
     expect(screen.getByText("Messages")).toBeInTheDocument();
     expect(screen.getByText("No messages added.")).toBeInTheDocument();
