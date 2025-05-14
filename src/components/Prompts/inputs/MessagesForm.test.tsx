@@ -276,6 +276,15 @@ describe("MessagesForm Component", () => {
   });
 
   it("registers the role and content fields", () => {
+    const deletePromptMessage = vi.fn();
+    usePromptsMock.mockReturnValue({
+      deletePromptMessage,
+    });
+    useFieldArrayMock.mockReturnValue({
+      fields: [{ id: "1", role: "User", content: "Test Message" }],
+      append: vi.fn(),
+      remove: vi.fn(),
+    });
     renderComponent();
     expect(mockRegister).toHaveBeenCalledWith("messages.0.role");
     expect(mockRegister).toHaveBeenCalledWith("messages.0.content");
