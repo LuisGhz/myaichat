@@ -65,12 +65,12 @@ vi.mock("assets/icons/PlusIcon", () => ({
 
 describe("MessagesForm Component", () => {
   let mockErrors: any = [];
-  let mockSetValue: Mock<any>;
-  let mockGetValues: Mock<any>;
-  let mockRegister: Mock<any>;
-  let deletePromptMessage: Mock<any>;
-  let appendMock: Mock<any>;
-  let removeMock: Mock<any>;
+  const mockSetValue = vi.fn();
+  const mockGetValues = vi.fn();
+  const mockRegister = vi.fn();
+  const deletePromptMessage = vi.fn();
+  const appendMock = vi.fn();
+  const removeMock = vi.fn();
   const { result: useFormResult } = renderHook(() =>
     useForm<PromptForm>({
       resolver: zodResolver(promptSchema),
@@ -85,23 +85,14 @@ describe("MessagesForm Component", () => {
       remove: removeMock,
     });
   };
-
-  beforeEach(() => {
-    vi.restoreAllMocks();
+  v4Mock.mockReturnValue("test-uuid");
+  usePromptsMock.mockReturnValue({
+    deletePromptMessage,
   });
-
+  
   beforeEach(() => {
-    mockSetValue = vi.fn();
-    mockGetValues = vi.fn();
-    mockRegister = vi.fn();
-    deletePromptMessage = vi.fn();
-    appendMock = vi.fn();
-    removeMock = vi.fn();
+    vi.clearAllMocks();
     mockUseFieldArray([]);
-    v4Mock.mockReturnValue("test-uuid");
-    usePromptsMock.mockReturnValue({
-      deletePromptMessage,
-    });
   });
 
   const renderComponent = () => {
