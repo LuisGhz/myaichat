@@ -59,15 +59,15 @@ export const Prompts = () => {
       <div className="flex flex-col gap-4 p-4 pt-10 md:pt-4 text-white text-center">
         <h1 className="text-2xl font-bold">Prompts</h1>
         <p className="text-gray-500">Manage your prompts here.</p>
-        {prompts && prompts.prompts.length > 0 && (
+        {prompts && prompts.length > 0 && (
           <div className="flex flex-col gap-2">
             <h2 className="text-xl font-semibold">Available Prompts</h2>
             {/* List of available prompts */}
             <ul>
-              {prompts.prompts.map((prompt, idx) => (
+              {prompts.map((prompt, idx) => (
                 <li
                   className={`text-blue-500 hover:text-blue-400 transition-colors duration-100 cursor-pointer ${
-                    idx < prompts.prompts.length - 1 ? "mb-2" : ""
+                    idx < prompts.length - 1 ? "mb-2" : ""
                   }`}
                   key={prompt.id}
                   onContextMenu={handleContextMenu(prompt.id)}
@@ -80,7 +80,7 @@ export const Prompts = () => {
             </ul>
           </div>
         )}
-        {prompts && prompts.prompts.length === 0 && (
+        {prompts && prompts.length === 0 && (
           <p className="text-gray-500">No prompts available.</p>
         )}
         <div className="flex justify-center mt-4">
