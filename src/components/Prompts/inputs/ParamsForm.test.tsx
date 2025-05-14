@@ -9,10 +9,7 @@ import {
 } from "@testing-library/react";
 import { ParamsForm } from "./ParamsForm";
 import { PromptForm, promptSchema } from "../PromptSchema";
-import {
-  useForm,
-  useFieldArray,
-} from "react-hook-form";
+import { useForm, useFieldArray } from "react-hook-form";
 import { v4 } from "uuid";
 import { usePrompts } from "hooks/usePrompts";
 import { useParams } from "react-router";
@@ -157,7 +154,7 @@ describe("ParamsForm", () => {
   describe("handleRemoveParam", () => {
     const paramIndex = 0;
     const paramIdDefault = "mock-uuid-default";
-    const paramIdExisting = "mock-uuid-default";
+    const paramIdExisting = "mock-uuid";
 
     it('should call remove directly for a new param (id includes "-default")', async () => {
       const fieldsData = [{ id: paramIdDefault, name: "p1", value: "v1" }];
@@ -180,19 +177,12 @@ describe("ParamsForm", () => {
       });
     });
 
-    it.todo('should open confirm dialog for an existing param (id does not include "-default")', async () => {
+    it('should open confirm dialog for an existing param (id does not include "-default")', async () => {
       const fieldsData = [{ id: paramIdExisting, name: "p1", value: "v1" }];
-      mockUseFieldArray.mockReturnValueOnce({
-        fields: fieldsData,
-        append: mockAppend,
-        remove: mockRemove,
-      });
-      mockGetValues.mockImplementation((name: string) => {
-        if (name === "params") {
-          return [{ id: paramIdExisting, name: "p1", value: "v1" }];
-        }
-        return undefined;
-      });
+      mockuseFieldArrayForTest(fieldsData);
+      mockGetValues.mockReturnValue([
+        { id: paramIdExisting, name: "p1", value: "v1" },
+      ]);
 
       renderComponent();
       fireEvent.click(screen.getByRole("button", { name: "Delete param" }));
@@ -202,66 +192,74 @@ describe("ParamsForm", () => {
       });
     });
 
-    it.todo("should call deletePromptParam and remove when confirm dialog is confirmed", async () => {
-      const fieldsData = [{ id: paramIdExisting, name: "p1", value: "v1" }];
-      mockUseFieldArray.mockReturnValue({
-        fields: fieldsData,
-        append: mockAppend,
-        remove: mockRemove,
-      });
-      mockGetValues.mockImplementation((name: string) => {
-        if (name === "params") {
-          return [{ id: paramIdExisting, name: "p1", value: "v1" }];
-        }
-        return undefined;
-      });
+    it.todo(
+      "should call deletePromptParam and remove when confirm dialog is confirmed",
+      async () => {
+        const fieldsData = [{ id: paramIdExisting, name: "p1", value: "v1" }];
+        mockUseFieldArray.mockReturnValue({
+          fields: fieldsData,
+          append: mockAppend,
+          remove: mockRemove,
+        });
+        mockGetValues.mockImplementation((name: string) => {
+          if (name === "params") {
+            return [{ id: paramIdExisting, name: "p1", value: "v1" }];
+          }
+          return undefined;
+        });
 
-      renderComponent();
-      fireEvent.click(screen.getByRole("button", { name: "Delete param" }));
+        renderComponent();
+        fireEvent.click(screen.getByRole("button", { name: "Delete param" }));
 
-      await waitFor(() => {
-        expect(
-          screen.getByTestId("confirm-dialog-confirm")
-        ).toBeInTheDocument();
-      });
-      fireEvent.click(screen.getByTestId("confirm-dialog-confirm"));
+        await waitFor(() => {
+          expect(
+            screen.getByTestId("confirm-dialog-confirm")
+          ).toBeInTheDocument();
+        });
+        fireEvent.click(screen.getByTestId("confirm-dialog-confirm"));
 
-      await waitFor(() => {
-        expect(mockDeletePromptParam).toHaveBeenCalledWith(
-          // mockUseParamsValue.id,
-          paramIdExisting
-        );
-        expect(mockRemove).toHaveBeenCalledWith(paramIndex);
-      });
-    });
+        await waitFor(() => {
+          expect(mockDeletePromptParam).toHaveBeenCalledWith(
+            // mockUseParamsValue.id,
+            paramIdExisting
+          );
+          expect(mockRemove).toHaveBeenCalledWith(paramIndex);
+        });
+      }
+    );
 
-    it.todo("should not call deletePromptParam or remove when confirm dialog is cancelled", async () => {
-      const fieldsData = [{ id: paramIdExisting, name: "p1", value: "v1" }];
-      mockUseFieldArray.mockReturnValue({
-        fields: fieldsData,
-        append: mockAppend,
-        remove: mockRemove,
-      });
-      mockGetValues.mockImplementation((name: string) => {
-        if (name === "params") {
-          return [{ id: paramIdExisting, name: "p1", value: "v1" }];
-        }
-        return undefined;
-      });
+    it.todo(
+      "should not call deletePromptParam or remove when confirm dialog is cancelled",
+      async () => {
+        const fieldsData = [{ id: paramIdExisting, name: "p1", value: "v1" }];
+        mockUseFieldArray.mockReturnValue({
+          fields: fieldsData,
+          append: mockAppend,
+          remove: mockRemove,
+        });
+        mockGetValues.mockImplementation((name: string) => {
+          if (name === "params") {
+            return [{ id: paramIdExisting, name: "p1", value: "v1" }];
+          }
+          return undefined;
+        });
 
-      renderComponent();
-      fireEvent.click(screen.getByRole("button", { name: "Delete param" }));
+        renderComponent();
+        fireEvent.click(screen.getByRole("button", { name: "Delete param" }));
 
-      await waitFor(() => {
-        expect(screen.getByTestId("confirm-dialog-cancel")).toBeInTheDocument();
-      });
-      fireEvent.click(screen.getByTestId("confirm-dialog-cancel"));
+        await waitFor(() => {
+          expect(
+            screen.getByTestId("confirm-dialog-cancel")
+          ).toBeInTheDocument();
+        });
+        fireEvent.click(screen.getByTestId("confirm-dialog-cancel"));
 
-      await waitFor(() => {
-        expect(mockDeletePromptParam).not.toHaveBeenCalled();
-        expect(mockRemove).not.toHaveBeenCalled();
-      });
-    });
+        await waitFor(() => {
+          expect(mockDeletePromptParam).not.toHaveBeenCalled();
+          expect(mockRemove).not.toHaveBeenCalled();
+        });
+      }
+    );
   });
 
   it.todo("should display field array errors correctly", () => {
