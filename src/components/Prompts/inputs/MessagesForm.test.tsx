@@ -96,6 +96,11 @@ describe("MessagesForm Component", () => {
     usePromptsMock.mockReturnValue({
       deletePromptMessage: vi.fn(),
     });
+    useFieldArrayMock.mockReturnValue({
+      fields: [],
+      append: vi.fn(),
+      remove: vi.fn(),
+    });
     renderComponent();
     expect(screen.getByText("Messages")).toBeInTheDocument();
     expect(screen.getByText("No messages added.")).toBeInTheDocument();
