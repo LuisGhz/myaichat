@@ -70,7 +70,7 @@ describe("ParamsForm", () => {
   const mockGetValues = vi.fn();
   const mockAppend = vi.fn();
   const mockRemove = vi.fn();
-  const mockErrors: any = [];
+  let mockErrors: any = [];
   mockV4.mockReturnValue("mock-uuid");
   mockUsePrompts.mockReturnValue({
     deletePromptParam: mockDeletePromptParam,
@@ -202,49 +202,45 @@ describe("ParamsForm", () => {
       });
     });
 
-    it(
-      "should not call deletePromptParam or remove when confirm dialog is cancelled",
-      async () => {
-        const fieldsData = [{ id: paramIdExisting, name: "p1", value: "v1" }];
-        mockuseFieldArrayForTest(fieldsData);
-        mockGetValues.mockReturnValue([
-          { id: paramIdExisting, name: "p1", value: "v1" },
-        ]);
+    it("should not call deletePromptParam or remove when confirm dialog is cancelled", async () => {
+      const fieldsData = [{ id: paramIdExisting, name: "p1", value: "v1" }];
+      mockuseFieldArrayForTest(fieldsData);
+      mockGetValues.mockReturnValue([
+        { id: paramIdExisting, name: "p1", value: "v1" },
+      ]);
 
-        renderComponent();
-        fireEvent.click(screen.getByRole("button", { name: "Delete param" }));
+      renderComponent();
+      fireEvent.click(screen.getByRole("button", { name: "Delete param" }));
 
-        await waitFor(() => {
-          expect(screen.getByTestId("confirm-dialog")).toBeInTheDocument();
-        });
-        fireEvent.click(screen.getByTestId("cancel-button"));
+      await waitFor(() => {
+        expect(screen.getByTestId("confirm-dialog")).toBeInTheDocument();
+      });
+      fireEvent.click(screen.getByTestId("cancel-button"));
 
-        await waitFor(() => {
-          expect(mockDeletePromptParam).not.toHaveBeenCalled();
-          expect(mockRemove).not.toHaveBeenCalled();
-        });
-      }
-    );
+      await waitFor(() => {
+        expect(mockDeletePromptParam).not.toHaveBeenCalled();
+        expect(mockRemove).not.toHaveBeenCalled();
+      });
+    });
   });
 
-  it.todo("should display field array errors correctly", () => {
-    // mockErrors = {
-    //   params: [
-    //     { name: { message: "Name error 1" } },
-    //     { value: { message: "Value error 2" } },
-    //     {
-    //       name: { message: "Name error 3" },
-    //       value: { message: "Value error 3" },
-    //     },
-    //   ],
-    // } as FieldErrors<PromptForm>;
+  it("should display field array errors correctly", () => {
+    mockErrors = {
+      params: [
+        { name: { message: "Name error 1" } },
+        { value: { message: "Value error 2" } },
+        {
+          name: { message: "Name error 3" },
+          value: { message: "Value error 3" },
+        },
+      ],
+    };
 
-    const fieldsData = [{ id: "1" }, { id: "2" }, { id: "3" }];
-    mockUseFieldArray.mockReturnValueOnce({
-      fields: fieldsData,
-      append: mockAppend,
-      remove: mockRemove,
-    });
+    const fieldsData = [
+      { id: "uuid-1", name: "p1", value: "v1" },
+      { id: "uuid-2", name: "p2", value: "v2" },
+    ];
+    mockuseFieldArrayForTest(fieldsData);
 
     renderComponent();
 
@@ -258,20 +254,13 @@ describe("ParamsForm", () => {
     ).toBeInTheDocument();
   });
 
-  it.todo("should display root errors for params correctly", () => {
-    // mockErrors = {
-    //   params: {
-    //     root: { message: "Root error for params" },
-    //   },
-    // } as FieldErrors<PromptForm>;
-
-    mockUseFieldArray.mockReturnValueOnce({
-      // No fields needed for root error
-      fields: [],
-      append: mockAppend,
-      remove: mockRemove,
-    });
-
+  it("should display root errors for params correctly", () => {
+    mockErrors = {
+      params: {
+        root: { message: "Root error for params" },
+      },
+    };
+    mockuseFieldArrayForTest([]);
     renderComponent();
     expect(screen.getByText("Root error for params")).toBeInTheDocument();
   });
