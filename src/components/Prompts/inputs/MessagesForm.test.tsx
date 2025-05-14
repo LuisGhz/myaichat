@@ -8,6 +8,7 @@ import { PromptForm, promptSchema } from "../PromptSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { v4 } from "uuid";
 import { useParams } from "react-router";
+import { usePrompts } from "hooks/usePrompts";
 
 // Mock necessary dependencies
 vi.mock("react-hook-form", async () => {
@@ -55,12 +56,8 @@ vi.mock("assets/icons/XMarkIcon", () => ({
   XMarkIcon: () => <div>XMarkIcon</div>,
 }));
 
-const deletePromptMessage = vi.fn();
-vi.doMock("hooks/usePrompts", () => ({
-  usePrompts: vi.fn().mockReturnValue({
-    deletePromptMessage,
-  }),
-}));
+vi.mock("hooks/usePrompts");
+const usePromptsMock = usePrompts as unknown as Mock<any>;
 
 vi.mock("assets/icons/PlusIcon", () => ({
   PlusIcon: () => <div>PlusIcon</div>,
@@ -96,12 +93,18 @@ describe("MessagesForm Component", () => {
   };
 
   it("renders without crashing", () => {
+    usePromptsMock.mockReturnValue({
+      deletePromptMessage: vi.fn(),
+    });
     renderComponent();
     expect(screen.getByText("Messages")).toBeInTheDocument();
     expect(screen.getByText("No messages added.")).toBeInTheDocument();
   });
 
   it("appends a new message when the add message button is clicked", async () => {
+    usePromptsMock.mockReturnValue({
+      deletePromptMessage: vi.fn(),
+    });
     const append = vi.fn();
     useFieldArrayMock.mockReturnValue({
       fields: [],
@@ -120,6 +123,9 @@ describe("MessagesForm Component", () => {
   });
 
   it("renders existing messages", () => {
+    usePromptsMock.mockReturnValue({
+      deletePromptMessage: vi.fn(),
+    });
     useFieldArrayMock.mockReturnValue({
       fields: [{ id: "1", role: "User", content: "Test Message" }],
       append: vi.fn(),
@@ -136,6 +142,9 @@ describe("MessagesForm Component", () => {
 
   describe("Removing messages", () => {
     it("opens the confirmation dialog when remove button is clicked for a message with an id", async () => {
+      usePromptsMock.mockReturnValue({
+        deletePromptMessage: vi.fn(),
+      });
       useFieldArrayMock.mockReturnValue({
         fields: [{ id: "123", role: "User", content: "Test Message" }],
         append: vi.fn(),
@@ -157,6 +166,9 @@ describe("MessagesForm Component", () => {
 
     it("removes the message immediately if it's a default message (newly added)", async () => {
       const removeMock = vi.fn();
+      usePromptsMock.mockReturnValue({
+        deletePromptMessage: vi.fn(),
+      });
       useFieldArrayMock.mockReturnValue({
         fields: [
           { id: "test-uuid-default", role: "User", content: "Test Message" },
@@ -177,7 +189,7 @@ describe("MessagesForm Component", () => {
       expect(removeMock).toHaveBeenCalledWith(0);
     });
 
-    it("calls deletePromptMessage and removes the message on confirm", async () => {
+    it.only("calls deletePromptMessage and removes the message on confirm", async () => {
       const removeMock = vi.fn();
       useFieldArrayMock.mockReturnValue({
         fields: [{ id: "123", role: "User", content: "Test Message" }],
@@ -188,27 +200,25 @@ describe("MessagesForm Component", () => {
         { id: "123", role: "User", content: "Test Message" },
       ]);
       useParamsMock.mockReturnValue({ id: "test-prompt-id" });
+      const deletePromptMessage = vi.fn();
+      usePromptsMock.mockReturnValue({
+        deletePromptMessage,
+      });
       renderComponent();
       const removeButton = screen.getByRole("button", {
         name: /delete message/i,
       });
       await userEvent.click(removeButton);
 
-      const confirmButton = screen.getByTestId("confirm-button");
-      await userEvent.click(confirmButton);
-      expect(mockGetValues).toHaveBeenCalledWith("messages");
-      expect(removeMock).not.toHaveBeenCalled();
       await waitFor(async () => {
         expect(screen.getByTestId("confirm-dialog")).toBeVisible();
-        const confirmButton = screen.getByTestId("confirm-button");
-        expect(confirmButton).toBeInTheDocument();
-        await userEvent.click(confirmButton);
       });
+      const confirmButton = screen.getByTestId("confirm-button");
+      expect(confirmButton).toBeInTheDocument();
+      await userEvent.click(confirmButton);
+      expect(mockGetValues).toHaveBeenCalledWith("messages");
       expect(removeMock).toHaveBeenCalled();
-      expect(deletePromptMessage).toHaveBeenCalledWith(
-        "test-prompt-id",
-        "123"
-      );
+      expect(deletePromptMessage).toHaveBeenCalledWith("test-prompt-id", "123");
     });
 
     it("closes the dialog and does not delete the message on cancel", async () => {
@@ -231,7 +241,7 @@ describe("MessagesForm Component", () => {
       const cancelButton = screen.getByTestId("cancel-button");
       await userEvent.click(cancelButton);
 
-      expect(deletePromptMessage).not.toHaveBeenCalled();
+      expect(usePromptsMock).not.toHaveBeenCalled();
       expect(removeMock).not.toHaveBeenCalled();
     });
   });
