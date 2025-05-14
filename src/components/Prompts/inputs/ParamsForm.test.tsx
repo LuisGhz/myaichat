@@ -177,9 +177,13 @@ describe("ParamsForm", () => {
       });
     });
 
-    it('should open confirm dialog for an existing param (id does not include "-default")', async () => {
+    it("should call deletePromptParam and remove when confirm dialog is confirmed", async () => {
       const fieldsData = [{ id: paramIdExisting, name: "p1", value: "v1" }];
-      mockuseFieldArrayForTest(fieldsData);
+      mockUseFieldArray.mockReturnValue({
+        fields: fieldsData,
+        append: mockAppend,
+        remove: mockRemove,
+      });
       mockGetValues.mockReturnValue([
         { id: paramIdExisting, name: "p1", value: "v1" },
       ]);
@@ -190,43 +194,13 @@ describe("ParamsForm", () => {
       await waitFor(() => {
         expect(screen.getByTestId("confirm-dialog")).toBeInTheDocument();
       });
+      fireEvent.click(screen.getByTestId("confirm-button"));
+
+      await waitFor(() => {
+        expect(mockDeletePromptParam).toHaveBeenCalled();
+        expect(mockRemove).toHaveBeenCalled();
+      });
     });
-
-    it.todo(
-      "should call deletePromptParam and remove when confirm dialog is confirmed",
-      async () => {
-        const fieldsData = [{ id: paramIdExisting, name: "p1", value: "v1" }];
-        mockUseFieldArray.mockReturnValue({
-          fields: fieldsData,
-          append: mockAppend,
-          remove: mockRemove,
-        });
-        mockGetValues.mockImplementation((name: string) => {
-          if (name === "params") {
-            return [{ id: paramIdExisting, name: "p1", value: "v1" }];
-          }
-          return undefined;
-        });
-
-        renderComponent();
-        fireEvent.click(screen.getByRole("button", { name: "Delete param" }));
-
-        await waitFor(() => {
-          expect(
-            screen.getByTestId("confirm-dialog-confirm")
-          ).toBeInTheDocument();
-        });
-        fireEvent.click(screen.getByTestId("confirm-dialog-confirm"));
-
-        await waitFor(() => {
-          expect(mockDeletePromptParam).toHaveBeenCalledWith(
-            // mockUseParamsValue.id,
-            paramIdExisting
-          );
-          expect(mockRemove).toHaveBeenCalledWith(paramIndex);
-        });
-      }
-    );
 
     it.todo(
       "should not call deletePromptParam or remove when confirm dialog is cancelled",
