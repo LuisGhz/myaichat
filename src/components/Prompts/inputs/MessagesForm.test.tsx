@@ -189,7 +189,7 @@ describe("MessagesForm Component", () => {
       expect(removeMock).toHaveBeenCalledWith(0);
     });
 
-    it.only("calls deletePromptMessage and removes the message on confirm", async () => {
+    it("calls deletePromptMessage and removes the message on confirm", async () => {
       const removeMock = vi.fn();
       useFieldArrayMock.mockReturnValue({
         fields: [{ id: "123", role: "User", content: "Test Message" }],
