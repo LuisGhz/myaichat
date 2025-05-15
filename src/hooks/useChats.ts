@@ -14,9 +14,13 @@ export const useChats = () => {
   const [isSending, setIsSending] = useState(false);
   const [isChatLoading, setIsChatLoading] = useState(false);
   const getAllChats = async () => {
-    const chatRes = await getAllChatsService();
-    const chats = chatRes?.chats || [];
-    return chats;
+    try {
+      const chatRes = await getAllChatsService();
+      const chats = chatRes?.chats || [];
+      return chats;
+    } catch {
+      toastError("Error fetching chats, please try again later.");
+    }
   };
 
   const getChatMessages = async (id: string, page?: number) => {
