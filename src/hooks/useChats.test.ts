@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { renderHook, act } from "@testing-library/react";
 import { useChats } from "./useChats";
 import * as chatService from "services/chat.service";
