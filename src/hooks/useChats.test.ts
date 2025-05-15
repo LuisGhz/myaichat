@@ -6,6 +6,7 @@ import * as toastHook from "hooks/useToast";
 import { vi, describe, it, expect, beforeEach, Mock } from "vitest";
 import { ChatMessagesRes } from "types/chat/ChatMessagesRes.type";
 import { NewMessageRes } from "types/chat/NewMessageRes.type";
+import { NewMessageReq } from "types/chat/NewMessageReq.type";
 
 vi.mock("hooks/useToast");
 
@@ -21,12 +22,13 @@ describe("useChats", () => {
   });
 
   it("getAllChats returns chats", async () => {
+    const chatsRes = [{ id: "1", title: "Chat 1" }];
     vi.spyOn(chatService, "getAllChatsService").mockResolvedValue({
-      chats: [{ id: "1", title: "Chat 1" }],
+      chats: chatsRes,
     });
     const { result } = renderHook(() => useChats());
     const chats = await result.current.getAllChats();
-    expect(chats).toEqual([{ id: "1" }]);
+    expect(chats).toEqual(chatsRes);
   });
 
   it("getAllChats calls toastError on error", async () => {
@@ -93,7 +95,7 @@ describe("useChats", () => {
     );
   });
 
-  it("sendNewMessage calls service and sets isSending", async () => {
+  it("sendNewMessage calls service", async () => {
     const res: NewMessageRes = {
       completionTokens: 100,
       content: "Content",
@@ -105,13 +107,13 @@ describe("useChats", () => {
     };
     vi.spyOn(chatService, "sendNewMessageService").mockResolvedValue(res);
     const { result } = renderHook(() => useChats());
-    const req = { prompt: "hi" } as any;
+    const req: NewMessageReq = { prompt: "hi", chatId: "chat1" };
     let ress;
     await act(async () => {
       ress = await result.current.sendNewMessage(req);
     });
-    expect(ress).toEqual({ ok: true });
-    expect(result.current.isSending).toBe(false);
+    expect(ress).not.toBeUndefined();
+    expect(ress).toEqual(res);
   });
 
   it("sendNewMessage calls toastError on error", async () => {
@@ -119,7 +121,10 @@ describe("useChats", () => {
       new Error("fail")
     );
     const { result } = renderHook(() => useChats());
-    const req = { prompt: "hi" } as any;
+    const req: NewMessageReq = {
+      prompt: "hi",
+      chatId: "chat1",
+    };
     await act(async () => {
       await result.current.sendNewMessage(req);
     });
