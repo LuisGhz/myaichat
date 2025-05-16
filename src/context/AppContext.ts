@@ -1,7 +1,7 @@
 import { createContext, Dispatch, SetStateAction } from "react";
 import { ChatSummary } from "types/chat/ChatSummary.type";
 
-type AppContextProps = {
+export type AppContextProps = {
   chats: ChatSummary[];
   getAllChatsForList: () => void;
   deleteChatById: (id: string) => void;
