@@ -52,8 +52,9 @@ export const usePromptForm = () => {
     };
 
     try {
+      const res = await updatePromptService(req);
       toastSuccess("Prompt updated successfully!");
-      return await updatePromptService(req);
+      return res;
     } catch (error) {
       toastError(`${error}`);
     }
