@@ -28,7 +28,7 @@ export default defineConfig({
         "src/consts/**",
         "src/components/ChatsLoading.tsx",
         "src/hooks/useMarkdown.tsx",
-        "src/components/Prompts/PromptSchema.ts",
+        "src/components/Prompts/PromptScAhema.ts",
       ],
     },
   },
