@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach, Mock } from "vitest";
 import { usePromptForm } from "./usePromptForm";
-import type { PromptForm } from "../components/Prompts/PromptSchema"; // Adjusted path
+import type { PromptForm } from "features/Prompts/PromptSchema";
 import {
   createPromptService,
   updatePromptService,

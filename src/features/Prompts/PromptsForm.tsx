@@ -1,10 +1,10 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { PromptForm, promptSchema } from "./PromptSchema";
-import { InputName } from "./inputs/InputName";
-import { InputContent } from "./inputs/InputContent";
-import { MessagesForm } from "./inputs/MessagesForm";
-import { ParamsForm } from "./inputs/ParamsForm";
+import { InputName } from "./components/InputName";
+import { InputContent } from "./components/InputContent";
+import { MessagesForm } from "./components/MessagesForm";
+import { ParamsForm } from "./components/ParamsForm";
 import { usePromptForm } from "hooks/usePromptForm";
 import { Link, useNavigate, useParams } from "react-router";
 import { usePrompts } from "hooks/usePrompts";

@@ -1,4 +1,4 @@
-import { PromptForm } from "components/Prompts/PromptSchema";
+import { PromptForm } from "features/Prompts/PromptSchema";
 import {
   createPromptService,
   updatePromptService,

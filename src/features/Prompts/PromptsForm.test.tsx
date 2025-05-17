@@ -13,23 +13,23 @@ vi.mock("react-hook-form");
 const mockUseForm = useForm as unknown as Mock;
 
 // Mock child components
-vi.mock("./inputs/InputName", () => ({
+vi.mock("./components/InputName", () => ({
   InputName: () => <div data-testid="input-name">InputName Component</div>,
 }));
 
-vi.mock("./inputs/InputContent", () => ({
+vi.mock("./components/InputContent", () => ({
   InputContent: () => (
     <div data-testid="input-content">InputContent Component</div>
   ),
 }));
 
-vi.mock("./inputs/MessagesForm", () => ({
+vi.mock("./components/MessagesForm", () => ({
   MessagesForm: () => (
     <div data-testid="messages-form">MessagesForm Component</div>
   ),
 }));
 
-vi.mock("./inputs/ParamsForm", () => ({
+vi.mock("./components/ParamsForm", () => ({
   ParamsForm: () => <div data-testid="params-form">ParamsForm Component</div>,
 }));
 
