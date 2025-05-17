@@ -26,7 +26,9 @@ export default defineConfig({
         "src/types/**",
         "src/assets/**",
         "src/consts/**",
-        "src/components/ChatsLoading.tsx"
+        "src/components/ChatsLoading.tsx",
+        "src/hooks/useMarkdown.tsx",
+        "src/components/Prompts/PromptSchema.ts",
       ],
     },
   },
