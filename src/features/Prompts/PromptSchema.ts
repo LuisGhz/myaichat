@@ -6,7 +6,7 @@ export const promptSchema = z.object({
   name: z
     .string()
     .min(1, "Name is required")
-    .max(15, "Must be 15 characters or less"),
+    .max(30, "Must be 30 characters or less"),
   content: z
     .string()
     .min(1, "Content is required")
