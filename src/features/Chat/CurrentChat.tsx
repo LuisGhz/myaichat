@@ -2,15 +2,15 @@ import { useChats } from "hooks/useChats";
 import { useEffect, useState, useContext, useRef } from "react";
 import { useNavigate, useParams } from "react-router";
 import { Message } from "types/chat/Message.type";
-import { Messages } from "./Messages/Messages";
-import { InputSection } from "./InputSection/InputSection";
+import { Messages } from "./components/Messages/Messages";
+import { InputSection } from "./components/InputSection/InputSection";
 import { NewMessageReq } from "types/chat/NewMessageReq.type";
 import { AppContext } from "context/AppContext";
-import { NewConversation } from "./NewConversation";
+import { NewConversation } from "./components/NewConversation";
 import { ModelsValues } from "types/chat/ModelsValues.type";
-import { CurrentModelSummary } from "./CurrentModelSummary";
+import { CurrentModelSummary } from "./components/CurrentModelSummary";
 import { ChatMessagesRes } from "types/chat/ChatMessagesRes.type";
-import { ChatsLoading } from "./ChatsLoading";
+import { ChatsLoading } from "./components/ChatsLoading";
 
 export const CurrentChat = () => {
   const { getAllChatsForList } = useContext(AppContext);
