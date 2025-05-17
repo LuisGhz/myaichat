@@ -2,7 +2,7 @@ import App from "App";
 import { CurrentChat } from "components/CurrentChat";
 import { Prompts } from "features/Prompts/Prompts";
 import { PromptsForm } from "features/Prompts/PromptsForm";
-import { Welcome } from "components/Welcome/Welcome";
+import { Welcome } from "features/Welcome/Welcome";
 import { BrowserRouter, Routes, Route } from "react-router";
 
 export const AppRouter = () => {
