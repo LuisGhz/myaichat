@@ -1,5 +1,5 @@
 import App from "App";
-import { CurrentChat } from "components/CurrentChat";
+import { CurrentChat } from "features/Chat/CurrentChat";
 import { Prompts } from "features/Prompts/Prompts";
 import { PromptsForm } from "features/Prompts/PromptsForm";
 import { Welcome } from "features/Welcome/Welcome";
