@@ -19,6 +19,7 @@ export const InputSection = ({ onEnter, isSending }: InputSectionProps) => {
   const selectedFile = useRef<File | null>(null);
   const textareaContainerRef = useRef<HTMLDivElement>(null);
   const params = useParams();
+  const maxLength = 8_000;
 
   useEffect(() => {
     const windowWidth = window.innerWidth;
@@ -112,6 +113,7 @@ export const InputSection = ({ onEnter, isSending }: InputSectionProps) => {
               aria-multiline="true"
               onFocus={onFocusTextarea}
               onBlur={onBlurTextarea}
+              maxLength={maxLength}
             />
             <div className="flex items-end">
               {userInput.length > 0 && (
