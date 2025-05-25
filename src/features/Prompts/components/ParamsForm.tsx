@@ -118,7 +118,7 @@ export const ParamsForm = ({ register, errors, control, getValues }: Props) => {
       ))}
       {Array.isArray(errors.params) &&
         errors.params.map((err, idx) => (
-          <div key={idx} className="text-red-600 text-sm">
+          <div key={idx} className="text-red-600 text-sm text-center">
             {err?.name?.message && (
               <div>
                 Param {idx + 1} name: {err.name.message}
@@ -132,7 +132,7 @@ export const ParamsForm = ({ register, errors, control, getValues }: Props) => {
           </div>
         ))}
       {errors.params?.root?.message && (
-        <div className="text-red-600 text-sm">{errors.params.root.message}</div>
+        <div className="text-red-600 text-sm text-center">{errors.params.root.message}</div>
       )}
     </div>
   );
