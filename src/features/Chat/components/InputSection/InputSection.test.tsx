@@ -129,4 +129,13 @@ describe("InputSection", () => {
       expect.any(File)
     );
   });
+
+  test("Textarea shouldn't allow more than 8,000 characters", async () => {
+    render(<InputSection onEnter={onEnter} isSending={false} />);
+    const textarea = screen.getByRole("textbox", { name: /Message input/i });
+    const longText = "a".repeat(8010);
+    await userEvent.click(textarea);
+    await userEvent.paste(longText);
+    expect(textarea).toHaveValue(longText.slice(0, 8000));
+  });
 });
