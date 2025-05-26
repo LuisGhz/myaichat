@@ -11,7 +11,7 @@ export const promptSchema = z
     content: z
       .string()
       .min(1, "Content is required")
-      .max(contentLength, `Must be ${contentLength} characters or less`),
+      .max(contentLength, `Content must be ${contentLength} characters or less`),
     messages: z
       .array(
         z.object({
@@ -19,8 +19,8 @@ export const promptSchema = z
           role: z.enum(["User", "Assistant"]),
           content: z
             .string()
-            .min(1, "Is required")
-            .max(contentLength, `Must be ${contentLength} characters or less`),
+            .min(1, "Message content is required")
+            .max(contentLength, `Message content must be ${contentLength} characters or less`),
         })
       )
       .optional(),
@@ -31,11 +31,11 @@ export const promptSchema = z
           name: z
             .string()
             .min(1, "Is required")
-            .max(15, "Must be 15 characters or less"),
+            .max(15, "Param name must be 15 characters or less"),
           value: z
             .string()
             .min(1, "Is required")
-            .max(100, "Must be 100 characters or less"),
+            .max(100, "Param value must be 100 characters or less"),
         })
       )
       .optional(),
@@ -70,7 +70,7 @@ export const promptSchema = z
     },
     {
       path: ["params"],
-      message: "All parameters must be included in the content",
+      message: "All params must be included in the prompt content",
     }
   );
 
