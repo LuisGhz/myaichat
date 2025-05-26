@@ -52,7 +52,7 @@ export const promptSchema = z
     },
     {
       path: ["params"],
-      message: "Parameter names must be unique",
+      message: "Params names must be unique",
     }
   )
   .refine(
