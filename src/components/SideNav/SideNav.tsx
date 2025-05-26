@@ -15,8 +15,10 @@ export const SideNav = () => {
     const handleClickOutside = (event: MouseEvent) => {
       if (window.innerWidth >= ScreensWidth.smallDesktop) return;
       const isMenuOpenMobile =
-        window.innerWidth < ScreensWidth.smallDesktop ? !isMenuOpen : isMenuOpen;
-      const contextMenu = document.querySelector('.sidenav-context-menu');
+        window.innerWidth < ScreensWidth.smallDesktop
+          ? !isMenuOpen
+          : isMenuOpen;
+      const contextMenu = document.querySelector(".sidenav-context-menu");
       if (
         !!navRef.current &&
         !!openRef.current &&
@@ -44,7 +46,11 @@ export const SideNav = () => {
   return (
     <>
       <section className="absolute top-0 left-0 z-10 flex text-white gap-x-3 mt-1 -ms-1.5">
-        <Link className="mt-1 ms-2.5 text-lg" aria-label="Go to home page" to={"/"}>
+        <Link
+          className="mt-1 ms-2.5 text-lg"
+          aria-label="Go to home page"
+          to={"/"}
+        >
           MyAIChat
         </Link>
         <button
@@ -66,19 +72,20 @@ export const SideNav = () => {
           <PencilSquareIcon className="size-7 text-white me-2 mt-1" />
         </Link>
       </section>
-      <nav
-        className={`fixed h-full top-0 ${
-          isMenuOpen
-            ? "-translate-x-full lg:translate-x-0"
-            : "translate-x-0 lg:-translate-x-full"
-        } transition-all duration-500 w-72 z-20 bg-cop-4 text-white overflow-y-auto hide-scrollbar`}
-        role="navigation"
-        aria-label="Chat navigation"
-        ref={navRef}
-      >
-        <HeaderNav />
-        <ChatsNav />
-      </nav>
+        <nav
+          className={`absolute h-full ${
+            isMenuOpen
+              ? "-translate-x-full lg:translate-x-0"
+              : "translate-x-0 lg:-translate-x-full"
+          } transition-all duration-500 w-72 z-20 bg-cop-4 text-white overflow-y-auto hide-scrollbar`}
+          role="navigation"
+          aria-label="Chat navigation"
+          ref={navRef}
+        >
+          <HeaderNav />
+          <ChatsNav />
+          <ChatsNav />
+        </nav>
     </>
   );
 };
