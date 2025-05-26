@@ -7,6 +7,7 @@ export type AppContextProps = {
   deleteChatById: (id: string) => void;
   isMenuOpen: boolean;
   setIsMenuOpen: Dispatch<SetStateAction<boolean>>;
+  isOffline: boolean;
 };
 
 export const AppContext = createContext<AppContextProps>({
@@ -15,4 +16,5 @@ export const AppContext = createContext<AppContextProps>({
   deleteChatById: () => {},
   isMenuOpen: true,
   setIsMenuOpen: () => {},
+  isOffline: false,
 });
