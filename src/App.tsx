@@ -1,18 +1,24 @@
+import { useContext } from "react";
 import { Outlet } from "react-router";
 import { ToastContainer } from "react-toastify";
-import { SideNav } from "components/SideNav/SideNav";
 import { AppContext } from "context/AppContext";
-import { useContext } from "react";
+import { SideNav } from "components/SideNav/SideNav";
+import { OfflineMessage } from "components/OfflineMessage";
 
 function App() {
-  const { isMenuOpen } = useContext(AppContext);
+  const { isMenuOpen, isOffline } = useContext(AppContext);
 
   return (
     <>
       <ToastContainer />
-      <div className="flex h-dvh relative">
+      <OfflineMessage />
+      <div className={`flex relative ${!isOffline ? "h-dvh" : "h-[calc(100dvh-4rem)]"}`}>
         <SideNav />
-        <main className={`grow bg-cop-3 ms-0 transition-all duration-500 ${isMenuOpen ? "lg:ms-72" : ""}`}>
+        <main
+          className={`grow bg-cop-3 ms-0 transition-all duration-500 ${
+            isMenuOpen ? "lg:ms-72" : ""
+          }`}
+        >
           <Outlet />
         </main>
       </div>
