@@ -2,6 +2,7 @@ import { ReactNode, useEffect, useState } from "react";
 import { AppContext } from "./AppContext";
 import { ChatSummary } from "types/chat/ChatSummary.type";
 import { useChats } from "hooks/useChats";
+import { useNetworkState } from "hooks/useNetworkState";
 
 type Props = {
   children: ReactNode;
@@ -10,6 +11,7 @@ type Props = {
 export const AppContextProvider = ({ children }: Props) => {
   const [chats, setChats] = useState<ChatSummary[]>([]);
   const [isMenuOpen, setIsMenuOpen] = useState(true);
+  const { isOffline } = useNetworkState();
 
   const { getAllChats, deleteChat } = useChats();
 
@@ -38,6 +40,7 @@ export const AppContextProvider = ({ children }: Props) => {
         deleteChatById,
         isMenuOpen,
         setIsMenuOpen,
+        isOffline,
       }}
     >
       {children}
