@@ -20,7 +20,7 @@ export const ImageViewer = ({ image }: Props) => {
   return (
     <>
       <img
-        className="w-48 mb-3"
+        className="w-48 mb-3 rounded-sm"
         src={finalImage}
         alt="Image uploaded by user"
       />
