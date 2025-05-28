@@ -84,7 +84,6 @@ export const SideNav = () => {
         >
           <HeaderNav />
           <ChatsNav />
-          <ChatsNav />
         </nav>
     </>
   );
