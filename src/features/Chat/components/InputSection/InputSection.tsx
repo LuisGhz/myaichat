@@ -30,6 +30,8 @@ export const InputSection = ({ onEnter, isSending }: InputSectionProps) => {
       textareaRef.current?.focus();
 
     setUserInput("");
+    setSelectedImage(null);
+    selectedFile.current = null;
   }, [params.id]);
 
   const onMessageKeyDown = (event: KeyboardEvent<HTMLTextAreaElement>) => {
