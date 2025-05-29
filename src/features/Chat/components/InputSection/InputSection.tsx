@@ -28,6 +28,8 @@ export const InputSection = ({ onEnter, isSending }: InputSectionProps) => {
     const windowWidth = window.innerWidth;
     if (params.id && windowWidth >= ScreensWidth.smallDesktop)
       textareaRef.current?.focus();
+
+    setUserInput("");
   }, [params.id]);
 
   const onMessageKeyDown = (event: KeyboardEvent<HTMLTextAreaElement>) => {
