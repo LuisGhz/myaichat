@@ -15,7 +15,7 @@ export const AssistantTyping = () => {
     maxWidth: "fit-content",
     backgroundColor: "transparent",
     borderRadius: "16px",
-    margin: "8px 0",
+    margin: "16px 0",
   };
 
   const dotStyle: CSSProperties = {
@@ -33,11 +33,11 @@ export const AssistantTyping = () => {
     },
     {
       animation: "dotJump 1.2s infinite ease-in-out",
-      animationDelay: "0.15s",
+      animationDelay: "0.25s",
     },
     {
       animation: "dotJump 1.2s infinite ease-in-out",
-      animationDelay: "0.3s",
+      animationDelay: "0.40s",
     },
   ];
 
