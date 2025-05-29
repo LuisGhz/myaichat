@@ -20,13 +20,14 @@ export const InputSection = ({ onEnter, isSending }: InputSectionProps) => {
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const selectedFile = useRef<File | null>(null);
   const textareaContainerRef = useRef<HTMLDivElement>(null);
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
   const params = useParams();
   const maxLength = 8_000;
 
   useEffect(() => {
     const windowWidth = window.innerWidth;
     if (params.id && windowWidth >= ScreensWidth.smallDesktop)
-      textareaContainerRef.current?.focus();
+      textareaRef.current?.focus();
   }, [params.id]);
 
   const onMessageKeyDown = (event: KeyboardEvent<HTMLTextAreaElement>) => {
@@ -117,6 +118,7 @@ export const InputSection = ({ onEnter, isSending }: InputSectionProps) => {
               onBlur={onBlurTextarea}
               maxLength={maxLength}
               disabled={isOffline}
+              ref={textareaRef}
             />
             <div className="flex items-end">
               {userInput.length > 0 && (
