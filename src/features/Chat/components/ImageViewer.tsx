@@ -18,12 +18,12 @@ export const ImageViewer = ({ image }: Props) => {
   }, []);
 
   return (
-    <>
+    finalImage !== "" && (
       <img
         className="w-48 mb-3 rounded-sm"
         src={finalImage}
         alt="Image uploaded by user"
       />
-    </>
+    )
   );
 };
