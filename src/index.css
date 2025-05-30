@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@import 'react-photo-view/dist/react-photo-view.css';
 
 * {
   box-sizing: border-box;
