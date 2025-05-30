@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-
+import { PhotoProvider, PhotoView } from "react-photo-view";
 type Props = {
   image: File | string;
 };
@@ -19,11 +19,17 @@ export const ImageViewer = ({ image }: Props) => {
 
   return (
     finalImage !== "" && (
-      <img
-        className="w-48 mb-3 rounded-sm"
-        src={finalImage}
-        alt="Image uploaded by user"
-      />
+      <>
+        <PhotoProvider maskOpacity={0.8} bannerVisible={false}>
+          <PhotoView src={finalImage}>
+            <img
+              className="w-48 mb-3 rounded-sm cursor-pointer"
+              src={finalImage}
+              alt="Image uploaded by user"
+            />
+          </PhotoView>
+        </PhotoProvider>
+      </>
     )
   );
 };
