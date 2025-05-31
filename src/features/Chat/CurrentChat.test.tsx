@@ -76,6 +76,7 @@ describe.todo("CurrentChat", () => {
     deleteChatById: vi.fn(),
     isMenuOpen: false,
     setIsMenuOpen: vi.fn(),
+    isOffline: false,
   };
 
   const renderWithContext = (ui: React.ReactElement) => {

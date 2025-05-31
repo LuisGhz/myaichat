@@ -63,6 +63,7 @@ describe("HeaderNav", () => {
           chats: [],
           deleteChatById: vi.fn(),
           getAllChatsForList: vi.fn(),
+          isOffline: false,
         }}
       >
         <HeaderNav />

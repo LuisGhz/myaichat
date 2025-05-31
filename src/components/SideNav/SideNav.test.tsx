@@ -41,6 +41,7 @@ const defaultContextValue: AppContextProps = {
   chats: [],
   deleteChatById: vi.fn(),
   getAllChatsForList: vi.fn(),
+  isOffline: false,
 };
 
 const renderSideNav = (contextProps = {}) => {

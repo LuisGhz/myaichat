@@ -79,6 +79,7 @@ const defaultContextValue: AppContextProps = {
   setIsMenuOpen: vi.fn(),
   isMenuOpen: false,
   getAllChatsForList: vi.fn(),
+  isOffline: false,
 };
 
 const renderComponent = (
