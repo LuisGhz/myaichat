@@ -21,7 +21,7 @@ export const useChats = () => {
   const getAllChats = async () => {
     try {
       const chatRes = await getAllChatsService();
-      const chats = chatRes?.chats || [];
+      const chats = chatRes?.chats.reverse() || [];
       setChats(chats);
     } catch {
       toastError("Error fetching chats, please try again later.");
