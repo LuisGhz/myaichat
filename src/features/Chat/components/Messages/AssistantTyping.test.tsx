@@ -41,12 +41,12 @@ describe("AssistantTyping", () => {
     
     expect(dots[1]).toHaveStyle({
       animation: "dotJump 1.2s infinite ease-in-out",
-      animationDelay: "0.15s",
+      animationDelay: "0.25s",
     });
     
     expect(dots[2]).toHaveStyle({
       animation: "dotJump 1.2s infinite ease-in-out",
-      animationDelay: "0.3s",
+      animationDelay: "0.40s",
     });
   });
 
