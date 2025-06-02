@@ -94,13 +94,17 @@ const renderComponent = (
   mockUseParams.mockReturnValue({ id: currentChatId! });
   mockUseNavigate.mockReturnValue(mockNavigate);
 
-  mockDeleteChatById = (contextOverrides.deleteChatById as any) || vi.fn();
+  mockDeleteChatById = vi.fn();
   mockSetIsMenuOpen = (contextOverrides.setIsMenuOpen as any) || vi.fn();
   mockUseAppStore.mockImplementation((selector: (state: any) => any) => {
     // This checks if the selector is intended to get `state.chats`
     // It's a simplified check; for more complex state, a more robust check might be needed.
     if (selector.toString().includes("state.chats")) {
       return chats;
+    }
+
+    if (selector.toString().includes("state.deleteChatById")) {
+      return mockDeleteChatById;
     }
     return undefined;
   });

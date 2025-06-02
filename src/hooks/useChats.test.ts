@@ -16,6 +16,7 @@ vi.mock("store/AppStore");
 const mockToastError = vi.fn();
 const mockAppStore = vi.mocked(AppStore.useAppStore);
 const setChatsMock = vi.fn();
+const mockDeleteChatById = vi.fn();
 
 describe("useChats", () => {
   (toastHook.useToast as Mock).mockReturnValue({
@@ -27,10 +28,15 @@ describe("useChats", () => {
     mockAppStore.mockImplementation((selector: (state: any) => any) => {
       const state = {
         setChats: setChatsMock,
+        deleteChatById: mockDeleteChatById,
       };
 
       if (selector.toString().includes("setChats")) {
         return state.setChats;
+      }
+
+      if (selector.toString().includes("deleteChatById")) {
+        return state.deleteChatById;
       }
       
       return undefined;
@@ -159,6 +165,7 @@ describe("useChats", () => {
       await result.current.deleteChat("chat1");
     });
     expect(spy).toHaveBeenCalledWith("chat1");
+    expect(mockDeleteChatById).toHaveBeenCalledWith("chat1");
   });
 
   it("deleteChat calls toastError on error", async () => {
