@@ -1,15 +1,21 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { renderHook, act } from "@testing-library/react";
+import { vi, describe, it, expect, beforeEach, Mock } from "vitest";
+import * as toastHook from "hooks/useToast";
+import * as AppStore from "store/AppStore";
 import { useChats } from "./useChats";
 import * as chatService from "services/chat.service";
-import * as toastHook from "hooks/useToast";
-import { vi, describe, it, expect, beforeEach, Mock } from "vitest";
 import { ChatMessagesRes } from "types/chat/ChatMessagesRes.type";
 import { NewMessageRes } from "types/chat/NewMessageRes.type";
 import { NewMessageReq } from "types/chat/NewMessageReq.type";
 
 vi.mock("hooks/useToast");
 
+vi.mock("store/AppStore");
+
 const mockToastError = vi.fn();
+const mockAppStore = vi.mocked(AppStore.useAppStore);
+const setChatsMock = vi.fn();
 
 describe("useChats", () => {
   (toastHook.useToast as Mock).mockReturnValue({
@@ -18,6 +24,17 @@ describe("useChats", () => {
 
   beforeEach(() => {
     vi.clearAllMocks();
+    mockAppStore.mockImplementation((selector: (state: any) => any) => {
+      const state = {
+        setChats: setChatsMock,
+      };
+
+      if (selector.toString().includes("setChats")) {
+        return state.setChats;
+      }
+      
+      return undefined;
+    });
   });
 
   it("getAllChats returns chats", async () => {
@@ -26,8 +43,8 @@ describe("useChats", () => {
       chats: chatsRes,
     });
     const { result } = renderHook(() => useChats());
-    const chats = await result.current.getAllChats();
-    expect(chats).toEqual(chatsRes);
+    await result.current.getAllChats();
+    expect(setChatsMock).toHaveBeenCalledWith(chatsRes);
   });
 
   it("getAllChats calls toastError on error", async () => {

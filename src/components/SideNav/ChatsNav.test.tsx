@@ -7,6 +7,7 @@ import { ScreensWidth } from "consts/ScreensWidth";
 import { ChatSummary } from "types/chat/ChatSummary.type";
 import * as reactRouter from "react-router";
 import * as useContextMenu from "hooks/useContextMenu";
+import * as useAppStore from "store/AppStore";
 
 // filepath: c:\Users\Luisghtz\dev\react\myaichat\src\components\SideNav\ChatsNav.test.tsx
 
@@ -44,6 +45,8 @@ vi.mock("components/ContextMenu", () => ({
   ),
 }));
 
+vi.mock("store/AppStore");
+
 vi.mock("assets/icons/TrashIcon", () => ({
   TrashIcon: () => <svg data-testid="trash-icon" />,
 }));
@@ -56,6 +59,7 @@ const mockNavigate = vi.fn();
 const mockUseParams = vi.mocked(reactRouter.useParams);
 const mockUseNavigate = vi.mocked(reactRouter.useNavigate);
 const mockUseContextMenu = vi.mocked(useContextMenu.useContextMenu);
+const mockUseAppStore = vi.mocked(useAppStore.useAppStore);
 
 let mockDeleteChatById: ReturnType<typeof vi.fn>;
 let mockSetIsMenuOpen: ReturnType<typeof vi.fn>;
@@ -92,6 +96,14 @@ const renderComponent = (
 
   mockDeleteChatById = (contextOverrides.deleteChatById as any) || vi.fn();
   mockSetIsMenuOpen = (contextOverrides.setIsMenuOpen as any) || vi.fn();
+  mockUseAppStore.mockImplementation((selector: (state: any) => any) => {
+    // This checks if the selector is intended to get `state.chats`
+    // It's a simplified check; for more complex state, a more robust check might be needed.
+    if (selector.toString().includes("state.chats")) {
+      return chats;
+    }
+    return undefined;
+  });
 
   mockOnTouchStart = vi.fn((_, callback) => {
     // Simulate the hook calling the callback.
