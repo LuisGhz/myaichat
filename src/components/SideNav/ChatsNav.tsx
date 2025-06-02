@@ -1,21 +1,30 @@
 import { ScreensWidth } from "consts/ScreensWidth";
 import { AppContext } from "context/AppContext";
-import { ReactNode, useContext, useRef, useState } from "react";
+import { ReactNode, useContext, useEffect, useRef, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router";
 import { useContextMenu } from "hooks/useContextMenu";
 import { ContextMenu } from "components/ContextMenu";
 import { TrashIcon } from "assets/icons/TrashIcon";
 import { PencilIcon } from "assets/icons/PencilIcon";
 import { ChatSummary } from "types/chat/ChatSummary.type";
+import { useChats } from "hooks/useChats";
+import { useAppStore } from "store/AppStore";
 
 export const ChatsNav = () => {
-  const { chats, deleteChatById, setIsMenuOpen } = useContext(AppContext);
+  const chats = useAppStore((state) => state.chats);
+  const { deleteChatById, setIsMenuOpen } = useContext(AppContext);
+  const { getAllChats } = useChats();
   const navigate = useNavigate();
   const params = useParams();
   const { onTouchStart, onTouchEnd } = useContextMenu();
   const [elements, setElements] = useState<ReactNode[]>([]);
   const [isContextMenuOpen, setIsContextMenuOpen] = useState(false);
   const triggeredContextMenu = useRef<HTMLElement>(null);
+
+  useEffect(() => {
+    getAllChats();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const handleDeleteChat = (id: string) => {
     deleteChatById(id);

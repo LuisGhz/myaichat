@@ -7,17 +7,21 @@ import {
   deleteChatService,
 } from "services/chat.service";
 import { NewMessageReq } from "types/chat/NewMessageReq.type";
+import { useAppStore } from "store/AppStore";
 
 export const useChats = () => {
   const [isEmptyPage, setIsEmptyPage] = useState(false);
   const { toastError } = useToast();
   const [isSending, setIsSending] = useState(false);
   const [isChatLoading, setIsChatLoading] = useState(false);
+
+  const setChats = useAppStore((state) => state.setChats);
+
   const getAllChats = async () => {
     try {
       const chatRes = await getAllChatsService();
       const chats = chatRes?.chats || [];
-      return chats;
+      setChats(chats);
     } catch {
       toastError("Error fetching chats, please try again later.");
     }
@@ -42,7 +46,8 @@ export const useChats = () => {
     if (newMessageOps.model) formData.append("model", newMessageOps.model);
     if (newMessageOps.chatId) formData.append("chatId", newMessageOps.chatId);
     if (newMessageOps.image) formData.append("image", newMessageOps.image);
-    if (newMessageOps.promptId) formData.append("promptId", newMessageOps.promptId);
+    if (newMessageOps.promptId)
+      formData.append("promptId", newMessageOps.promptId);
     setIsSending(true);
     try {
       const res = await sendNewMessageService(formData);
