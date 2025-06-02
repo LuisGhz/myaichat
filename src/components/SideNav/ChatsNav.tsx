@@ -12,8 +12,9 @@ import { useAppStore } from "store/AppStore";
 
 export const ChatsNav = () => {
   const chats = useAppStore((state) => state.chats);
-  const { deleteChatById, setIsMenuOpen } = useContext(AppContext);
-  const { getAllChats } = useChats();
+  
+  const { setIsMenuOpen } = useContext(AppContext);
+  const { getAllChats, deleteChat: deleteChatById } = useChats();
   const navigate = useNavigate();
   const params = useParams();
   const { onTouchStart, onTouchEnd } = useContextMenu();

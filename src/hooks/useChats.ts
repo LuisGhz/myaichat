@@ -16,6 +16,7 @@ export const useChats = () => {
   const [isChatLoading, setIsChatLoading] = useState(false);
 
   const setChats = useAppStore((state) => state.setChats);
+  const deleteChatById = useAppStore((state) => state.deleteChatById);
 
   const getAllChats = async () => {
     try {
@@ -64,6 +65,7 @@ export const useChats = () => {
   const deleteChat = async (id: string) => {
     try {
       await deleteChatService(id);
+      deleteChatById(id);
     } catch {
       toastError("Error deleting chat, please try again later.");
     }
