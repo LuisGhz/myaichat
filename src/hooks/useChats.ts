@@ -7,7 +7,10 @@ import {
   deleteChatService,
 } from "services/chat.service";
 import { NewMessageReq } from "types/chat/NewMessageReq.type";
-import { useAppStore } from "store/AppStore";
+import {
+  useAppDeleteChatByIdStore,
+  useAppSetChatsStore,
+} from "store/useAppStore";
 
 export const useChats = () => {
   const [isEmptyPage, setIsEmptyPage] = useState(false);
@@ -15,8 +18,8 @@ export const useChats = () => {
   const [isSending, setIsSending] = useState(false);
   const [isChatLoading, setIsChatLoading] = useState(false);
 
-  const setChats = useAppStore((state) => state.setChats);
-  const deleteChatById = useAppStore((state) => state.deleteChatById);
+  const setChats = useAppSetChatsStore();
+  const deleteChatById = useAppDeleteChatByIdStore();
 
   const getAllChats = async () => {
     try {
