@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { renderHook, act } from "@testing-library/react";
 import { vi, describe, it, expect, beforeEach, Mock } from "vitest";
 import { useChats } from "./useChats";
