@@ -10,10 +10,10 @@ import { ModelsValues } from "types/chat/ModelsValues.type";
 import { CurrentModelSummary } from "./components/CurrentModelSummary";
 import { ChatMessagesRes } from "types/chat/ChatMessagesRes.type";
 import { ChatsLoading } from "./components/ChatsLoading";
-import { useAppStore } from "store/AppStore";
+import { useAppAddChatStore } from "store/useAppStore";
 
 export const CurrentChat = () => {
-  const addChat = useAppStore((state) => state.addChat);
+  const addChat = useAppAddChatStore();
   const [messages, setMessages] = useState<Message[]>([]);
   const [model, setModel] = useState<ModelsValues>("gemini-2.0-flash");
   const [totalPromptTokens, setTotalPromptTokens] = useState(0);
