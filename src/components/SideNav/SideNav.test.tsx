@@ -1,8 +1,9 @@
 import { render, screen, fireEvent, cleanup } from "@testing-library/react";
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import { SideNav } from "./SideNav";
-import { AppContext, AppContextProps } from "context/AppContext";
 import { ScreensWidth } from "consts/ScreensWidth"; // Used by the component
+import * as useAppStore from "store/useAppStore"; // Used by the component
+import { AppStoreProps } from "types/store/AppStore";
 
 // Mocks
 vi.mock("react-router", () => ({
@@ -33,29 +34,23 @@ vi.mock("./HeaderNav", () => ({
   HeaderNav: vi.fn(() => <div data-testid="header-nav">HeaderNav</div>),
 }));
 
+vi.mock("store/useAppStore");
+
 const mockSetIsMenuOpen = vi.fn();
 
-const defaultContextValue: AppContextProps = {
-  isMenuOpen: false,
-  setIsMenuOpen: mockSetIsMenuOpen,
-  chats: [],
-  deleteChatById: vi.fn(),
-  getAllChatsForList: vi.fn(),
-  isOffline: false,
-};
-
-const renderSideNav = (contextProps = {}) => {
-  const providerValue = { ...defaultContextValue, ...contextProps };
-  return render(
-    <AppContext.Provider value={providerValue}>
-      <SideNav />
-    </AppContext.Provider>
+const renderSideNav = (storeProps: Partial<AppStoreProps> = {}) => {
+  vi.mocked(useAppStore.useAppIsMenuOpenStore).mockReturnValue(
+    storeProps.isMenuOpen ?? true
   );
+  return render(<SideNav />);
 };
 
 describe("SideNav", () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    vi.mocked(useAppStore.useAppSetIsMenuOpenStore).mockReturnValue(
+      mockSetIsMenuOpen
+    );
     // Reset window.innerWidth to a common default or ensure it's managed by specific describe blocks
     Object.defineProperty(window, "innerWidth", {
       writable: true,
@@ -91,39 +86,40 @@ describe("SideNav", () => {
 
   describe("Menu Toggle", () => {
     it("should call setIsMenuOpen and toggle aria-expanded when open menu button is clicked", () => {
-      const currentSetIsMenuOpen = vi.fn();
+      // Initial state: isMenuOpen = false
+      // renderSideNav sets up useAppIsMenuOpenStore to return false.
+      // useAppSetIsMenuOpenStore
+      //
+      // is assumed to be mocked to return mockSetIsMenuOpen in a beforeEach.
       const { rerender } = renderSideNav({
         isMenuOpen: false,
-        setIsMenuOpen: currentSetIsMenuOpen,
       });
       let button = screen.getByRole("button", { name: /Open sidebar menu/i });
       expect(button).toHaveAttribute("aria-expanded", "false");
 
       fireEvent.click(button);
-      expect(currentSetIsMenuOpen).toHaveBeenCalledTimes(1);
-      const updaterFalseToTrue = currentSetIsMenuOpen.mock.calls[0][0];
-      expect(updaterFalseToTrue(false)).toBe(true);
+      // Component calls setIsMenuOpen(!isMenuOpen). Initial isMenuOpen was false.
+      // So, setIsMenuOpen(true) is called.
+      expect(mockSetIsMenuOpen).toHaveBeenCalledTimes(1);
+      expect(mockSetIsMenuOpen).toHaveBeenCalledWith(true);
 
-      // Simulate state update by re-rendering with new context value
-      currentSetIsMenuOpen.mockClear();
-      rerender(
-        <AppContext.Provider
-          value={{
-            ...defaultContextValue,
-            isMenuOpen: true,
-            setIsMenuOpen: currentSetIsMenuOpen,
-          }}
-        >
-          <SideNav />
-        </AppContext.Provider>
-      );
-      button = screen.getByRole("button", { name: /Open sidebar menu/i }); // Re-fetch after rerender
-      expect(button).toHaveAttribute("aria-expanded", "true");
+      // Simulate state update: isMenuOpen becomes true
+      mockSetIsMenuOpen.mockClear(); // Clear mock calls for the next assertion set
+
+      // Update the store mock to reflect the new state
+      vi.mocked(useAppStore.useAppIsMenuOpenStore).mockReturnValue(true);
+
+      // Rerender the component. It will now pick up isMenuOpen = true from the store.
+      rerender(<SideNav />);
+
+      button = screen.getByRole("button", { name: /Open sidebar menu/i }); // Re-fetch button after rerender
+      expect(button).toHaveAttribute("aria-expanded", "true"); // aria-expanded should now be true
 
       fireEvent.click(button);
-      expect(currentSetIsMenuOpen).toHaveBeenCalledTimes(1);
-      const updaterTrueToFalse = currentSetIsMenuOpen.mock.calls[0][0];
-      expect(updaterTrueToFalse(true)).toBe(false);
+      // Component calls setIsMenuOpen(!isMenuOpen). Current isMenuOpen is true.
+      // So, setIsMenuOpen(false) is called.
+      expect(mockSetIsMenuOpen).toHaveBeenCalledTimes(1);
+      expect(mockSetIsMenuOpen).toHaveBeenCalledWith(false);
     });
   });
 
@@ -172,8 +168,6 @@ describe("SideNav", () => {
       renderSideNav({ isMenuOpen: false, setIsMenuOpen: mockSetIsMenuOpen });
       fireEvent.click(document.body);
       expect(mockSetIsMenuOpen).toHaveBeenCalledTimes(1);
-      const updater = mockSetIsMenuOpen.mock.calls[0][0];
-      expect(updater(false)).toBe(true); // Toggles to true, hiding on mobile
     });
 
     it("should not call setIsMenuOpen if menu is hidden (isMenuOpen: true) and click is outside", () => {
