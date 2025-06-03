@@ -1,14 +1,18 @@
-import { useContext, useEffect, useRef } from "react";
+import { useEffect, useRef } from "react";
 import { Link } from "react-router";
 import { ArrowRightCircleIcon } from "assets/icons/ArrowRightCircleIcon";
 import { PencilSquareIcon } from "assets/icons/PencilSquareIcon";
 import { ScreensWidth } from "consts/ScreensWidth";
 import { ChatsNav } from "./ChatsNav";
-import { AppContext } from "context/AppContext";
 import { HeaderNav } from "./HeaderNav";
+import {
+  useAppIsMenuOpenStore,
+  useAppSetIsMenuOpenStore,
+} from "store/useAppStore";
 
 export const SideNav = () => {
-  const { isMenuOpen, setIsMenuOpen } = useContext(AppContext);
+  const isMenuOpen = useAppIsMenuOpenStore();
+  const setIsMenuOpen = useAppSetIsMenuOpenStore();
   const navRef = useRef<HTMLElement>(null);
   const openRef = useRef<HTMLButtonElement>(null);
   useEffect(() => {
@@ -27,7 +31,7 @@ export const SideNav = () => {
         !contextMenu?.contains(event.target as Node) &&
         isMenuOpenMobile
       ) {
-        setIsMenuOpen(() => !isMenuOpen);
+        setIsMenuOpen(!isMenuOpen);
       }
     };
 
@@ -40,7 +44,7 @@ export const SideNav = () => {
   }, [isMenuOpen]);
 
   const toggleMenu = () => {
-    setIsMenuOpen((prev) => !prev);
+    setIsMenuOpen(!isMenuOpen);
   };
 
   return (
@@ -72,19 +76,19 @@ export const SideNav = () => {
           <PencilSquareIcon className="size-7 text-white me-2 mt-1" />
         </Link>
       </section>
-        <nav
-          className={`absolute h-full ${
-            isMenuOpen
-              ? "-translate-x-full lg:translate-x-0"
-              : "translate-x-0 lg:-translate-x-full"
-          } transition-all duration-500 w-72 z-20 bg-cop-4 text-white overflow-y-auto hide-scrollbar`}
-          role="navigation"
-          aria-label="Chat navigation"
-          ref={navRef}
-        >
-          <HeaderNav />
-          <ChatsNav />
-        </nav>
+      <nav
+        className={`absolute h-full ${
+          isMenuOpen
+            ? "-translate-x-full lg:translate-x-0"
+            : "translate-x-0 lg:-translate-x-full"
+        } transition-all duration-500 w-72 z-20 bg-cop-4 text-white overflow-y-auto hide-scrollbar`}
+        role="navigation"
+        aria-label="Chat navigation"
+        ref={navRef}
+      >
+        <HeaderNav />
+        <ChatsNav />
+      </nav>
     </>
   );
 };
