@@ -1,20 +1,23 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { renderHook, act } from "@testing-library/react";
 import { vi, describe, it, expect, beforeEach, Mock } from "vitest";
-import * as toastHook from "hooks/useToast";
-import * as AppStore from "store/AppStore";
 import { useChats } from "./useChats";
+import * as toastHook from "hooks/useToast";
 import * as chatService from "services/chat.service";
+import * as useAppStore from "store/useAppStore";
 import { ChatMessagesRes } from "types/chat/ChatMessagesRes.type";
 import { NewMessageRes } from "types/chat/NewMessageRes.type";
 import { NewMessageReq } from "types/chat/NewMessageReq.type";
 
 vi.mock("hooks/useToast");
 
-vi.mock("store/AppStore");
+vi.mock("store/useAppStore");
 
 const mockToastError = vi.fn();
-const mockAppStore = vi.mocked(AppStore.useAppStore);
+const mockAppStore = vi.mocked(useAppStore.useAppSetChatsStore);
+const mockAppDeleteChatByIdStore = vi.mocked(
+  useAppStore.useAppDeleteChatByIdStore
+);
 const setChatsMock = vi.fn();
 const mockDeleteChatById = vi.fn();
 
@@ -25,22 +28,8 @@ describe("useChats", () => {
 
   beforeEach(() => {
     vi.clearAllMocks();
-    mockAppStore.mockImplementation((selector: (state: any) => any) => {
-      const state = {
-        setChats: setChatsMock,
-        deleteChatById: mockDeleteChatById,
-      };
-
-      if (selector.toString().includes("setChats")) {
-        return state.setChats;
-      }
-
-      if (selector.toString().includes("deleteChatById")) {
-        return state.deleteChatById;
-      }
-      
-      return undefined;
-    });
+    mockAppStore.mockReturnValue(setChatsMock);
+    mockAppDeleteChatByIdStore.mockReturnValue(mockDeleteChatById);
   });
 
   it("getAllChats returns chats", async () => {
