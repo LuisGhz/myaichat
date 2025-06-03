@@ -7,7 +7,8 @@ import { ScreensWidth } from "consts/ScreensWidth";
 import { ChatSummary } from "types/chat/ChatSummary.type";
 import * as reactRouter from "react-router";
 import * as useContextMenu from "hooks/useContextMenu";
-import * as useAppStore from "store/AppStore";
+import * as useAppStore from "store/useAppStore";
+import * as useChats from "hooks/useChats";
 
 // filepath: c:\Users\Luisghtz\dev\react\myaichat\src\components\SideNav\ChatsNav.test.tsx
 
@@ -45,7 +46,7 @@ vi.mock("components/ContextMenu", () => ({
   ),
 }));
 
-vi.mock("store/AppStore");
+vi.mock("store/useAppStore");
 
 vi.mock("assets/icons/TrashIcon", () => ({
   TrashIcon: () => <svg data-testid="trash-icon" />,
@@ -55,13 +56,22 @@ vi.mock("assets/icons/PencilIcon", () => ({
   PencilIcon: () => <svg data-testid="pencil-icon" />,
 }));
 
+vi.mock("hooks/useChats");
+
 const mockNavigate = vi.fn();
 const mockUseParams = vi.mocked(reactRouter.useParams);
 const mockUseNavigate = vi.mocked(reactRouter.useNavigate);
 const mockUseContextMenu = vi.mocked(useContextMenu.useContextMenu);
-const mockUseAppStore = vi.mocked(useAppStore.useAppStore);
+const mockUseChatsAppStore = vi.mocked(useAppStore.useAppChatsStore);
+
+interface MinimalUseChatsReturn {
+  getAllChats: () => Promise<void>;
+  deleteChat: (chatId: string) => Promise<void>; // Adjust the return type if it's not Promise<void>
+}
+const mockUseChats = vi.mocked(useChats.useChats as () => MinimalUseChatsReturn);
 
 let mockDeleteChatById: ReturnType<typeof vi.fn>;
+let mockGetAllChats: ReturnType<typeof vi.fn>;
 let mockSetIsMenuOpen: ReturnType<typeof vi.fn>;
 let mockOnTouchStart: ReturnType<typeof vi.fn>;
 let mockOnTouchEnd: ReturnType<typeof vi.fn>;
@@ -93,22 +103,14 @@ const renderComponent = (
 ) => {
   mockUseParams.mockReturnValue({ id: currentChatId! });
   mockUseNavigate.mockReturnValue(mockNavigate);
-
   mockDeleteChatById = vi.fn();
+  mockGetAllChats = vi.fn();
   mockSetIsMenuOpen = (contextOverrides.setIsMenuOpen as any) || vi.fn();
-  mockUseAppStore.mockImplementation((selector: (state: any) => any) => {
-    // This checks if the selector is intended to get `state.chats`
-    // It's a simplified check; for more complex state, a more robust check might be needed.
-    if (selector.toString().includes("state.chats")) {
-      return chats;
-    }
-
-    if (selector.toString().includes("state.deleteChatById")) {
-      return mockDeleteChatById;
-    }
-    return undefined;
-  });
-
+  mockUseChatsAppStore.mockReturnValue(chats);
+  mockUseChats.mockReturnValue({
+    getAllChats: mockGetAllChats,
+    deleteChat: mockDeleteChatById,
+  })
   mockOnTouchStart = vi.fn((_, callback) => {
     // Simulate the hook calling the callback.
     // The callback in the component calls event.preventDefault() internally.
