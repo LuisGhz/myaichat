@@ -1,19 +1,19 @@
 import { useChats } from "hooks/useChats";
-import { useEffect, useState, useContext, useRef } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useNavigate, useParams } from "react-router";
 import { Message } from "types/chat/Message.type";
 import { Messages } from "./components/Messages/Messages";
 import { InputSection } from "./components/InputSection/InputSection";
 import { NewMessageReq } from "types/chat/NewMessageReq.type";
-import { AppContext } from "context/AppContext";
 import { NewConversation } from "./components/NewConversation";
 import { ModelsValues } from "types/chat/ModelsValues.type";
 import { CurrentModelSummary } from "./components/CurrentModelSummary";
 import { ChatMessagesRes } from "types/chat/ChatMessagesRes.type";
 import { ChatsLoading } from "./components/ChatsLoading";
+import { useAppStore } from "store/AppStore";
 
 export const CurrentChat = () => {
-  const { getAllChatsForList } = useContext(AppContext);
+  const addChat = useAppStore((state) => state.addChat);
   const [messages, setMessages] = useState<Message[]>([]);
   const [model, setModel] = useState<ModelsValues>("gemini-2.0-flash");
   const [totalPromptTokens, setTotalPromptTokens] = useState(0);
@@ -124,11 +124,14 @@ export const CurrentChat = () => {
         ];
       });
 
-      if (!params.id && res.chatId) {
+      if (!params.id && res.chatId && res.chatTitle) {
         isSendingFirstMessage.current = true;
         navigate(`/chat/${res.chatId}`, { replace: true });
         setCurrentModel(model);
-        getAllChatsForList();
+        addChat({
+          id: res.chatId,
+          title: res.chatTitle,
+        });
         // Add a small delay to ensure the state is not going to be reset on useEffect
         setTimeout(() => {
           isSendingFirstMessage.current = false;
