@@ -8,10 +8,10 @@ import { TrashIcon } from "assets/icons/TrashIcon";
 import { PencilIcon } from "assets/icons/PencilIcon";
 import { ChatSummary } from "types/chat/ChatSummary.type";
 import { useChats } from "hooks/useChats";
-import { useAppStore } from "store/AppStore";
+import { useAppChatsStore } from "store/useAppStore";
 
 export const ChatsNav = () => {
-  const chats = useAppStore((state) => state.chats);
+  const chats = useAppChatsStore();
   
   const { setIsMenuOpen } = useContext(AppContext);
   const { getAllChats, deleteChat: deleteChatById } = useChats();
