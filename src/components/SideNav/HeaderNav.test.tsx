@@ -1,8 +1,11 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import { render, screen, fireEvent, within } from "@testing-library/react";
 import { HeaderNav } from "./HeaderNav";
-import { AppContext } from "../../context/AppContext";
 import { ScreensWidth } from "../../consts/ScreensWidth";
+import {
+  useAppIsMenuOpenStore,
+  useAppSetIsMenuOpenStore,
+} from "store/useAppStore";
 
 // Mock react-router
 vi.mock("react-router", () => ({
@@ -34,18 +37,21 @@ vi.mock("assets/icons/ArrowLeftCircleIcon", () => ({
     <svg data-testid="arrow-left-icon" {...props} />
   )),
 }));
+
 vi.mock("assets/icons/PencilSquareIcon", () => ({
   PencilSquareIcon: vi.fn((props) => (
     <svg data-testid="pencil-icon" {...props} />
   )),
 }));
 
+vi.mock("store/useAppStore");
+
 describe("HeaderNav", () => {
-  let mockSetIsMenuOpen: ReturnType<typeof vi.fn>;
+  const mockSetIsMenuOpen = vi.fn();
   let windowSpy: ReturnType<typeof vi.spyOn>;
+  vi.mocked(useAppSetIsMenuOpenStore).mockReturnValue(mockSetIsMenuOpen);
 
   beforeEach(() => {
-    mockSetIsMenuOpen = vi.fn();
     windowSpy = vi.spyOn(window, "innerWidth", "get");
   });
 
@@ -54,21 +60,9 @@ describe("HeaderNav", () => {
     vi.clearAllMocks();
   });
 
-  const renderComponent = () => {
-    return render(
-      <AppContext.Provider
-        value={{
-          setIsMenuOpen: mockSetIsMenuOpen,
-          isMenuOpen: false,
-          chats: [],
-          deleteChatById: vi.fn(),
-          getAllChatsForList: vi.fn(),
-          isOffline: false,
-        }}
-      >
-        <HeaderNav />
-      </AppContext.Provider>
-    );
+  const renderComponent = (isMenuOpen: boolean = true) => {
+    vi.mocked(useAppIsMenuOpenStore).mockReturnValue(isMenuOpen);
+    return render(<HeaderNav />);
   };
 
   it("renders correctly with all elements", () => {
