@@ -1,18 +1,33 @@
-import { useContext } from "react";
+import { useEffect } from "react";
 import { Outlet } from "react-router";
 import { ToastContainer } from "react-toastify";
-import { AppContext } from "context/AppContext";
 import { SideNav } from "components/SideNav/SideNav";
 import { OfflineMessage } from "components/OfflineMessage";
+import {
+  useAppIsMenuOpenStore,
+  useAppUpdateIsOfflineStore,
+} from "store/useAppStore";
+import { useNetworkState } from "hooks/useNetworkState";
 
 function App() {
-  const { isMenuOpen, isOffline } = useContext(AppContext);
+  const isMenuOpen = useAppIsMenuOpenStore();
+  const updateIsOffline = useAppUpdateIsOfflineStore();
+  const { isOffline } = useNetworkState();
+
+  useEffect(() => {
+    updateIsOffline(isOffline);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isOffline]);
 
   return (
     <>
       <ToastContainer />
       <OfflineMessage />
-      <div className={`flex relative ${!isOffline ? "h-dvh" : "h-[calc(100dvh-4rem)]"}`}>
+      <div
+        className={`flex relative ${
+          !isOffline ? "h-dvh" : "h-[calc(100dvh-4rem)]"
+        }`}
+      >
         <SideNav />
         <main
           className={`grow bg-cop-3 ms-0 transition-all duration-500 ${
