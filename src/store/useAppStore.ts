@@ -7,3 +7,4 @@ export const useAppSetChatsStore = () => useZustandAppStore((state) => state.set
 export const useAppDeleteChatByIdStore = () => useZustandAppStore((state) => state.deleteChatById);
 export const useAppAddChatStore = () => useZustandAppStore((state) => state.addChat);
 export const useAppSetIsMenuOpenStore = () => useZustandAppStore((state) => state.setIsMenuOpen);
+export const useAppUpdateIsOfflineStore = () => useZustandAppStore((state) => state.updateIsOffline);
