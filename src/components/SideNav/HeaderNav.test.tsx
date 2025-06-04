@@ -112,7 +112,7 @@ describe("HeaderNav", () => {
     });
     fireEvent.click(closeButton);
     expect(mockSetIsMenuOpen).toHaveBeenCalledTimes(1);
-    expect(mockSetIsMenuOpen).toHaveBeenCalledWith(expect.any(Function));
+    expect(mockSetIsMenuOpen).toHaveBeenCalledWith(false);
   });
 
   describe('toggleMenuMobile for "New conversation" link (/chat)', () => {
@@ -130,7 +130,7 @@ describe("HeaderNav", () => {
       expect(newConversationLink).toBeInTheDocument();
       fireEvent.click(newConversationLink!);
       expect(mockSetIsMenuOpen).toHaveBeenCalledTimes(1);
-      expect(mockSetIsMenuOpen).toHaveBeenCalledWith(expect.any(Function));
+      expect(mockSetIsMenuOpen).toHaveBeenCalledWith(false);
     });
 
     it("does not call setIsMenuOpen when window width is equal to tablet breakpoint", () => {
@@ -167,7 +167,7 @@ describe("HeaderNav", () => {
       expect(promptsLink).toBeInTheDocument();
       fireEvent.click(promptsLink!);
       expect(mockSetIsMenuOpen).toHaveBeenCalledTimes(1);
-      expect(mockSetIsMenuOpen).toHaveBeenCalledWith(expect.any(Function));
+      expect(mockSetIsMenuOpen).toHaveBeenCalledWith(false);
     });
 
     it("does not call setIsMenuOpen when window width is equal to tablet breakpoint", () => {
