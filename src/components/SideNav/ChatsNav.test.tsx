@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import { render, screen, fireEvent } from "@testing-library/react";
-import { AppContext, AppContextProps } from "context/AppContext";
 import { ChatsNav } from "./ChatsNav";
 import { ScreensWidth } from "consts/ScreensWidth";
 import { ChatSummary } from "types/chat/ChatSummary.type";
@@ -9,6 +8,7 @@ import * as reactRouter from "react-router";
 import * as useContextMenu from "hooks/useContextMenu";
 import * as useAppStore from "store/useAppStore";
 import * as useChats from "hooks/useChats";
+import { AppStoreProps } from "types/store/AppStore";
 
 // filepath: c:\Users\Luisghtz\dev\react\myaichat\src\components\SideNav\ChatsNav.test.tsx
 
@@ -63,18 +63,24 @@ const mockUseParams = vi.mocked(reactRouter.useParams);
 const mockUseNavigate = vi.mocked(reactRouter.useNavigate);
 const mockUseContextMenu = vi.mocked(useContextMenu.useContextMenu);
 const mockUseChatsAppStore = vi.mocked(useAppStore.useAppChatsStore);
+const mockUseAppIsMenuOpenStore = vi.mocked(useAppStore.useAppIsMenuOpenStore);
+const mockUseAppSetIsMenuOpenStore = vi.mocked(
+  useAppStore.useAppSetIsMenuOpenStore
+);
 
 interface MinimalUseChatsReturn {
   getAllChats: () => Promise<void>;
   deleteChat: (chatId: string) => Promise<void>; // Adjust the return type if it's not Promise<void>
 }
-const mockUseChats = vi.mocked(useChats.useChats as () => MinimalUseChatsReturn);
+const mockUseChats = vi.mocked(
+  useChats.useChats as () => MinimalUseChatsReturn
+);
 
 let mockDeleteChatById: ReturnType<typeof vi.fn>;
 let mockGetAllChats: ReturnType<typeof vi.fn>;
-let mockSetIsMenuOpen: ReturnType<typeof vi.fn>;
 let mockOnTouchStart: ReturnType<typeof vi.fn>;
 let mockOnTouchEnd: ReturnType<typeof vi.fn>;
+let mockSetIsMenuOpen: ReturnType<typeof vi.fn>;
 
 const mockChatsData: ChatSummary[] = [
   {
@@ -87,30 +93,21 @@ const mockChatsData: ChatSummary[] = [
   },
 ];
 
-const defaultContextValue: AppContextProps = {
-  chats: [],
-  deleteChatById: vi.fn(),
-  setIsMenuOpen: vi.fn(),
-  isMenuOpen: false,
-  getAllChatsForList: vi.fn(),
-  isOffline: false,
-};
-
 const renderComponent = (
   chats = mockChatsData,
   currentChatId: string | null = null,
-  contextOverrides: Partial<AppContextProps> = {}
+  props: Partial<AppStoreProps> = {}
 ) => {
   mockUseParams.mockReturnValue({ id: currentChatId! });
   mockUseNavigate.mockReturnValue(mockNavigate);
   mockDeleteChatById = vi.fn();
   mockGetAllChats = vi.fn();
-  mockSetIsMenuOpen = (contextOverrides.setIsMenuOpen as any) || vi.fn();
+  mockSetIsMenuOpen = vi.fn();
   mockUseChatsAppStore.mockReturnValue(chats);
   mockUseChats.mockReturnValue({
     getAllChats: mockGetAllChats,
     deleteChat: mockDeleteChatById,
-  })
+  });
   mockOnTouchStart = vi.fn((_, callback) => {
     // Simulate the hook calling the callback.
     // The callback in the component calls event.preventDefault() internally.
@@ -121,20 +118,9 @@ const renderComponent = (
     onTouchStart: mockOnTouchStart,
     onTouchEnd: mockOnTouchEnd,
   });
-
-  return render(
-    <AppContext.Provider
-      value={{
-        ...defaultContextValue,
-        chats,
-        deleteChatById: mockDeleteChatById,
-        setIsMenuOpen: mockSetIsMenuOpen,
-        ...contextOverrides,
-      }}
-    >
-      <ChatsNav />
-    </AppContext.Provider>
-  );
+  mockUseAppIsMenuOpenStore.mockReturnValue(props.isMenuOpen ?? true);
+  mockUseAppSetIsMenuOpenStore.mockReturnValue(mockSetIsMenuOpen);
+  return render(<ChatsNav />);
 };
 
 describe("ChatsNav", () => {
@@ -147,7 +133,7 @@ describe("ChatsNav", () => {
     mockUseParams.mockReturnValue({ id: undefined });
     mockNavigate.mockClear();
     mockDeleteChatById?.mockClear();
-    mockSetIsMenuOpen?.mockClear();
+    mockUseAppIsMenuOpenStore.mockClear();
     mockOnTouchStart?.mockClear();
     mockOnTouchEnd?.mockClear();
 
