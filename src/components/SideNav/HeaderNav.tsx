@@ -1,19 +1,22 @@
 import { ArrowLeftCircleIcon } from "assets/icons/ArrowLeftCircleIcon";
 import { PencilSquareIcon } from "assets/icons/PencilSquareIcon";
 import { ScreensWidth } from "consts/ScreensWidth";
-import { AppContext } from "context/AppContext";
-import { useContext } from "react";
 import { Link } from "react-router";
+import {
+  useAppIsMenuOpenStore,
+  useAppSetIsMenuOpenStore,
+} from "store/useAppStore";
 
 export const HeaderNav = () => {
-  const { setIsMenuOpen } = useContext(AppContext);
+  const isMenuOpen = useAppIsMenuOpenStore();
+  const setIsMenuOpen = useAppSetIsMenuOpenStore();
 
   const toggleMenu = () => {
-    setIsMenuOpen((prev) => !prev);
+    setIsMenuOpen(!isMenuOpen);
   };
 
   const toggleMenuMobile = () => {
-    if (window.innerWidth < ScreensWidth.tablet) setIsMenuOpen((prev) => !prev);
+    if (window.innerWidth < ScreensWidth.tablet) setIsMenuOpen(!isMenuOpen);
   };
 
   return (
