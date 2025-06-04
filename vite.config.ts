@@ -29,7 +29,7 @@ export default defineConfig({
         "src/features/Chat/components/ChatsLoading.tsx",
         "src/hooks/useMarkdown.tsx",
         "src/features/Prompts/PromptSchema.ts",
-        "src/components/OfflineMessage.tsx",
+        "src/store/**",
       ],
     },
   },
