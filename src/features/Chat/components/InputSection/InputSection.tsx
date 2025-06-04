@@ -1,4 +1,4 @@
-import { KeyboardEvent, useContext, useEffect, useRef, useState } from "react";
+import { KeyboardEvent, useEffect, useRef, useState } from "react";
 import TextareaAutosize from "react-textarea-autosize";
 import "./InputSection.css";
 import { useParams } from "react-router";
@@ -7,7 +7,7 @@ import { Microphone } from "./Microphone";
 import { ArrowUpIcon } from "assets/icons/ArrowUpIcon";
 import { AttachFile } from "./AttachFile";
 import { XMarkIcon } from "assets/icons/XMarkIcon";
-import { AppContext } from "context/AppContext";
+import { useAppIsOfflineStore } from "store/useAppStore";
 
 type InputSectionProps = {
   onEnter: (newUserMessage: string, file: File | undefined) => void;
@@ -15,7 +15,7 @@ type InputSectionProps = {
 };
 
 export const InputSection = ({ onEnter, isSending }: InputSectionProps) => {
-  const { isOffline } = useContext(AppContext);
+  const isOffline = useAppIsOfflineStore();
   const [userInput, setUserInput] = useState("");
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const selectedFile = useRef<File | null>(null);
