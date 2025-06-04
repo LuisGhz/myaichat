@@ -17,4 +17,5 @@ export const useZustandAppStore = create<AppStoreProps>((set) => ({
     }));
   },
   setIsMenuOpen: (isOpen) => set({ isMenuOpen: isOpen }),
+  updateIsOffline: (isOffline) => set({ isOffline }),
 }));
