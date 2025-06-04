@@ -8,4 +8,5 @@ export type AppStoreProps = {
   isMenuOpen: boolean;
   setIsMenuOpen: (isOpen: boolean) => void;
   isOffline: boolean;
+  updateIsOffline: (isOffline: boolean) => void;
 };
