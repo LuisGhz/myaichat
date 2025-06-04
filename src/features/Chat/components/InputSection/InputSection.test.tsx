@@ -2,6 +2,7 @@
 import { render, fireEvent, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { InputSection } from "./InputSection";
+import { useAppIsOfflineStore } from "store/useAppStore";
 
 // Mock dependencies
 vi.mock("hooks/useAttachedFilesValidator", () => ({
@@ -24,6 +25,8 @@ vi.mock("react-router", () => ({
   useParams: () => ({}),
   Link: ({ children }: any) => <>{children}</>,
 }));
+
+vi.mock("store/useAppStore");
 
 describe("InputSection", () => {
   const onEnter = vi.fn();
@@ -137,5 +140,12 @@ describe("InputSection", () => {
     await userEvent.click(textarea);
     await userEvent.paste(longText);
     expect(textarea).toHaveValue(longText.slice(0, 8000));
+  });
+
+  test("disable textarea when offline", () => {
+    vi.mocked(useAppIsOfflineStore).mockReturnValue(true);
+    render(<InputSection onEnter={onEnter} isSending={false} />);
+    const textarea = screen.getByRole("textbox", { name: /Message input/i });
+    expect(textarea).toBeDisabled();
   });
 });
