@@ -1,8 +1,7 @@
-import { AppContext } from "context/AppContext";
-import { useContext } from "react";
+import { useAppIsOfflineStore } from "store/useAppStore";
 
 export const OfflineMessage = () => {
-  const { isOffline } = useContext(AppContext);
+  const isOffline = useAppIsOfflineStore();
 
   if (!isOffline) return null;
 
