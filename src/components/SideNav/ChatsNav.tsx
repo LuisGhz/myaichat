@@ -1,6 +1,5 @@
 import { ScreensWidth } from "consts/ScreensWidth";
-import { AppContext } from "context/AppContext";
-import { ReactNode, useContext, useEffect, useRef, useState } from "react";
+import { ReactNode, useEffect, useRef, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router";
 import { useContextMenu } from "hooks/useContextMenu";
 import { ContextMenu } from "components/ContextMenu";
@@ -8,12 +7,16 @@ import { TrashIcon } from "assets/icons/TrashIcon";
 import { PencilIcon } from "assets/icons/PencilIcon";
 import { ChatSummary } from "types/chat/ChatSummary.type";
 import { useChats } from "hooks/useChats";
-import { useAppChatsStore } from "store/useAppStore";
+import {
+  useAppChatsStore,
+  useAppIsMenuOpenStore,
+  useAppSetIsMenuOpenStore,
+} from "store/useAppStore";
 
 export const ChatsNav = () => {
   const chats = useAppChatsStore();
-  
-  const { setIsMenuOpen } = useContext(AppContext);
+  const isMenuOpen = useAppIsMenuOpenStore();
+  const setIsMenuOpen = useAppSetIsMenuOpenStore();
   const { getAllChats, deleteChat: deleteChatById } = useChats();
   const navigate = useNavigate();
   const params = useParams();
@@ -24,7 +27,7 @@ export const ChatsNav = () => {
 
   useEffect(() => {
     getAllChats();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleDeleteChat = (id: string) => {
@@ -39,7 +42,7 @@ export const ChatsNav = () => {
   };
 
   const handleRedirectToChatOnMobile = () => {
-    if (window.innerWidth < ScreensWidth.tablet) setIsMenuOpen((prev) => !prev);
+    if (window.innerWidth < ScreensWidth.tablet) setIsMenuOpen(!isMenuOpen);
   };
 
   const updateElements = (chat: ChatSummary) => {
