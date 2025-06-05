@@ -21,9 +21,9 @@ export const usePrompts = () => {
       const res = await getPromptsService();
       if (!res) {
         throw new Error();
-        return;
       }
-      setPrompts([...res.prompts]);
+      const sortedPrompts = res.prompts.sort((a, b) => a.name.localeCompare(b.name));
+      setPrompts([...sortedPrompts]);
     } catch {
       toastError("Failed to fetch prompts. Please try again later.");
     }
