@@ -19,14 +19,15 @@ describe("usePrompts", () => {
   });
 
   it("getPrompts sets prompts on success", async () => {
+    const prompts = [{ id: "1", name: "B 1" }, { id: "1", name: "A 1" }];
     vi.spyOn(promptsService, "getPromptsService").mockResolvedValue({
-      prompts: [{ id: "1", name: "Prompt 1" }],
+      prompts: prompts,
     });
     const { result } = renderHook(() => usePrompts());
     await act(async () => {
       await result.current.getPrompts();
     });
-    expect(result.current.prompts).toEqual([{ id: "1", name: "Prompt 1" }]);
+    expect(result.current.prompts).toEqual(prompts.sort((a, b) => a.name.localeCompare(b.name)));
   });
 
   it("getPrompts calls toastError on error", async () => {
