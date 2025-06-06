@@ -20,7 +20,7 @@ export const CurrentModelSummary = ({
 
   return (
     <>
-      <div className="text-gray-600 text-xs flex justify-end gap-1.5">
+      <div className="text-gray-600 text-xs flex justify-end gap-1.5 mt-0.5">
         <span>{shortName} -</span>
         <span>
           PT:{fNumber(totalPromptTokens || 0)} - $
