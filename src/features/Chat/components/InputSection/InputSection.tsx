@@ -81,7 +81,7 @@ export const InputSection = ({ onEnter, isSending }: InputSectionProps) => {
   return (
     <>
       <section
-        className="my-4 flex-col bg-cop-1 px-2 pb-2 pt-0.5 rounded-b-xl rounded-t-2xl w-11/12 md:w-10/12 mx-auto relative h-auto"
+        className="mb-4 mt-1 flex-col bg-cop-1 px-2 pb-2 pt-0.5 rounded-b-xl rounded-t-2xl w-11/12 md:w-10/12 mx-auto relative h-auto"
         aria-label="Message input area"
       >
         <div
