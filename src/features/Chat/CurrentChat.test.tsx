@@ -1,381 +1,430 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import {
-  render,
-  screen,
-  fireEvent,
-  waitFor,
-  act,
-} from "@testing-library/react";
-import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
+import { describe, it, expect, vi, beforeEach } from "vitest";
+import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import { CurrentChat } from "./CurrentChat";
-import { AppContext, AppContextProps } from "context/AppContext";
-import * as useChats from "hooks/useChats";
+import { useChats } from "hooks/useChats";
+import { useNavigate, useParams } from "react-router";
+import { useAppAddChatStore } from "store/useAppStore";
 
-// Mock child components
-vi.mock("./Messages/Messages", () => ({
-  Messages: vi.fn(({ messages }) => (
-    <div data-testid="messages-component">Messages: {messages.length}</div>
-  )),
+// Mock all external dependencies
+vi.mock("hooks/useChats");
+vi.mock("react-router");
+vi.mock("store/useAppStore");
+vi.mock("./components/Messages/Messages", () => ({
+  Messages: ({ messages, isSending }: any) => (
+    <div data-testid="messages">
+      {messages.map((msg: any, index: number) => (
+        <div key={index} data-testid={`message-${index}`}>
+          {msg.role}: {msg.content}
+        </div>
+      ))}
+      {isSending && <div data-testid="sending-indicator">Sending...</div>}
+    </div>
+  ),
 }));
-vi.mock("./InputSection/InputSection", () => ({
-  InputSection: vi.fn(({ onEnter, isSending }) => (
-    <div data-testid="input-section-component">
+vi.mock("./components/InputSection/InputSection", () => ({
+  InputSection: ({ onEnter, isSending }: any) => (
+    <div data-testid="input-section">
       <button
-        data-testid="send-button"
         onClick={() => onEnter("test message", undefined)}
+        disabled={isSending}
+        data-testid="send-button"
       >
         Send
       </button>
-      <span>InputSending: {String(isSending)}</span>
     </div>
-  )),
+  ),
 }));
-vi.mock("./NewConversation", () => ({
-  NewConversation: vi.fn(({ setModel, setPromptId, setIsWelcomeLoaded }) => (
-    <div data-testid="new-conversation-component">
-      NewConversation
-      <button onClick={() => setModel("test-model")}>SetModel</button>
-      <button onClick={() => setPromptId("test-prompt")}>SetPrompt</button>
-      <button onClick={() => setIsWelcomeLoaded(true)}>SetWelcomeLoaded</button>
+vi.mock("./components/NewConversation", () => ({
+  NewConversation: ({ model, setIsWelcomeLoaded }: any) => (
+    <div data-testid="new-conversation">
+      <span>Model: {model}</span>
+      <button
+        onClick={() => setIsWelcomeLoaded(true)}
+        data-testid="welcome-button"
+      >
+        Start
+      </button>
     </div>
-  )),
+  ),
 }));
-vi.mock("./CurrentModelSummary", () => ({
-  CurrentModelSummary: vi.fn(() => (
-    <div data-testid="current-model-summary-component">CurrentModelSummary</div>
-  )),
+vi.mock("./components/CurrentModelSummary", () => ({
+  CurrentModelSummary: ({
+    currentModel,
+    totalPromptTokens,
+    totalCompletionTokens,
+  }: any) => (
+    <div data-testid="model-summary">
+      Model: {currentModel}, Prompt: {totalPromptTokens}, Completion:{" "}
+      {totalCompletionTokens}
+    </div>
+  ),
 }));
-vi.mock("./ChatsLoading", () => ({
-  ChatsLoading: vi.fn(() => (
-    <div data-testid="chats-loading-component">ChatsLoading</div>
-  )),
+vi.mock("./components/ChatsLoading", () => ({
+  ChatsLoading: () => <div data-testid="chats-loading">Loading...</div>,
 }));
 
-// Mock hooks
-const mockNavigate = vi.fn();
-const mockUseParams = vi.fn();
-vi.mock("react-router", async () => {
-  const actual = await vi.importActual("react-router");
-  return {
-    ...actual,
-    useParams: () => mockUseParams(),
-    useNavigate: () => mockNavigate,
-  };
-});
-
-vi.mock("hooks/useChats");
-
-describe.todo("CurrentChat", () => {
+describe("CurrentChat", () => {
+  const mockNavigate = vi.fn();
+  const mockAddChat = vi.fn();
   const mockGetChatMessages = vi.fn();
   const mockSendNewMessage = vi.fn();
   const mockSetIsEmptyPage = vi.fn();
-  const mockGetAllChatsForList = vi.fn();
-  const appContextValue: AppContextProps = {
-    getAllChatsForList: mockGetAllChatsForList,
-    chats: [],
-    deleteChatById: vi.fn(),
-    isMenuOpen: false,
-    setIsMenuOpen: vi.fn(),
-    isOffline: false,
-  };
 
-  const renderWithContext = (ui: React.ReactElement) => {
-    return render(
-      <AppContext.Provider value={appContextValue}>{ui}</AppContext.Provider>
-    );
-  };
-
-  const mockingUseChats = (props: any = {}) => {
-    // Reset useChats mock to default for each test
-    const def = {
-      deleteChat: vi.fn(),
-      getAllChats: vi.fn(),
-      getChatMessages: mockGetChatMessages,
-      isChatLoading: true,
-      isEmptyPage: false,
-      isSending: false,
-      sendNewMessage: mockSendNewMessage,
-      setIsEmptyPage: mockSetIsEmptyPage,
-    };
-    // Re-apply the mock implementation with the reset default
-    vi.mocked(useChats.useChats).mockReturnValue({ ...def, ...props });
-  };
   beforeEach(() => {
     vi.clearAllMocks();
-    vi.useFakeTimers();
-    mockingUseChats();
-    mockUseParams.mockReturnValue({}); // Default to no params
-  });
 
-  afterEach(() => {
-    vi.runOnlyPendingTimers();
-    vi.useRealTimers();
-  });
+    (useNavigate as any).mockReturnValue(mockNavigate);
+    (useAppAddChatStore as any).mockReturnValue(mockAddChat);
+    (useParams as any).mockReturnValue({ id: undefined });
 
-  it("renders NewConversation when no chat ID, not loading, and messages are empty", () => {
-    mockUseParams.mockReturnValue({});
-    mockingUseChats({ isChatLoading: false });
-
-    renderWithContext(<CurrentChat />);
-
-    expect(
-      screen.getByTestId("new-conversation-component")
-    ).toBeInTheDocument();
-    expect(screen.getByTestId("input-section-component")).toBeInTheDocument();
-    expect(
-      screen.queryByTestId("chats-loading-component")
-    ).not.toBeInTheDocument();
-    expect(screen.queryByTestId("messages-component")).not.toBeInTheDocument();
-  });
-
-  it("renders empty grow div when chat ID exists, messages are empty, not loading, and not welcome screen", async () => {
-    mockUseParams.mockReturnValue({ id: "chat123" });
-    mockingUseChats({ isChatLoading: false });
-    mockGetChatMessages.mockResolvedValue({
-      historyMessages: [],
-      model: "test-model",
-      totalPromptTokens: 0,
-      totalCompletionTokens: 0,
-    });
-
-    const { container } = renderWithContext(<CurrentChat />);
-
-    await act(async () => {
-      vi.advanceTimersByTime(300); // For handleFirstPageLoad's setTimeout
-    });
-
-    expect(
-      screen.queryByTestId("new-conversation-component")
-    ).not.toBeInTheDocument();
-    expect(
-      screen.queryByTestId("chats-loading-component")
-    ).not.toBeInTheDocument();
-    expect(screen.queryByTestId("messages-component")).not.toBeInTheDocument();
-    expect(screen.getByTestId("input-section-component")).toBeInTheDocument();
-
-    const mainContainer = container.firstChild as HTMLElement;
-    const growDiv = Array.from(mainContainer.childNodes).find((node) =>
-      (node as HTMLElement).classList?.contains("grow")
-    );
-    expect(growDiv).toBeInTheDocument();
-  });
-
-  it("renders ChatsLoading when chat ID exists, isChatLoading is true, page is 0, and messages are empty", async () => {
-    mockUseParams.mockReturnValue({ id: "chat123" });
-    mockingUseChats({ isChatLoading: true });
-    mockGetChatMessages.mockReturnValue(new Promise(() => {})); // Keep it pending
-
-    renderWithContext(<CurrentChat />);
-
-    expect(screen.getByTestId("chats-loading-component")).toBeInTheDocument();
-    expect(screen.getByTestId("input-section-component")).toBeInTheDocument();
-  });
-
-  it("renders Messages when messages exist", async () => {
-    mockUseParams.mockReturnValue({ id: "chat123" });
-    const initialMessages = [{ role: "User" as const, content: "Hello" }];
-    mockGetChatMessages.mockResolvedValue({
-      historyMessages: initialMessages,
-      model: "test-model",
-      totalPromptTokens: 10,
-      totalCompletionTokens: 20,
-    });
-    mockingUseChats({ isChatLoading: false });
-
-    renderWithContext(<CurrentChat />);
-
-    await act(async () => {
-      vi.advanceTimersByTime(300);
-    });
-
-    expect(screen.getByTestId("messages-component")).toBeInTheDocument();
-    expect(screen.getByText("Messages: 1")).toBeInTheDocument();
-  });
-
-  it("renders CurrentModelSummary when currentModel exists and messages.length > 1", async () => {
-    mockUseParams.mockReturnValue({ id: "chat123" });
-    const initialMessages = [
-      { role: "User" as const, content: "Hello" },
-      { role: "Assistant" as const, content: "Hi" },
-    ];
-    mockGetChatMessages.mockResolvedValue({
-      historyMessages: initialMessages,
-      model: "test-model-active",
-      totalPromptTokens: 10,
-      totalCompletionTokens: 20,
-    });
-    mockingUseChats({ isChatLoading: false });
-
-    renderWithContext(<CurrentChat />);
-
-    await act(async () => {
-      vi.advanceTimersByTime(300);
-    });
-
-    expect(
-      screen.getByTestId("current-model-summary-component")
-    ).toBeInTheDocument();
-  });
-
-  it("calls onEnter, updates messages, calls sendNewMessage for a new chat, and handles navigation", async () => {
-    mockUseParams.mockReturnValue({}); // New chat
-    mockingUseChats({ isChatLoading: false });
-    const sendMessageResponse = {
-      content: "Assistant response",
-      chatId: "newChat456",
-      promptTokens: 5,
-      completionTokens: 15,
-      totalChatPromptTokens: 5,
-      totalChatCompletionTokens: 15,
-    };
-    mockSendNewMessage.mockResolvedValue(sendMessageResponse);
-
-    const { rerender } = renderWithContext(<CurrentChat />);
-
-    await act(async () => {
-      fireEvent.click(screen.getByTestId("send-button"));
-    });
-
-    await waitFor(() => {
-      expect(screen.getByTestId("messages-component")).toBeInTheDocument();
-      expect(screen.getByText("Messages: 2")).toBeInTheDocument(); // User + Assistant
-    });
-
-    expect(mockSendNewMessage).toHaveBeenCalledWith(
-      expect.objectContaining({
-        chatId: undefined,
-        prompt: "test message",
-        model: "gemini-2.0-flash", // Default initial model
-      })
-    );
-    expect(mockNavigate).toHaveBeenCalledWith("/chat/newChat456", {
-      replace: true,
-    });
-    expect(mockGetAllChatsForList).toHaveBeenCalledTimes(1);
-
-    // Simulate navigation causing params.id to update and component to re-evaluate useEffects
-    mockUseParams.mockReturnValue({ id: sendMessageResponse.chatId });
-    act(() => {
-      rerender(
-        <AppContext.Provider value={appContextValue}>
-          <CurrentChat />
-        </AppContext.Provider>
-      );
-    });
-
-    // Messages should persist because isSendingFirstMessage.current was true
-    expect(screen.getByText("Messages: 2")).toBeInTheDocument();
-
-    await act(async () => {
-      vi.advanceTimersByTime(250); // For sendMessage's setTimeout to set isSendingFirstMessage.current = false
+    (useChats as any).mockReturnValue({
+      getChatMessages: mockGetChatMessages,
+      sendNewMessage: mockSendNewMessage,
+      isSending: false,
+      isEmptyPage: false,
+      setIsEmptyPage: mockSetIsEmptyPage,
+      isChatLoading: false,
     });
   });
 
-  it("calls onEnter for an existing chat", async () => {
-    const chatId = "existingChat789";
-    mockUseParams.mockReturnValue({ id: chatId });
-    const initialMessages = [
-      { role: "User" as const, content: "Previous message" },
-    ];
-    mockGetChatMessages.mockResolvedValue({
-      historyMessages: initialMessages,
-      model: "gpt-4",
-      totalPromptTokens: 10,
-      totalCompletionTokens: 20,
-    });
-    mockingUseChats({ isChatLoading: false });
-    const sendMessageResponse = {
-      content: "Assistant response to existing",
-      promptTokens: 7,
-      completionTokens: 17,
-      totalChatPromptTokens: 17,
-      totalChatCompletionTokens: 37,
-    };
-    mockSendNewMessage.mockResolvedValue(sendMessageResponse);
+  describe("Initial Rendering", () => {
+    it("renders new conversation when no chat ID and no messages", () => {
+      render(<CurrentChat />);
 
-    renderWithContext(<CurrentChat />);
-    await act(async () => {
-      vi.advanceTimersByTime(300);
-    }); // Initial load
-
-    expect(screen.getByText("Messages: 1")).toBeInTheDocument();
-
-    await act(async () => {
-      fireEvent.click(screen.getByTestId("send-button"));
+      expect(screen.getByTestId("new-conversation")).toBeInTheDocument();
+      expect(screen.getByText("Model: gemini-2.0-flash")).toBeInTheDocument();
+      expect(screen.getByTestId("input-section")).toBeInTheDocument();
     });
 
-    await waitFor(() => {
-      expect(screen.getByText("Messages: 3")).toBeInTheDocument(); // Prev + User + Assistant
-    });
-    expect(mockSendNewMessage).toHaveBeenCalledWith(
-      expect.objectContaining({
-        chatId: chatId,
-        model: undefined, // Model not sent for existing chat
-      })
-    );
-    expect(mockNavigate).not.toHaveBeenCalled();
-  });
+    it("renders empty state when welcome is not loaded", () => {
+      render(<CurrentChat />);
 
-  // isFirstLoaded is not updating. Pending research.
-  it.todo("increments page on scroll to top", async () => {
-    mockUseParams.mockReturnValue({ id: "chat123" });
-    mockGetChatMessages
-      .mockResolvedValueOnce({
-        historyMessages: [
-          { role: "User", content: "Msg1 Page0" },
-          { role: "User", content: "Msg1 Page0".repeat(100) },
-          { role: "User", content: "Msg1 Page0".repeat(100) },
-        ],
-        model: "test-model",
-      })
-      .mockResolvedValueOnce({
-        historyMessages: [{ role: "User", content: "Msg1 Page1" }],
-        model: "test-model",
+      const emptyDiv = document.querySelector(".grow:empty");
+      expect(emptyDiv).toBeInTheDocument();
+    });
+
+    it("renders loading state when chat is loading", () => {
+      (useChats as any).mockReturnValue({
+        getChatMessages: mockGetChatMessages,
+        sendNewMessage: mockSendNewMessage,
+        isSending: false,
+        isEmptyPage: false,
+        setIsEmptyPage: mockSetIsEmptyPage,
+        isChatLoading: true,
       });
-    mockingUseChats({ isChatLoading: false, isEmptyPage: false });
 
-    const { container } = renderWithContext(<CurrentChat />);
+      render(<CurrentChat />);
 
-    expect(mockGetChatMessages).toHaveBeenCalled();
-
-    await act(async () => {
-      vi.advanceTimersByTime(300);
-    }); // isFirstLoaded = true
-    expect(screen.getByText("Messages: 3")).toBeInTheDocument();
-    const scrollableSection = container.querySelector(
-      ".overflow-y-auto.hide-scrollbar"
-    );
-    expect(scrollableSection).toBeInTheDocument();
-
-    await act(async () => {
-      fireEvent.scroll(scrollableSection!, { target: { scrollTop: 0 } });
-    });
-    await act(async () => {
-      vi.advanceTimersByTime(100);
-    }); // setIsUpdatingMessagesFromScroll timeout
-    screen.debug();
-    
-    expect(mockGetChatMessages).toHaveBeenCalledTimes(2);
-    expect(mockGetChatMessages).toHaveBeenNthCalledWith(2, "chat123", 1);
-    await waitFor(() => {
-    expect(screen.getByText("Messages: 4")).toBeInTheDocument(); // Page1 msg + Page0 msg
+      expect(screen.getByTestId("chats-loading")).toBeInTheDocument();
     });
   });
 
-  it.todo(
-    "navigates away if getChatMessages returns null on initial load",
-    async () => {
-      mockUseParams.mockReturnValue({ id: "chat123" });
+  describe("Chat Loading", () => {
+    it("loads chat messages when chat ID is present", async () => {
+      const mockChatData = {
+        historyMessages: [
+          { role: "User", content: "Hello" },
+          { role: "Assistant", content: "Hi there!" },
+        ],
+        model: "gpt-4",
+        totalPromptTokens: 10,
+        totalCompletionTokens: 15,
+      };
+
+      (useParams as any).mockReturnValue({ id: "chat-123" });
+      mockGetChatMessages.mockResolvedValue(mockChatData);
+
+      render(<CurrentChat />);
+
+      await waitFor(() => {
+        expect(mockGetChatMessages).toHaveBeenCalledWith("chat-123");
+      });
+    });
+
+    it("navigates to /chat when chat loading fails", async () => {
+      (useParams as any).mockReturnValue({ id: "invalid-chat" });
       mockGetChatMessages.mockResolvedValue(null);
-      mockingUseChats({ isChatLoading: false });
 
-      renderWithContext(<CurrentChat />);
+      render(<CurrentChat />);
 
-      await act(async () => {
-        await Promise.resolve();
-      }); // Allow promises to settle
+      await waitFor(() => {
+        expect(mockNavigate).toHaveBeenCalledWith("/chat");
+      });
+    });
 
-      expect(mockNavigate).toHaveBeenCalledWith("/chat");
-    }
-  );
+    it("renders messages when they exist", async () => {
+      const mockChatData = {
+        historyMessages: [
+          { role: "User", content: "Hello" },
+          { role: "Assistant", content: "Hi there!" },
+        ],
+        model: "gpt-4",
+        totalPromptTokens: 10,
+        totalCompletionTokens: 15,
+      };
+
+      (useParams as any).mockReturnValue({ id: "chat-123" });
+      mockGetChatMessages.mockResolvedValue(mockChatData);
+
+      render(<CurrentChat />);
+
+      await waitFor(() => {
+        expect(screen.getByTestId("messages")).toBeInTheDocument();
+      });
+    });
+  });
+
+  describe("Message Sending", () => {
+    it("sends a new message and updates state", async () => {
+      const mockResponse = {
+        content: "Assistant response",
+        promptTokens: 5,
+        completionTokens: 10,
+        totalChatPromptTokens: 15,
+        totalChatCompletionTokens: 25,
+      };
+
+      mockSendNewMessage.mockResolvedValue(mockResponse);
+
+      render(<CurrentChat />);
+
+      const sendButton = screen.getByTestId("send-button");
+      fireEvent.click(sendButton);
+
+      await waitFor(() => {
+        expect(mockSendNewMessage).toHaveBeenCalledWith({
+          chatId: undefined,
+          prompt: "test message",
+          image: undefined,
+          promptId: "",
+          model: "gemini-2.0-flash",
+        });
+      });
+    });
+
+    it("creates new chat and navigates when sending first message", async () => {
+      const mockResponse = {
+        content: "Assistant response",
+        promptTokens: 5,
+        completionTokens: 10,
+        totalChatPromptTokens: 15,
+        totalChatCompletionTokens: 25,
+        chatId: "new-chat-123",
+        chatTitle: "New Chat",
+      };
+
+      mockSendNewMessage.mockResolvedValue(mockResponse);
+
+      render(<CurrentChat />);
+
+      const sendButton = screen.getByTestId("send-button");
+      fireEvent.click(sendButton);
+
+      await waitFor(() => {
+        expect(mockNavigate).toHaveBeenCalledWith("/chat/new-chat-123", {
+          replace: true,
+        });
+        expect(mockAddChat).toHaveBeenCalledWith({
+          id: "new-chat-123",
+          title: "New Chat",
+        });
+      });
+    });
+
+    it("shows sending indicator when message is being sent", () => {
+      (useChats as any).mockReturnValue({
+        getChatMessages: mockGetChatMessages,
+        sendNewMessage: mockSendNewMessage,
+        isSending: true,
+        isEmptyPage: false,
+        setIsEmptyPage: mockSetIsEmptyPage,
+        isChatLoading: false,
+      });
+
+      // Set up initial messages to render Messages component
+      const mockChatData = {
+        historyMessages: [{ role: "User", content: "Hello" }],
+        model: "gpt-4",
+        totalPromptTokens: 10,
+        totalCompletionTokens: 15,
+      };
+
+      (useParams as any).mockReturnValue({ id: "chat-123" });
+      mockGetChatMessages.mockResolvedValue(mockChatData);
+
+      render(<CurrentChat />);
+
+      waitFor(() => {
+        expect(screen.getByTestId("sending-indicator")).toBeInTheDocument();
+      });
+    });
+  });
+
+  describe("Pagination", () => {
+    // TODO: Pending to research about settimeout and its issues with faketimers (tests keep loading until timed out)
+    it.todo("loads more messages when scrolling to top", async () => {
+      const mockChatData = {
+        historyMessages: [
+          { role: "User", content: "Hello".repeat(100) },
+          { role: "User", content: "Hello".repeat(100) },
+          { role: "User", content: "Hello".repeat(100) },
+        ],
+        model: "gpt-4",
+        totalPromptTokens: 10,
+        totalCompletionTokens: 15,
+      };
+
+      (useParams as any).mockReturnValue({ id: "chat-123" });
+      mockGetChatMessages.mockResolvedValue(mockChatData);
+
+      render(<CurrentChat />);
+
+      // Wait for initial load
+      await waitFor(() => {
+        expect(screen.getByTestId("messages")).toBeInTheDocument();
+      });
+
+      // Simulate scroll to top
+      const scrollableSection = document.querySelector(
+        ".overflow-y-auto.hide-scrollbar"
+      );
+      fireEvent.scroll(scrollableSection!, { target: { scrollTop: 0 } });
+      await waitFor(() => {
+        expect(mockGetChatMessages).toHaveBeenCalledWith("chat-123", 1);
+        expect(mockGetChatMessages).toHaveBeenCalledTimes(2);
+      });
+    });
+
+    it("does not load more messages when isEmptyPage is true", async () => {
+      (useChats as any).mockReturnValue({
+        getChatMessages: mockGetChatMessages,
+        sendNewMessage: mockSendNewMessage,
+        isSending: false,
+        isEmptyPage: true,
+        setIsEmptyPage: mockSetIsEmptyPage,
+        isChatLoading: false,
+      });
+
+      const mockChatData = {
+        historyMessages: [{ role: "User", content: "Hello" }],
+        model: "gpt-4",
+        totalPromptTokens: 10,
+        totalCompletionTokens: 15,
+      };
+
+      (useParams as any).mockReturnValue({ id: "chat-123" });
+      mockGetChatMessages.mockResolvedValue(mockChatData);
+
+      render(<CurrentChat />);
+
+      // Wait for initial load
+      await waitFor(() => {
+        expect(screen.getByTestId("messages")).toBeInTheDocument();
+      });
+
+      // Simulate scroll to top
+      const scrollableSection = document.querySelector(".overflow-y-auto");
+      fireEvent.scroll(scrollableSection!, { target: { scrollTop: 0 } });
+
+      // Should not call getChatMessages for pagination
+      expect(mockGetChatMessages).toHaveBeenCalledTimes(1);
+    });
+  });
+
+  describe("Model Summary", () => {
+    it("renders model summary when currentModel exists and multiple messages", async () => {
+      const mockChatData = {
+        historyMessages: [
+          { role: "User", content: "Hello" },
+          { role: "Assistant", content: "Hi there!" },
+        ],
+        model: "gpt-4",
+        totalPromptTokens: 10,
+        totalCompletionTokens: 15,
+      };
+
+      (useParams as any).mockReturnValue({ id: "chat-123" });
+      mockGetChatMessages.mockResolvedValue(mockChatData);
+
+      render(<CurrentChat />);
+
+      await waitFor(() => {
+        expect(screen.getByTestId("model-summary")).toBeInTheDocument();
+        expect(
+          screen.getByText("Model: gpt-4, Prompt: 10, Completion: 15")
+        ).toBeInTheDocument();
+      });
+    });
+
+    it("does not render model summary with only one message", async () => {
+      const mockChatData = {
+        historyMessages: [{ role: "User", content: "Hello" }],
+        model: "gpt-4",
+        totalPromptTokens: 10,
+        totalCompletionTokens: 15,
+      };
+
+      (useParams as any).mockReturnValue({ id: "chat-123" });
+      mockGetChatMessages.mockResolvedValue(mockChatData);
+
+      render(<CurrentChat />);
+
+      await waitFor(() => {
+        expect(screen.queryByTestId("model-summary")).not.toBeInTheDocument();
+      });
+    });
+  });
+
+  describe("State Reset", () => {
+    it("resets state when chat ID changes", async () => {
+      const { rerender } = render(<CurrentChat />);
+
+      // Change params to trigger useEffect
+      (useParams as any).mockReturnValue({ id: "new-chat" });
+      mockGetChatMessages.mockResolvedValue({
+        historyMessages: [],
+        model: "gpt-3.5",
+        totalPromptTokens: 0,
+        totalCompletionTokens: 0,
+      });
+
+      rerender(<CurrentChat />);
+
+      await waitFor(() => {
+        expect(mockGetChatMessages).toHaveBeenCalledWith("new-chat");
+      });
+    });
+  });
+
+  describe("Error Handling", () => {
+    it.todo("handles pagination error by navigating to /chat", async () => {
+      const mockChatData = {
+        historyMessages: [{ role: "User", content: "Hello" }],
+        model: "gpt-4",
+        totalPromptTokens: 10,
+        totalCompletionTokens: 15,
+      };
+
+      (useParams as any).mockReturnValue({ id: "chat-123" });
+      mockGetChatMessages
+        .mockResolvedValueOnce(mockChatData) // First call succeeds
+        .mockResolvedValueOnce(null); // Pagination call fails
+
+      render(<CurrentChat />);
+
+      // Wait for initial load
+      await waitFor(() => {
+        expect(screen.getByTestId("messages")).toBeInTheDocument();
+      });
+
+      // Simulate scroll to top to trigger pagination
+      const scrollableSection = document.querySelector(".overflow-y-auto");
+      fireEvent.scroll(scrollableSection!, { target: { scrollTop: 0 } });
+
+      await waitFor(() => {
+        expect(mockNavigate).toHaveBeenCalledWith("/chat");
+      });
+    });
+  });
 });
