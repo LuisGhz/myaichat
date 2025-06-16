@@ -1,5 +1,5 @@
 @import "tailwindcss";
-@import 'react-photo-view/dist/react-photo-view.css';
+@import "react-photo-view/dist/react-photo-view.css";
 
 * {
   box-sizing: border-box;
@@ -18,7 +18,8 @@
   --color-cop-10: #1e2334;
 }
 
-html, body {
+html,
+body {
   font-size: 16px;
 }
 
@@ -31,4 +32,20 @@ html, body {
 .hide-scrollbar {
   -ms-overflow-style: none; /* IE and Edge */
   scrollbar-width: none; /* Firefox */
+}
+
+/**
+ * Modal styles
+ */
+.rename-chat-modal .ant-modal-content {
+  @apply bg-cop-2 text-white;
+}
+.rename-chat-modal .ant-modal-title {
+  @apply bg-cop-2 text-white;
+}
+.rename-chat-modal .ant-modal-footer {
+  @apply bg-cop-2 text-white;
+}
+.rename-chat-modal .ant-modal-close-x {
+  @apply text-white;
 }
