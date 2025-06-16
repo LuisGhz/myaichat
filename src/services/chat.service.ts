@@ -8,16 +8,22 @@ export const getAllChatsService = async () => {
 };
 
 export const getChatMessagesService = async (id: string, page: number = 0) => {
-  return await apiClient.get<ChatMessagesRes>(`/chat/${id}/messages?page=${page}`);
+  return await apiClient.get<ChatMessagesRes>(
+    `/chat/${id}/messages?page=${page}`
+  );
 };
 
 export const sendNewMessageService = async (newMessageReq: FormData) => {
   return await apiClient.postFormData<NewMessageRes, unknown>(
     "/chat/send-message",
-    newMessageReq,
+    newMessageReq
   );
 };
 
 export const deleteChatService = async (id: string) => {
   return await apiClient.del(`/chat/${id}/delete`);
+};
+
+export const renameChatTitleService = async (id: string, newTitle: string) => {
+  return await apiClient.patch(`/chat/${id}/rename`, { title: newTitle });
 };

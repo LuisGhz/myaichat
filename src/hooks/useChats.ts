@@ -5,6 +5,7 @@ import {
   getChatMessagesService,
   sendNewMessageService,
   deleteChatService,
+  renameChatTitleService,
 } from "services/chat.service";
 import { NewMessageReq } from "types/chat/NewMessageReq.type";
 import {
@@ -14,7 +15,7 @@ import {
 
 export const useChats = () => {
   const [isEmptyPage, setIsEmptyPage] = useState(false);
-  const { toastError } = useToast();
+  const { toastError, toastSuccess } = useToast();
   const [isSending, setIsSending] = useState(false);
   const [isChatLoading, setIsChatLoading] = useState(false);
 
@@ -74,11 +75,21 @@ export const useChats = () => {
     }
   };
 
+  const renameChatTitle = async (id: string, newTitle: string) => {
+    try {
+      await renameChatTitleService(id, newTitle);
+      toastSuccess("Chat renamed successfully!");
+    } catch {
+      toastError("Error renaming chat, please try again later.");
+    }
+  };
+
   return {
     getAllChats,
     getChatMessages,
     sendNewMessage,
     deleteChat,
+    renameChatTitle,
     isSending,
     isEmptyPage,
     setIsEmptyPage,
