@@ -19,6 +19,7 @@ export const RenameChatModal = ({ chat, onOk, onCancel }: Props) => {
       onOk={() => onOk(chat.id, newTitle)}
       centered
       width={320}
+      okButtonProps={{ disabled: newTitle.trim() === "" }}
       className="rename-chat-modal"
     >
       <Input value={newTitle} onChange={(e) => setNewTitle(e.target.value)} />
