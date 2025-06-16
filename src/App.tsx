@@ -30,7 +30,7 @@ function App() {
       >
         <SideNav />
         <main
-          className={`grow bg-cop-3 ms-0 transition-all duration-500 ${
+          className={`app-main grow bg-cop-3 ms-0 transition-all duration-500 overflow-y-auto ${
             isMenuOpen ? "lg:ms-72" : ""
           }`}
         >
