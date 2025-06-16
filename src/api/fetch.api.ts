@@ -105,7 +105,8 @@ export const createFetchAdapter = (baseUrl: string): HttpClient => {
         body: data ? JSON.stringify(data) : undefined,
       });
       await handleResponse(response);
-      return (await response.json()) as T;
+      const responseText = await response.text();
+      return responseText ? (JSON.parse(responseText) as T) : undefined;
     } catch (error) {
       console.error("PATCH request failed:", error);
       throw error;
