@@ -24,7 +24,7 @@ export const ModelInfoC = ({ model }: Props) => {
         <div style={{ fontWeight: 600 }}>Context Window</div>
         <div>{fNumber(model.metadata.contextWindow)}</div>
         <div style={{ fontWeight: 600 }}>Max Output Tokens</div>
-        <div>{model.metadata.maxOutputTokens}</div>
+        <div>{fNumber(model.metadata.maxOutputTokens)}</div>
         <div style={{ fontWeight: 600 }}>Knowledge Cutoff</div>
         <div>{model.metadata.knowledgeCutoff}</div>
         <div style={{ fontWeight: 600 }}>Price</div>
