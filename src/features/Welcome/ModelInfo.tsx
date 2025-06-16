@@ -10,13 +10,29 @@ export const ModelInfoC = ({ model }: Props) => {
 
   return (
     <section className="metadata bottom-full left-0">
-      <p>Context Window: {fNumber(model.metadata.contextWindow)}</p>
-      <p>Max Output Tokens: {model.metadata.maxOutputTokens}</p>
-      <p>Knowledge Cutoff: {model.metadata.knowledgeCutoff}</p>
-      <p>
-        Price: Input: {fCurrency(model.price.input, { maximumFractionDigits: 3 })} / Output:{" "}
-        {fCurrency(model.price.output, { maximumFractionDigits: 2 })}
-      </p>
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns: "1fr 2fr",
+          gap: "8px",
+          minWidth: 220,
+          maxWidth: 480,
+          width: "100%",
+          padding: "8px 0",
+        }}
+      >
+        <div style={{ fontWeight: 600 }}>Context Window</div>
+        <div>{fNumber(model.metadata.contextWindow)}</div>
+        <div style={{ fontWeight: 600 }}>Max Output Tokens</div>
+        <div>{model.metadata.maxOutputTokens}</div>
+        <div style={{ fontWeight: 600 }}>Knowledge Cutoff</div>
+        <div>{model.metadata.knowledgeCutoff}</div>
+        <div style={{ fontWeight: 600 }}>Price</div>
+        <div>
+          Input: {fCurrency(model.price.input, { maximumFractionDigits: 3 })} /
+          Output: {fCurrency(model.price.output, { maximumFractionDigits: 2 })}
+        </div>
+      </div>
     </section>
   );
 };

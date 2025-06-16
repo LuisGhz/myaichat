@@ -1,58 +1,45 @@
-import { TouchEvent } from "react";
 import { MODELS } from "consts/Models";
 import "./Welcome.css";
 import { ModelInfoC } from "./ModelInfo";
-import { useState } from "react";
 
 export const Welcome = () => {
-  const [visibleModel, setVisibleModel] = useState<string | null>(null);
-  let touchTimer: ReturnType<typeof setTimeout>;
-
-  const handleTouchStart =
-    (modelValue: string, isLink: boolean) => (e: TouchEvent<HTMLElement>) => {
-      e.preventDefault();
-      touchTimer = setTimeout(() => {
-        if (isLink) {
-          e.stopPropagation();
-          e.preventDefault();
-          setVisibleModel(modelValue);
-        }
-      }, 500); // Long touch threshold
-    };
-
-  const handleTouchEnd =
-    (modelValue: string, isLink: boolean) => (e: TouchEvent<HTMLElement>) => {
-      e.stopPropagation();
-      clearTimeout(touchTimer);
-      if (!isLink)
-        setVisibleModel((prev) => (prev === modelValue ? null : modelValue));
-    };
-
   return (
-    <div className="text-white text-center flex flex-col items-center justify-center h-screen">
+    <div className="text-white text-center flex flex-col items-center justify-start h-screen pt-10 md:pt-2">
       <h1 className="text-2xl">Welcome to My AI Chat</h1>
-      <p>It supports the following models</p>
+      <p className="text-lg mt-2 mb-4">
+        This app is designed to help you interact with various AI models. It
+        supports the following ones:
+      </p>
       <ul>
-        {MODELS.map((model) => (
-          <li
-            className={`link-container text-lg ${
-              visibleModel === model.value ? "link-container--active" : ""
-            } `}
-            key={model.value}
-            onTouchStart={handleTouchStart(model.value, false)}
-            onTouchEnd={handleTouchEnd(model.value, false)}
-          >
-            <a
-              className="text-blue-500 hover:text-blue-400 transition-colors duration-100 cursor-pointer relative"
-              href={model.link}
-              target="_blank"
-              onTouchStart={handleTouchStart(model.value, true)}
-              onTouchEnd={handleTouchEnd(model.value, true)}
-            >
-              {model.name}
-            </a>
-            <ModelInfoC model={model} />
-          </li>
+        {MODELS.map((model, idx) => (
+          <>
+            {idx === 0 ||
+            model.developBy.name !== MODELS[idx - 1].developBy.name ? (
+              <li
+                className="text-2xl font-bold mt-4 mb-2 text-start flex gap-3"
+                key={idx}
+              >
+                <a className="cursor-pointer" href={model.developBy.link}>
+                  <img
+                    className="w-6 h-6 mt-1.5"
+                    src={model.developBy.imageUrl}
+                    alt={model.developBy.name}
+                  />
+                </a>
+                <span>{model.developBy.name}</span>
+              </li>
+            ) : null}
+            <li className="mb-2" key={model.value}>
+              <a
+                className="text-blue-500 hover:text-blue-400 transition-colors duration-200 cursor-pointer relative flex items-center justify-center gap-2 font-bold"
+                href={model.link}
+                target="_blank"
+              >
+                {model.name}
+              </a>
+              <ModelInfoC model={model} />
+            </li>
+          </>
         ))}
       </ul>
     </div>
