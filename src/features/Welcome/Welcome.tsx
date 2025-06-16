@@ -1,5 +1,4 @@
 import { MODELS } from "consts/Models";
-import "./Welcome.css";
 import { ModelInfoC } from "./ModelInfo";
 
 export const Welcome = () => {
