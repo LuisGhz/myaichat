@@ -1,82 +1,79 @@
 import { ScreensWidth } from "consts/ScreensWidth";
-import { ReactNode, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router";
 import { useContextMenu } from "hooks/useContextMenu";
 import { ContextMenu } from "components/ContextMenu";
-import { TrashIcon } from "assets/icons/TrashIcon";
-import { PencilIcon } from "assets/icons/PencilIcon";
 import { ChatSummary } from "types/chat/ChatSummary.type";
 import { useChats } from "hooks/useChats";
 import {
   useAppChatsStore,
   useAppIsMenuOpenStore,
   useAppSetIsMenuOpenStore,
+  useAppUpdateChatTitleStore,
 } from "store/useAppStore";
+import { useChatsNavContextMenu } from "hooks/components/useChatsNavContextMenu";
+import { RenameChatModal } from "components/modals/RenameChatModal";
 
 export const ChatsNav = () => {
   const chats = useAppChatsStore();
   const isMenuOpen = useAppIsMenuOpenStore();
   const setIsMenuOpen = useAppSetIsMenuOpenStore();
-  const { getAllChats, deleteChat: deleteChatById } = useChats();
-  const navigate = useNavigate();
-  const params = useParams();
+  const updateChatTitle = useAppUpdateChatTitleStore();
+  const { getAllChats } = useChats();
   const { onTouchStart, onTouchEnd } = useContextMenu();
-  const [elements, setElements] = useState<ReactNode[]>([]);
+  const navigate = useNavigate();
+  const params = useParams<{ id?: string }>();
+  const { deleteChat: deleteChatById, renameChatTitle } = useChats();
   const [isContextMenuOpen, setIsContextMenuOpen] = useState(false);
   const triggeredContextMenu = useRef<HTMLElement>(null);
+  const [isRenameModalOpen, setIsRenameModalOpen] = useState(false);
+  const [chatToRename, setChatToRename] = useState<ChatSummary | null>(null);
+  const { elements, updateElements } = useChatsNavContextMenu({
+    setIsContextMenuOpen,
+  });
 
   useEffect(() => {
     getAllChats();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  const handleRedirectToChatOnMobile = () => {
+    if (window.innerWidth < ScreensWidth.tablet) setIsMenuOpen(!isMenuOpen);
+  };
+
   const handleDeleteChat = (id: string) => {
     deleteChatById(id);
     if (params.id === id) navigate("/chat");
   };
 
-  const handleRenameChat = (id: string) => {
-    console.log("Rename chat", id);
-    alert("Not available yet.");
+  const handleRenameModal = (id: string) => {
+    setIsRenameModalOpen(true);
+    const chat = chats.find((chat) => chat.id === id);
+    if (chat) setChatToRename(chat);
     setIsContextMenuOpen(false);
   };
 
-  const handleRedirectToChatOnMobile = () => {
-    if (window.innerWidth < ScreensWidth.tablet) setIsMenuOpen(!isMenuOpen);
+  const onRenameCancel = () => {
+    setIsRenameModalOpen(false);
+    setChatToRename(null);
   };
 
-  const updateElements = (chat: ChatSummary) => {
-    setElements([
-      <button
-        className="cursor-pointer w-full text-red-700 flex gap-2"
-        type="button"
-        aria-label={`Delete chat: ${chat.title}`}
-        onClick={() => {
-          handleDeleteChat(chat.id);
-          setIsContextMenuOpen(false);
-        }}
-        onContextMenu={(e) => e.preventDefault()}
-      >
-        <TrashIcon className="w-5 min-w-5" />
-        <span>Delete</span>
-      </button>,
-      <button
-        className="cursor-pointer w-full text-white flex gap-2"
-        type="button"
-        aria-label="Rename chat"
-        onClick={() => handleRenameChat(chat.id)}
-      >
-        <PencilIcon className="w-5 min-w-5" />
-        <span>Rename</span>
-      </button>,
-    ]);
+  const onRenameOk = async (id: string, newTitle: string) => {
+    await renameChatTitle(id, newTitle);
+    setIsRenameModalOpen(false);
+    updateChatTitle(id, newTitle);
+    setChatToRename(null);
   };
 
   const handleContextMenu =
     (chat: ChatSummary) => (e: React.MouseEvent<HTMLElement>) => {
       e.preventDefault();
       triggeredContextMenu.current = e.currentTarget;
-      updateElements(chat);
+      updateElements({
+        chat,
+        handleDeleteChat,
+        handleRenameModal,
+      });
       setIsContextMenuOpen(true);
     };
 
@@ -85,25 +82,10 @@ export const ChatsNav = () => {
       onTouchStart(e, () => {
         e.preventDefault();
         triggeredContextMenu.current = e.currentTarget;
-        updateElements(chat);
+        updateElements({ chat, handleDeleteChat, handleRenameModal });
         setIsContextMenuOpen(true);
       });
     };
-
-  const closeContextMenuOnAnyScroll = () => {
-    const handleScroll = () => {
-      setIsContextMenuOpen(false);
-    };
-
-    window.addEventListener("scroll", handleScroll, true);
-
-    return () => {
-      window.removeEventListener("scroll", handleScroll, true);
-    };
-  };
-
-  // Call the function to attach the scroll listener
-  closeContextMenuOnAnyScroll();
 
   return (
     <>
@@ -138,6 +120,13 @@ export const ChatsNav = () => {
         triggered={triggeredContextMenu.current!}
         customClass="sidenav-context-menu"
       />
+      {isRenameModalOpen && chatToRename && (
+        <RenameChatModal
+          chat={chatToRename}
+          onOk={onRenameOk}
+          onCancel={onRenameCancel}
+        />
+      )}
     </>
   );
 };
