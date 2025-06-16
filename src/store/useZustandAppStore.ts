@@ -6,6 +6,13 @@ export const useZustandAppStore = create<AppStoreProps>((set) => ({
   isMenuOpen: true,
   isOffline: false,
   setChats: (chats) => set({ chats }),
+  updateChatTitle: (id: string, title: string) => {
+    set((state) => ({
+      chats: state.chats.map((chat) =>
+        chat.id === id ? { ...chat, title } : chat
+      ),
+    }));
+  },
   deleteChatById: (id: string) => {
     set((state) => ({
       chats: state.chats.filter((chat) => chat.id !== id),
