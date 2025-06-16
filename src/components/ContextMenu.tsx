@@ -91,6 +91,19 @@ export const ContextMenu = ({
     };
   }, [setIsOpen, triggered, uuid]);
 
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsOpen(false);
+    };
+
+    window.addEventListener("scroll", handleScroll, true);
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll, true);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   return createPortal(
     <ul
       className={`${uuid} ${
