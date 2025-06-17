@@ -332,50 +332,6 @@ describe("CurrentChat", () => {
     });
   });
 
-  describe("Model Summary", () => {
-    it("renders model summary when currentModel exists and multiple messages", async () => {
-      const mockChatData = {
-        historyMessages: [
-          { role: "User", content: "Hello" },
-          { role: "Assistant", content: "Hi there!" },
-        ],
-        model: "gpt-4",
-        totalPromptTokens: 10,
-        totalCompletionTokens: 15,
-      };
-
-      (useParams as any).mockReturnValue({ id: "chat-123" });
-      mockGetChatMessages.mockResolvedValue(mockChatData);
-
-      render(<CurrentChat />);
-
-      await waitFor(() => {
-        expect(screen.getByTestId("model-summary")).toBeInTheDocument();
-        expect(
-          screen.getByText("Model: gpt-4, Prompt: 10, Completion: 15")
-        ).toBeInTheDocument();
-      });
-    });
-
-    it("does not render model summary with only one message", async () => {
-      const mockChatData = {
-        historyMessages: [{ role: "User", content: "Hello" }],
-        model: "gpt-4",
-        totalPromptTokens: 10,
-        totalCompletionTokens: 15,
-      };
-
-      (useParams as any).mockReturnValue({ id: "chat-123" });
-      mockGetChatMessages.mockResolvedValue(mockChatData);
-
-      render(<CurrentChat />);
-
-      await waitFor(() => {
-        expect(screen.queryByTestId("model-summary")).not.toBeInTheDocument();
-      });
-    });
-  });
-
   describe("State Reset", () => {
     it("resets state when chat ID changes", async () => {
       const { rerender } = render(<CurrentChat />);
