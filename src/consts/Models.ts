@@ -50,7 +50,7 @@ export const MODELS: ModelInfo[] = [
   },
   {
     value: "gpt-4o-mini",
-    shortName: "4oM",
+    shortName: "4om",
     name: "GPT 4o Mini",
     developBy: {
       name: "OpenAI",
