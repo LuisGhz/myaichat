@@ -7,10 +7,10 @@ import { InputSection } from "./components/InputSection/InputSection";
 import { NewMessageReq } from "types/chat/NewMessageReq.type";
 import { NewConversation } from "./components/NewConversation";
 import { ModelsValues } from "types/chat/ModelsValues.type";
-import { CurrentModelSummary } from "./components/CurrentModelSummary";
 import { ChatMessagesRes } from "types/chat/ChatMessagesRes.type";
 import { ChatsLoading } from "./components/ChatsLoading";
 import { useAppAddChatStore } from "store/useAppStore";
+import { useCurrentChatStoreSetCurrentModelData } from "store/features/chat/useCurrentChatStore";
 
 export const CurrentChat = () => {
   const addChat = useAppAddChatStore();
@@ -25,6 +25,7 @@ export const CurrentChat = () => {
   const [isWelcomeLoaded, setIsWelcomeLoaded] = useState(false);
   const [isUpdatingMessagesFromScroll, setIsUpdatingMessagesFromScroll] =
     useState(false);
+  const setCurrentModelData = useCurrentChatStoreSetCurrentModelData();
   const params = useParams();
   const navigate = useNavigate();
   const {
@@ -67,6 +68,21 @@ export const CurrentChat = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [page]);
 
+  useEffect(() => {
+    if (currentModel) {
+      setCurrentModelData({
+        model: currentModel,
+        totalPromptTokens,
+        totalCompletionTokens,
+      });
+    }
+  }, [
+    currentModel,
+    totalPromptTokens,
+    totalCompletionTokens,
+    setCurrentModelData,
+  ]);
+
   const handleNewPageLoad = (res: ChatMessagesRes) => {
     setIsUpdatingMessagesFromScroll(() => true);
     setMessages((prevMessages) => [
@@ -97,6 +113,7 @@ export const CurrentChat = () => {
     setIsEmptyPage(() => false);
     setTotalPromptTokens(() => 0);
     setTotalCompletionTokens(() => 0);
+    setCurrentModelData(null);
   };
 
   const sendMessage = async (newUserMessage: string, image?: File) => {
@@ -195,13 +212,13 @@ export const CurrentChat = () => {
             </div>
           </section>
         )}
-        {currentModel && messages.length > 1 && (
+        {/* {currentModel && messages.length > 1 && (
           <CurrentModelSummary
             currentModel={currentModel}
             totalCompletionTokens={totalCompletionTokens}
             totalPromptTokens={totalPromptTokens}
           />
-        )}
+        )} */}
         <InputSection onEnter={onEnter} isSending={isSending} />
       </div>
     </>
