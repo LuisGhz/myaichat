@@ -34,7 +34,7 @@ describe('Microphone', () => {
 
     const { getByRole } = render(<Microphone onTranscription={mockOnTranscription} />);
     const button = getByRole('button');
-    fireEvent.mouseDown(button);
+    fireEvent.click(button);
 
     expect(alertSpy).toHaveBeenCalledWith(
       'Speech recognition is not supported in your browser.'
@@ -42,18 +42,22 @@ describe('Microphone', () => {
     alertSpy.mockRestore();
   });
 
-  it('starts and stops recording on mouse events', () => {
+  it('starts and stops recording on click events', () => {
     const { getByRole, queryByText } = render(<Microphone onTranscription={mockOnTranscription} />);
     const button = getByRole('button');
 
+    // Initially not recording
+    expect(button).toHaveAttribute('aria-label', 'Activate voice input');
+    expect(queryByText('Recording...')).not.toBeInTheDocument();
+
     // Start recording
-    fireEvent.mouseDown(button);
+    fireEvent.click(button);
     expect(mockRecognition.start).toHaveBeenCalled();
     expect(button).toHaveAttribute('aria-label', 'Recording in progress');
     expect(queryByText('Recording...')).toBeInTheDocument();
 
     // Stop recording
-    fireEvent.mouseUp(button);
+    fireEvent.click(button);
     expect(mockRecognition.stop).toHaveBeenCalled();
     expect(button).toHaveAttribute('aria-label', 'Activate voice input');
     expect(queryByText('Recording...')).not.toBeInTheDocument();
