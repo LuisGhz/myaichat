@@ -28,6 +28,12 @@ vi.mock("react-router", () => ({
 
 vi.mock("store/useAppStore");
 
+vi.mock("../CurrentModelSummary", () => {
+  return {
+    CurrentModelSummary: () => <div>Current Model Summary</div>,
+  };
+});
+
 describe("InputSection", () => {
   const onEnter = vi.fn();
 
