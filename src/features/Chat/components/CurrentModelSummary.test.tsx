@@ -1,94 +1,95 @@
 import { render, screen } from "@testing-library/react";
-import { describe, it, expect, vi } from "vitest";
+import { describe, it, expect, vi, beforeEach } from "vitest";
 import { CurrentModelSummary } from "./CurrentModelSummary";
 
 // Mock the MODELS constant
 vi.mock("consts/Models", () => ({
   MODELS: [
     {
-      value: "test-model",
+      value: "model",
       shortName: "Test",
       price: { input: 0.001, output: 0.002 },
     },
     {
-      value: "another-model",
+      value: "anothermodel",
       shortName: "Another",
       price: { input: 0.1, output: 0.4 },
     },
   ],
 }));
 
-describe("CurrentModelSummary", () => {
-  it("should render the component with correct values", () => {
-    render(
-      <CurrentModelSummary
-        currentModel="test-model"
-        totalPromptTokens={100000}
-        totalCompletionTokens={200000}
-      />
-    );
+// Mock the hooks
+vi.mock("store/features/chat/useCurrentChatStore", () => ({
+  useCurrentChatStoreGetCurrentModelData: vi.fn(),
+}));
 
-    expect(screen.getByText(/Test -/)).toBeInTheDocument();
+vi.mock("hooks/useFormat", () => ({
+  useFormat: vi.fn(),
+}));
+
+import { useCurrentChatStoreGetCurrentModelData } from "store/features/chat/useCurrentChatStore";
+import { useFormat } from "hooks/useFormat";
+
+const mockUseCurrentChatStoreGetCurrentModelData = vi.mocked(
+  useCurrentChatStoreGetCurrentModelData
+);
+const mockUseFormat = vi.mocked(useFormat);
+
+describe("CurrentModelSummary", () => {
+  beforeEach(() => {
+    mockUseFormat.mockReturnValue({
+      fNumber: (num: number) => num.toLocaleString(),
+      fCurrency: (num: number) => `$${num.toFixed(2)}`
+    });
+  });
+
+  it("should render the component with correct values", () => {
+    mockUseCurrentChatStoreGetCurrentModelData.mockReturnValue({
+      model: "model",
+      totalPromptTokens: 100000,
+      totalCompletionTokens: 200000,
+    });
+
+    render(<CurrentModelSummary />);
+
+    expect(screen.getByText(/Test/)).toBeInTheDocument();
     expect(screen.getByText(/PT:100,000 - \$0.00/)).toBeInTheDocument();
     expect(screen.getByText(/CT:200,000 - \$0.00/)).toBeInTheDocument();
   });
 
-  it("should render 0 values when tokens are not provided", () => {
-    render(<CurrentModelSummary currentModel="test-model" />);
-
-    expect(screen.getByText(/Test -/)).toBeInTheDocument();
-    expect(screen.getByText(/PT:0 - \$0.00/)).toBeInTheDocument();
-    expect(screen.getByText(/CT:0 - \$0.00/)).toBeInTheDocument();
-  });
-
   it("should render correct values for another model", () => {
-    render(
-      <CurrentModelSummary
-        currentModel="another-model"
-        totalPromptTokens={1_000_000}
-        totalCompletionTokens={1_000_000}
-      />
-    );
+    mockUseCurrentChatStoreGetCurrentModelData.mockReturnValue({
+      model: "anothermodel",
+      totalPromptTokens: 1_000_000,
+      totalCompletionTokens: 1_000_000,
+    });
 
-    expect(screen.getByText(/Another -/)).toBeInTheDocument();
+    render(<CurrentModelSummary />);
+
+    expect(screen.getByText(/Another/)).toBeInTheDocument();
     expect(screen.getByText(/PT:1,000,000 - \$0.10/)).toBeInTheDocument();
     expect(screen.getByText(/CT:1,000,000 - \$0.40/)).toBeInTheDocument();
   });
 
   it("should handle cases where totalPromptTokens or totalCompletionTokens are zero", () => {
-    render(
-      <CurrentModelSummary
-        currentModel="test-model"
-        totalPromptTokens={0}
-        totalCompletionTokens={0}
-      />
-    );
+    mockUseCurrentChatStoreGetCurrentModelData.mockReturnValue({
+      model: "model",
+      totalPromptTokens: 0,
+      totalCompletionTokens: 0,
+    });
 
-    expect(screen.getByText(/Test -/)).toBeInTheDocument();
+    render(<CurrentModelSummary />);
+
+    expect(screen.getByText(/Test/)).toBeInTheDocument();
     expect(screen.getByText(/PT:0 - \$0.00/)).toBeInTheDocument();
     expect(screen.getByText(/CT:0 - \$0.00/)).toBeInTheDocument();
   });
 
-  it("should handle cases where totalPromptTokens or totalCompletionTokens are undefined", () => {
-    const r = render(
-      <CurrentModelSummary
-        currentModel="test-model"
-        totalCompletionTokens={100000}
-      />
-    );
+  it("should return null when no current model is available", () => {
+    mockUseCurrentChatStoreGetCurrentModelData.mockReturnValue(null);
 
-    expect(screen.getByText(/Test -/)).toBeInTheDocument();
-    expect(screen.getByText(/PT:0 - \$0.00/)).toBeInTheDocument();
-    expect(screen.getByText(/CT:100,000 - \$0.00/)).toBeInTheDocument();
-    
-    r.rerender(
-      <CurrentModelSummary
-      currentModel="test-model"
-      totalPromptTokens={100000}
-      />
-    )
-    expect(screen.getByText(/Test -/)).toBeInTheDocument();
-    expect(screen.getByText(/PT:100,000 - \$0.00/)).toBeInTheDocument();
-    expect(screen.getByText(/CT:0 - \$0.00/)).toBeInTheDocument();
+    const { container } = render(<CurrentModelSummary />);
+
+    expect(container.firstChild).toBeNull();
   });
 });
