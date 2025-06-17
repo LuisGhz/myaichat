@@ -74,7 +74,7 @@ export const Microphone = ({ onTranscription }: Props) => {
       onTouchEnd={stopRecording}
       ref={buttonRef}
     >
-      <MicrophoneIcon className="size-5" />
+      <MicrophoneIcon className="size-6" />
       {isRecording && <span className="sr-only">Recording...</span>}
     </button>
   );

@@ -68,7 +68,7 @@ export const AttachFile = ({ onSelectImage }: Props) => {
         }}
         ref={buttonRef}
       >
-        <PlusIcon className="size-5" />
+        <PlusIcon className="size-6" />
         <ul
           className="hidden bg-cop-4 text-white rounded-lg mt-2 w-40 shadow-lg transition-all duration-200 delay-150 absolute z-10 bottom-full"
           ref={optionsRef}
