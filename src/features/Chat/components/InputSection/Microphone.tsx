@@ -1,5 +1,6 @@
 import { MicrophoneIcon } from "assets/icons/MicrophoneIcon";
 import { useState, useEffect, useRef } from "react";
+import "./Microphone.css";
 
 type Props = {
   onTranscription: (text: string) => void;
@@ -42,6 +43,14 @@ export const Microphone = ({ onTranscription }: Props) => {
     };
   }, [onTranscription]);
 
+  const handleRecording = () => {
+    if (isRecording) {
+      stopRecording();
+    } else {
+      startRecording();
+    }
+  };
+
   const startRecording = () => {
     if (recognitionRef.current) {
       recognitionRef.current.start();
@@ -61,17 +70,16 @@ export const Microphone = ({ onTranscription }: Props) => {
   return (
     <button
       className={`text-white transition-all delay-150 duration-200 ${
-        isRecording ? "bg-red-500 hover:bg-red-600" : "hover:bg-cop-6"
+        isRecording
+          ? "bg-red-600 hover:bg-red-700 recording-button"
+          : "hover:bg-cop-6"
       } p-2 rounded-full cursor-pointer`}
       aria-label={
         isRecording ? "Recording in progress" : "Activate voice input"
       }
       type="button"
-      onMouseDown={startRecording}
-      onMouseUp={stopRecording}
-      onMouseLeave={isRecording ? stopRecording : undefined}
-      onTouchStart={startRecording}
-      onTouchEnd={stopRecording}
+      onClick={handleRecording}
+      onTouchStart={handleRecording}
       ref={buttonRef}
     >
       <MicrophoneIcon className="size-6" />
