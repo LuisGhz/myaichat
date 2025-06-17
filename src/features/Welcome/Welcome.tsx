@@ -4,7 +4,7 @@ import { ModelInfoC } from "./ModelInfo";
 
 export const Welcome = () => {
   return (
-    <div className="text-white text-center flex flex-col items-center justify-start h-screen pt-10 md:pt-2">
+    <div className="text-white text-center flex flex-col items-center justify-start h-screen pt-10 md:pt-2 overflow-y-auto">
       <h1 className="text-2xl">Welcome to My AI Chat</h1>
       <p className="text-lg mt-2 mb-4">
         This app is designed to help you interact with various AI models. It
