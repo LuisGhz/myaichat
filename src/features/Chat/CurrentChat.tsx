@@ -67,25 +67,6 @@ export const CurrentChat = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [page]);
 
-  useEffect(() => {
-    const incrementPageOnScrollTop = (event: Event) => {
-      const target = event.target as HTMLElement;
-      if (target.scrollTop === 0 && !isEmptyPage && isFirstLoaded) {
-        console.log("incrementPageOnScrollTop");
-        setPage((prevPage) => prevPage + 1);
-      }
-    };
-
-    const container = document.querySelector(".app-main") as HTMLElement;
-    setTimeout(() => {
-      container.addEventListener("scroll", incrementPageOnScrollTop);
-    }, 1000);
-    return () => {
-      container.removeEventListener("scroll", incrementPageOnScrollTop);
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
   const handleNewPageLoad = (res: ChatMessagesRes) => {
     setIsUpdatingMessagesFromScroll(() => true);
     setMessages((prevMessages) => [
@@ -171,6 +152,14 @@ export const CurrentChat = () => {
     await sendMessage(newUserMessage, image);
   };
 
+  const incrementPageOnScrollTop = (event: React.UIEvent<HTMLDivElement>) => {
+    const target = event.target as HTMLElement;
+    if (target.scrollTop === 0 && !isEmptyPage && isFirstLoaded) {
+      console.log("incrementPageOnScrollTop");
+      setPage((prevPage) => prevPage + 1);
+    }
+  };
+
   return (
     <>
       <div className="flex flex-col h-full max-w-full md:max-w-11/12 xl:max-w-9/12 mx-auto pt-10 lg:px-2">
@@ -193,7 +182,10 @@ export const CurrentChat = () => {
           <ChatsLoading />
         )}
         {messages.length > 0 && (
-          <section className="messages-container grow mt-0.5 px-1 md:px-5">
+          <section
+            className="messages-container overflow-y-auto hide-scrollbar grow mt-0.5 px-1 md:px-5"
+            onScroll={incrementPageOnScrollTop}
+          >
             <div className="min-h-full flex flex-col justify-end">
               <Messages
                 messages={messages}
