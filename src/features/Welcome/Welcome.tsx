@@ -1,3 +1,4 @@
+import { Fragment } from "react";
 import { MODELS } from "consts/Models";
 import { ModelInfoC } from "./ModelInfo";
 
@@ -11,13 +12,10 @@ export const Welcome = () => {
       </p>
       <ul>
         {MODELS.map((model, idx) => (
-          <>
+          <Fragment key={idx}>
             {idx === 0 ||
             model.developBy.name !== MODELS[idx - 1].developBy.name ? (
-              <li
-                className="text-2xl font-bold mt-4 mb-2 text-start flex gap-3"
-                key={idx}
-              >
+              <li className="text-2xl font-bold mt-4 mb-2 text-start flex gap-3">
                 <a className="cursor-pointer" href={model.developBy.link}>
                   <img
                     className="w-6 h-6 mt-1.5"
@@ -38,7 +36,7 @@ export const Welcome = () => {
               </a>
               <ModelInfoC model={model} />
             </li>
-          </>
+          </Fragment>
         ))}
       </ul>
     </div>
