@@ -55,7 +55,7 @@ export const SideNav = () => {
           aria-label="Go to home page"
           to={"/"}
         >
-          MyAIChat
+          <img className="w-8 h-8 rounded-full" src="/public/myaichat.png" alt="My ai chat icon" />
         </Link>
         <button
           className="cursor-pointer"

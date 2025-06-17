@@ -24,7 +24,11 @@ export const HeaderNav = () => {
       <ul className={`px-1`}>
         <li className="flex justify-between items-center px-2 py-1">
           <Link className="mt-0.5" to={"/"} aria-label="Go to homepage">
-            MyAIChat
+            <img
+              className="w-8 h-8 rounded-full"
+              src="/public/myaichat.png"
+              alt="My AI Chat"
+            />
           </Link>
           <button
             type="button"
