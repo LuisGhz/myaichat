@@ -10,7 +10,11 @@ import { ModelsValues } from "types/chat/ModelsValues.type";
 import { ChatMessagesRes } from "types/chat/ChatMessagesRes.type";
 import { ChatsLoading } from "./components/ChatsLoading";
 import { useAppAddChatStore } from "store/useAppStore";
-import { useCurrentChatStoreSetCurrentModelData } from "store/features/chat/useCurrentChatStore";
+import {
+  useCurrentChatStoreGetMaxOutputTokens,
+  useCurrentChatStoreSetCurrentModelData,
+  useCurrentChatStoreSetMaxOutputTokens,
+} from "store/features/chat/useCurrentChatStore";
 
 export const CurrentChat = () => {
   const addChat = useAppAddChatStore();
@@ -26,6 +30,8 @@ export const CurrentChat = () => {
   const [isUpdatingMessagesFromScroll, setIsUpdatingMessagesFromScroll] =
     useState(false);
   const setCurrentModelData = useCurrentChatStoreSetCurrentModelData();
+  const setMaxOutputTokens = useCurrentChatStoreSetMaxOutputTokens();
+  const maxOutputTokens = useCurrentChatStoreGetMaxOutputTokens();
   const params = useParams();
   const navigate = useNavigate();
   const {
@@ -99,6 +105,7 @@ export const CurrentChat = () => {
     setCurrentModel(res?.model || "");
     setTotalPromptTokens(res?.totalPromptTokens || 0);
     setTotalCompletionTokens(res?.totalCompletionTokens || 0);
+    setMaxOutputTokens(res?.maxOutputTokens || 2000);
     setTimeout(() => {
       setIsFirstLoaded(() => true);
     }, 250);
@@ -122,6 +129,7 @@ export const CurrentChat = () => {
       prompt: newUserMessage,
       image,
       promptId,
+      maxOutputTokens,
     };
     req.model = params.id ? undefined : model;
 
