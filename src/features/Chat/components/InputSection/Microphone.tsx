@@ -1,5 +1,5 @@
 import { MicrophoneIcon } from "assets/icons/MicrophoneIcon";
-import { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import "./Microphone.css";
 
 type Props = {
@@ -79,7 +79,6 @@ export const Microphone = ({ onTranscription }: Props) => {
       }
       type="button"
       onClick={handleRecording}
-      onTouchStart={handleRecording}
       ref={buttonRef}
     >
       <MicrophoneIcon className="size-6" />
