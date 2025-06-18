@@ -6,7 +6,7 @@ import {
   useAppIsMenuOpenStore,
   useAppSetIsMenuOpenStore,
 } from "store/useAppStore";
-import MyAIChatLogo from "/public/myaichat.png";
+import MyAIChatLogo from "assets/myaichat.png";
 
 export const HeaderNav = () => {
   const isMenuOpen = useAppIsMenuOpenStore();
