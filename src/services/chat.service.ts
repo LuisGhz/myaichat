@@ -27,3 +27,12 @@ export const deleteChatService = async (id: string) => {
 export const renameChatTitleService = async (id: string, newTitle: string) => {
   return await apiClient.patch(`/chat/${id}/rename`, { title: newTitle });
 };
+
+export const changeMaxOutputTokensService = async (
+  id: string,
+  maxOutputTokens: number
+) => {
+  return await apiClient.patch(`/chat/${id}/change-max-output-tokens`, {
+    maxOutputTokens,
+  });
+}
