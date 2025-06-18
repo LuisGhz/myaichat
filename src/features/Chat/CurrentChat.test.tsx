@@ -199,6 +199,7 @@ describe("CurrentChat", () => {
           image: undefined,
           promptId: "",
           model: "gemini-2.0-flash",
+          maxOutputTokens: 2000,
         });
       });
     });
