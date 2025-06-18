@@ -9,6 +9,7 @@ import { AttachFile } from "./AttachFile";
 import { XMarkIcon } from "assets/icons/XMarkIcon";
 import { useAppIsOfflineStore } from "store/useAppStore";
 import { CurrentModelSummary } from "../CurrentModelSummary";
+import { ChatConfig } from "./ChatConfig";
 
 type InputSectionProps = {
   onEnter: (newUserMessage: string, file: File | undefined) => void;
@@ -142,7 +143,10 @@ export const InputSection = ({ onEnter, isSending }: InputSectionProps) => {
         <div className="flex justify-between w-full px-2 mt-1">
           <AttachFile onSelectImage={onSelectImage} />
           <CurrentModelSummary />
-          <Microphone onTranscription={onTranscription} />
+          <div className="flex items-center gap-2">
+            <ChatConfig />
+            <Microphone onTranscription={onTranscription} />
+          </div>
         </div>
       </section>
     </>
