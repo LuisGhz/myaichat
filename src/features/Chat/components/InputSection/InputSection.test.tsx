@@ -34,6 +34,12 @@ vi.mock("../CurrentModelSummary", () => {
   };
 });
 
+vi.mock("./ChatConfig", () => {
+  return {
+    ChatConfig: () => <div>Chat Config</div>,
+  };
+});
+
 describe("InputSection", () => {
   const onEnter = vi.fn();
 
