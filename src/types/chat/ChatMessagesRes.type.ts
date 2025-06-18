@@ -5,4 +5,5 @@ export type ChatMessagesRes = {
   model: string;
   totalPromptTokens: number;
   totalCompletionTokens: number;
+  maxOutputTokens: number;
 }

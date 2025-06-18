@@ -6,4 +6,5 @@ export type NewMessageReq = {
   model?: ModelsValues;
   image? : File;
   promptId?: string;
+  maxOutputTokens: number;
 }
