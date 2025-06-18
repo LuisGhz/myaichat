@@ -6,6 +6,7 @@ import {
   sendNewMessageService,
   deleteChatService,
   renameChatTitleService,
+  changeMaxOutputTokensService,
 } from "services/chat.service";
 import { NewMessageReq } from "types/chat/NewMessageReq.type";
 import {
@@ -48,6 +49,7 @@ export const useChats = () => {
   const sendNewMessage = async (newMessageOps: NewMessageReq) => {
     const formData = new FormData();
     formData.append("prompt", newMessageOps.prompt);
+    formData.append("maxOutputTokens", String(newMessageOps.maxOutputTokens));
     if (newMessageOps.model) formData.append("model", newMessageOps.model);
     if (newMessageOps.chatId) formData.append("chatId", newMessageOps.chatId);
     if (newMessageOps.image) formData.append("image", newMessageOps.image);
@@ -84,12 +86,21 @@ export const useChats = () => {
     }
   };
 
+  const changeMaxOutputTokens = async (id: string, maxOutputTokens: number) => {
+    try {
+      await changeMaxOutputTokensService(id, maxOutputTokens);
+    } catch {
+      toastError("Error changing max output tokens, please try again later.");
+    }
+  };
+
   return {
     getAllChats,
     getChatMessages,
     sendNewMessage,
     deleteChat,
     renameChatTitle,
+    changeMaxOutputTokens,
     isSending,
     isEmptyPage,
     setIsEmptyPage,
