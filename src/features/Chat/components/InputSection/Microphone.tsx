@@ -1,5 +1,5 @@
 import { MicrophoneIcon } from "assets/icons/MicrophoneIcon";
-import React, { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 import "./Microphone.css";
 
 type Props = {
