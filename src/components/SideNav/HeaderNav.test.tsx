@@ -72,7 +72,9 @@ describe("HeaderNav", () => {
     const homepageLink = screen.getByRole("link", { name: "Go to homepage" });
     expect(homepageLink).toBeInTheDocument();
     expect(homepageLink).toHaveAttribute("href", "/");
-    expect(within(homepageLink).getByText("MyAIChat")).toBeInTheDocument();
+    expect(
+      within(homepageLink).getByAltText("My AI Chat")
+    ).toBeInTheDocument();
 
     // Close button
     expect(
