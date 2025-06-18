@@ -9,6 +9,7 @@ import {
   useAppIsMenuOpenStore,
   useAppSetIsMenuOpenStore,
 } from "store/useAppStore";
+import MyAIChatLogo from "/public/myaichat.png";
 
 export const SideNav = () => {
   const isMenuOpen = useAppIsMenuOpenStore();
@@ -55,7 +56,11 @@ export const SideNav = () => {
           aria-label="Go to home page"
           to={"/"}
         >
-          <img className="w-8 h-8 rounded-full" src="/public/myaichat.png" alt="My ai chat icon" />
+          <img
+            className="w-8 h-8 rounded-full"
+            src={MyAIChatLogo}
+            alt="My ai chat icon"
+          />
         </Link>
         <button
           className="cursor-pointer"

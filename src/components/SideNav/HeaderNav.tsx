@@ -1,11 +1,12 @@
+import { Link } from "react-router";
 import { ArrowLeftCircleIcon } from "assets/icons/ArrowLeftCircleIcon";
 import { PencilSquareIcon } from "assets/icons/PencilSquareIcon";
 import { ScreensWidth } from "consts/ScreensWidth";
-import { Link } from "react-router";
 import {
   useAppIsMenuOpenStore,
   useAppSetIsMenuOpenStore,
 } from "store/useAppStore";
+import MyAIChatLogo from "/public/myaichat.png";
 
 export const HeaderNav = () => {
   const isMenuOpen = useAppIsMenuOpenStore();
@@ -26,7 +27,7 @@ export const HeaderNav = () => {
           <Link className="mt-0.5" to={"/"} aria-label="Go to homepage">
             <img
               className="w-8 h-8 rounded-full"
-              src="/public/myaichat.png"
+              src={MyAIChatLogo}
               alt="My AI Chat"
             />
           </Link>
