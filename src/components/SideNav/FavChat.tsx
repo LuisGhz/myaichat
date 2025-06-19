@@ -1,5 +1,5 @@
 import { StarIcon } from "assets/icons/StarIcon";
-import { StarIconSolid } from "assets/icons/StarIconSolid";
+import { StarIconSolid } from "assets/icons/StarSolidIcon";
 import { useAppStoreUpdateChatFav } from "store/useAppStore";
 
 type Props = {
