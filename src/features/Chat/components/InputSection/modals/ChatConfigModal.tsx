@@ -22,6 +22,10 @@ export const ChatConfigModal = ({
   const maxTokensLimit = 8000;
 
   useEffect(() => {
+    setMaxTokens(maxOutputTokens);
+  }, [maxOutputTokens]);
+
+  useEffect(() => {
     if (isThinkingMode) {
       alert("No available yet.");
       setisThinkingMode(false);
