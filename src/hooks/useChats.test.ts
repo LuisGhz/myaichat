@@ -67,6 +67,7 @@ describe("useChats", () => {
       model: "model",
       totalCompletionTokens: 100,
       totalPromptTokens: 100,
+      maxOutputTokens: 2000,
     };
     vi.spyOn(chatService, "getChatMessagesService").mockResolvedValue(mockRes);
     const { result } = renderHook(() => useChats());
@@ -84,6 +85,7 @@ describe("useChats", () => {
       model: "model",
       totalCompletionTokens: 100,
       totalPromptTokens: 100,
+      maxOutputTokens: 2000,
     });
     const { result } = renderHook(() => useChats());
     await act(async () => {
@@ -117,7 +119,11 @@ describe("useChats", () => {
     };
     vi.spyOn(chatService, "sendNewMessageService").mockResolvedValue(res);
     const { result } = renderHook(() => useChats());
-    const req: NewMessageReq = { prompt: "hi", chatId: "chat1" };
+    const req: NewMessageReq = {
+      prompt: "hi",
+      chatId: "chat1",
+      maxOutputTokens: 2000,
+    };
     let ress;
     await act(async () => {
       ress = await result.current.sendNewMessage(req);
@@ -134,6 +140,7 @@ describe("useChats", () => {
     const req: NewMessageReq = {
       prompt: "hi",
       chatId: "chat1",
+      maxOutputTokens: 2000,
     };
     await act(async () => {
       await result.current.sendNewMessage(req);

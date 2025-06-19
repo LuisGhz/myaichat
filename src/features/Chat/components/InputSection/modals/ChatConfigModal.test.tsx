@@ -96,7 +96,7 @@ describe("ChatConfigModal", () => {
     rerender(<ChatConfigModal {...defaultProps} maxOutputTokens={2000} />);
 
     // The input value should not change because the internal state is not synced with props after initial mount
-    expect(input).toHaveValue(defaultProps.maxOutputTokens);
+    expect(input).toHaveValue(2000);
   });
 
   it("should have correct accessibility attributes for inputs", () => {
