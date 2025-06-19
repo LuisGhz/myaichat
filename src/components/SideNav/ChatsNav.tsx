@@ -1,6 +1,6 @@
 import { ScreensWidth } from "consts/ScreensWidth";
 import { useEffect, useRef, useState } from "react";
-import { Link, useNavigate, useParams } from "react-router";
+import { useNavigate, useParams } from "react-router";
 import { useContextMenu } from "hooks/useContextMenu";
 import { ContextMenu } from "components/ContextMenu";
 import { ChatSummary } from "types/chat/ChatSummary.type";
@@ -13,9 +13,13 @@ import {
 } from "store/useAppStore";
 import { useChatsNavContextMenu } from "hooks/components/useChatsNavContextMenu";
 import { RenameChatModal } from "components/modals/RenameChatModal";
+import { ChatItem } from "./ChatItem";
 
 export const ChatsNav = () => {
   const chats = useAppChatsStore();
+  const [groupedChats, setGroupedChats] = useState<
+    Partial<Record<"favourites" | "others", ChatSummary[]>>
+  >({});
   const isMenuOpen = useAppIsMenuOpenStore();
   const setIsMenuOpen = useAppSetIsMenuOpenStore();
   const updateChatTitle = useAppUpdateChatTitleStore();
@@ -36,6 +40,13 @@ export const ChatsNav = () => {
     getAllChats();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  useEffect(() => {
+    const res = Object.groupBy(chats, (chat) =>
+      chat.fav ? "favourites" : "others"
+    );
+    setGroupedChats(res);
+  }, [chats]);
 
   const handleRedirectToChatOnMobile = () => {
     if (window.innerWidth < ScreensWidth.tablet) setIsMenuOpen(!isMenuOpen);
@@ -90,28 +101,30 @@ export const ChatsNav = () => {
   return (
     <>
       <ul className={`px-2`}>
-        {chats.length > 0 &&
-          chats.map((chat) => (
-            <li
-              className="my-3 hover:bg-cop-6 transition-colors duration-300 rounded-lg flex justify-between"
-              key={chat.id}
-              title={chat.title}
-            >
-              <Link
-                to={`/chat/${chat.id}`}
-                className={`block whitespace-nowrap overflow-hidden text-ellipsis w-full h-11 px-2 py-2 ${
-                  chat.id === params.id ? "font-bold" : ""
-                }`}
-                aria-label={`Open chat: ${chat.title}`}
-                onClick={handleRedirectToChatOnMobile}
-                onContextMenu={handleContextMenu(chat)}
-                onTouchStart={handleContextMenuOnTouch(chat)}
+        {chats.length > 0 && (
+          <>
+            {groupedChats.favourites?.map((chat) => (
+              <ChatItem
+                key={chat.id}
+                chat={chat}
+                handleRedirectToChatOnMobile={handleRedirectToChatOnMobile}
+                handleContextMenu={handleContextMenu}
+                handleContextMenuOnTouch={handleContextMenuOnTouch}
                 onTouchEnd={onTouchEnd}
-              >
-                {chat.title}
-              </Link>
-            </li>
-          ))}
+              />
+            ))}
+            {groupedChats.others?.map((chat) => (
+              <ChatItem
+                key={chat.id}
+                chat={chat}
+                handleRedirectToChatOnMobile={handleRedirectToChatOnMobile}
+                handleContextMenu={handleContextMenu}
+                handleContextMenuOnTouch={handleContextMenuOnTouch}
+                onTouchEnd={onTouchEnd}
+              />
+            ))}
+          </>
+        )}
       </ul>
       <ContextMenu
         isOpen={isContextMenuOpen}
