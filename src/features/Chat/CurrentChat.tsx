@@ -11,6 +11,7 @@ import { ChatMessagesRes } from "types/chat/ChatMessagesRes.type";
 import { ChatsLoading } from "./components/ChatsLoading";
 import { useAppAddChatStore } from "store/useAppStore";
 import {
+  useCurrentChatStoreGetDefaultMaxOutputTokens,
   useCurrentChatStoreGetMaxOutputTokens,
   useCurrentChatStoreSetCurrentModelData,
   useCurrentChatStoreSetMaxOutputTokens,
@@ -31,6 +32,7 @@ export const CurrentChat = () => {
     useState(false);
   const setCurrentModelData = useCurrentChatStoreSetCurrentModelData();
   const setMaxOutputTokens = useCurrentChatStoreSetMaxOutputTokens();
+  const defaultMaxOutputTokens = useCurrentChatStoreGetDefaultMaxOutputTokens();
   const maxOutputTokens = useCurrentChatStoreGetMaxOutputTokens();
   const params = useParams();
   const navigate = useNavigate();
@@ -105,7 +107,7 @@ export const CurrentChat = () => {
     setCurrentModel(res?.model || "");
     setTotalPromptTokens(res?.totalPromptTokens || 0);
     setTotalCompletionTokens(res?.totalCompletionTokens || 0);
-    setMaxOutputTokens(res?.maxOutputTokens || 2000);
+    setMaxOutputTokens(res?.maxOutputTokens || defaultMaxOutputTokens);
     setTimeout(() => {
       setIsFirstLoaded(() => true);
     }, 250);
@@ -121,6 +123,7 @@ export const CurrentChat = () => {
     setTotalPromptTokens(() => 0);
     setTotalCompletionTokens(() => 0);
     setCurrentModelData(null);
+    setMaxOutputTokens(defaultMaxOutputTokens);
   };
 
   const sendMessage = async (newUserMessage: string, image?: File) => {
