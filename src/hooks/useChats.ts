@@ -7,6 +7,7 @@ import {
   deleteChatService,
   renameChatTitleService,
   changeMaxOutputTokensService,
+  toggleChatFavService,
 } from "services/chat.service";
 import { NewMessageReq } from "types/chat/NewMessageReq.type";
 import {
@@ -94,6 +95,16 @@ export const useChats = () => {
     }
   };
 
+  const toggleChatFav = async (id: string) => {
+    try {
+      await toggleChatFavService(id);
+    } catch {
+      toastError(
+        "Error updating chat favorite status, please try again later."
+      );
+    }
+  };
+
   return {
     getAllChats,
     getChatMessages,
@@ -101,6 +112,7 @@ export const useChats = () => {
     deleteChat,
     renameChatTitle,
     changeMaxOutputTokens,
+    toggleChatFav,
     isSending,
     isEmptyPage,
     setIsEmptyPage,

@@ -35,4 +35,8 @@ export const changeMaxOutputTokensService = async (
   return await apiClient.patch(`/chat/${id}/change-max-output-tokens`, {
     maxOutputTokens,
   });
-}
+};
+
+export const toggleChatFavService = async (id: string) => {
+  return await apiClient.patch(`/chat/${id}/toggle-chat-fav`);
+};

@@ -1,5 +1,6 @@
 import { StarIcon } from "assets/icons/StarIcon";
 import { StarIconSolid } from "assets/icons/StarSolidIcon";
+import { useChats } from "hooks/useChats";
 import { useAppStoreUpdateChatFav } from "store/useAppStore";
 
 type Props = {
@@ -9,9 +10,15 @@ type Props = {
 
 export const FavChat = ({ id, fav }: Props) => {
   const updateChatFav = useAppStoreUpdateChatFav();
+  const { toggleChatFav } = useChats();
 
-  const toggleFav = () => {
-    updateChatFav(id, !fav);
+  const toggleFav = async () => {
+    try {
+      await toggleChatFav(id);
+      updateChatFav(id, !fav);
+    } catch {
+      console.error("Error toggling favorite chat status");
+    }
   };
 
   return (
