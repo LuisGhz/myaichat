@@ -4,6 +4,8 @@ export const useAppChatsStore = () =>
   useZustandAppStore((state) => state.chats);
 export const useAppUpdateChatTitleStore = () =>
   useZustandAppStore((state) => state.updateChatTitle);
+export const useAppStoreUpdateChatFav = () =>
+  useZustandAppStore((state) => state.updateChatFav);
 export const useAppIsMenuOpenStore = () =>
   useZustandAppStore((state) => state.isMenuOpen);
 export const useAppIsOfflineStore = () =>

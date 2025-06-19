@@ -5,6 +5,7 @@ export type AppStoreProps = {
   setChats: (chats: ChatSummary[]) => void;
   deleteChatById: (id: string) => void;
   updateChatTitle: (id: string, title: string) => void;
+  updateChatFav: (id: string, fav: boolean) => void;
   addChat: (chat: ChatSummary) => void;
   isMenuOpen: boolean;
   setIsMenuOpen: (isOpen: boolean) => void;

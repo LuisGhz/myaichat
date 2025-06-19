@@ -13,6 +13,13 @@ export const useZustandAppStore = create<AppStoreProps>((set) => ({
       ),
     }));
   },
+  updateChatFav: (id: string, fav: boolean) => {
+    set((state) => ({
+      chats: state.chats.map((chat) =>
+        chat.id === id ? { ...chat, fav } : chat
+      ),
+    }));
+  },
   deleteChatById: (id: string) => {
     set((state) => ({
       chats: state.chats.filter((chat) => chat.id !== id),
