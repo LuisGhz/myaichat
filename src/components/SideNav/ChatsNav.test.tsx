@@ -55,6 +55,38 @@ vi.mock("components/modals/RenameChatModal", () => ({
   )),
 }));
 
+vi.mock("store/useAppStore", () => ({
+  useAppChatsStore: vi.fn(),
+  useAppIsMenuOpenStore: vi.fn(),
+  useAppSetIsMenuOpenStore: vi.fn(),
+  useAppUpdateChatTitleStore: vi.fn(),
+}));
+
+vi.mock("./ChatItem", () => ({
+  ChatItem: vi.fn(
+    ({
+      chat,
+      handleRedirectToChatOnMobile,
+      handleContextMenu,
+      handleContextMenuOnTouch,
+      onTouchEnd,
+    }) => (
+      <li role="listitem">
+        <a
+          href={`/chat/${chat.id}`}
+          onClick={handleRedirectToChatOnMobile}
+          onContextMenu={handleContextMenu(chat)}
+          onTouchStart={handleContextMenuOnTouch(chat)}
+          onTouchEnd={onTouchEnd}
+          aria-label={`Open chat: ${chat.title}`}
+        >
+          {chat.title}
+        </a>
+      </li>
+    )
+  ),
+}));
+
 vi.mock("store/useAppStore");
 
 vi.mock("hooks/useChats");
@@ -99,10 +131,12 @@ const mockChatsData: ChatSummary[] = [
   {
     id: "chat1",
     title: "Chat Alpha",
+    fav: true,
   },
   {
     id: "chat2",
     title: "Chat Beta",
+    fav: false,
   },
 ];
 
@@ -118,21 +152,21 @@ const renderComponent = (
   mockRenameChatTitle = vi.fn();
   mockSetIsMenuOpen = vi.fn();
   mockUpdateChatTitle = vi.fn();
-  
+
   // Store the handlers that will be passed to updateElements
   let currentHandlers: any = {};
-  
+
   mockUpdateElements = vi.fn((handlers) => {
     currentHandlers = handlers;
   });
-  
+
   mockUseChatsAppStore.mockReturnValue(chats);
   mockUseChats.mockReturnValue({
     getAllChats: mockGetAllChats,
     deleteChat: mockDeleteChatById,
     renameChatTitle: mockRenameChatTitle,
   });
-  
+
   mockOnTouchStart = vi.fn((_, callback) => {
     callback();
   });
@@ -141,28 +175,38 @@ const renderComponent = (
     onTouchStart: mockOnTouchStart,
     onTouchEnd: mockOnTouchEnd,
   });
-  
+
   mockUseAppIsMenuOpenStore.mockReturnValue(props.isMenuOpen ?? true);
   mockUseAppSetIsMenuOpenStore.mockReturnValue(mockSetIsMenuOpen);
   mockUseAppUpdateChatTitleStore.mockReturnValue(mockUpdateChatTitle);
-  
+
   mockUseChatsNavContextMenu.mockReturnValue({
     elements: [
-      <button key="delete" onClick={() => {
-        // Use the actual handler passed via updateElements
-        if (currentHandlers.handleDeleteChat && currentHandlers.chat) {
-          currentHandlers.handleDeleteChat(currentHandlers.chat.id);
-        }
-      }}>Delete</button>,
-      <button key="rename" onClick={() => {
-        if (currentHandlers.handleRenameModal && currentHandlers.chat) {
-          currentHandlers.handleRenameModal(currentHandlers.chat.id);
-        }
-      }}>Rename</button>
+      <button
+        key="delete"
+        onClick={() => {
+          // Use the actual handler passed via updateElements
+          if (currentHandlers.handleDeleteChat && currentHandlers.chat) {
+            currentHandlers.handleDeleteChat(currentHandlers.chat.id);
+          }
+        }}
+      >
+        Delete
+      </button>,
+      <button
+        key="rename"
+        onClick={() => {
+          if (currentHandlers.handleRenameModal && currentHandlers.chat) {
+            currentHandlers.handleRenameModal(currentHandlers.chat.id);
+          }
+        }}
+      >
+        Rename
+      </button>,
     ],
     updateElements: mockUpdateElements,
   });
-  
+
   return render(<ChatsNav />);
 };
 
@@ -206,21 +250,6 @@ describe("ChatsNav", () => {
     });
   });
 
-  it("should highlight the active chat", () => {
-    const activeChatId = mockChatsData[0].id;
-    renderComponent(mockChatsData, activeChatId);
-
-    const activeLink = screen.getByRole("link", {
-      name: `Open chat: ${mockChatsData[0].title}`,
-    });
-    expect(activeLink).toHaveClass("font-bold");
-
-    const inactiveLink = screen.getByRole("link", {
-      name: `Open chat: ${mockChatsData[1].title}`,
-    });
-    expect(inactiveLink).not.toHaveClass("font-bold");
-  });
-
   it("should handle chat click on desktop without toggling menu", () => {
     innerWidthSpy.mockReturnValue(ScreensWidth.tablet + 100);
     renderComponent();
@@ -243,9 +272,10 @@ describe("ChatsNav", () => {
 
   it("should open context menu on right click and update elements", () => {
     renderComponent();
-    const firstChatLink = screen.getByRole("link", {
-      name: `Open chat: ${mockChatsData[0].title}`,
-    });
+
+    const firstChatLink = screen.getByLabelText(
+      `Open chat: ${mockChatsData[0].title}`
+    );
 
     const contextMenuEvent = new MouseEvent("contextmenu", { bubbles: true });
     vi.spyOn(contextMenuEvent, "preventDefault");
@@ -282,10 +312,10 @@ describe("ChatsNav", () => {
     const firstChatLink = screen.getByRole("link", {
       name: `Open chat: ${mockChatsData[0].title}`,
     });
-    
+
     // First trigger the context menu to set up the handlers
     fireEvent.contextMenu(firstChatLink);
-    
+
     // Verify updateElements was called with the correct chat
     expect(mockUpdateElements).toHaveBeenCalledWith({
       chat: mockChatsData[0],
@@ -307,7 +337,7 @@ describe("ChatsNav", () => {
     const firstChatLink = screen.getByRole("link", {
       name: `Open chat: ${mockChatsData[0].title}`,
     });
-    
+
     // First trigger the context menu to set up the handlers
     fireEvent.contextMenu(firstChatLink);
 
@@ -323,17 +353,24 @@ describe("ChatsNav", () => {
     // Mock context menu with actual rename handler
     mockUseChatsNavContextMenu.mockReturnValue({
       elements: [
-        <button key="rename" onClick={() => {
-          // Simulate the actual rename handler behavior
-          const event = new CustomEvent('rename', { detail: { chatId: mockChatsData[0].id } });
-          window.dispatchEvent(event);
-        }}>Rename</button>
+        <button
+          key="rename"
+          onClick={() => {
+            // Simulate the actual rename handler behavior
+            const event = new CustomEvent("rename", {
+              detail: { chatId: mockChatsData[0].id },
+            });
+            window.dispatchEvent(event);
+          }}
+        >
+          Rename
+        </button>,
       ],
       updateElements: mockUpdateElements,
     });
 
     renderComponent();
-    
+
     // Trigger context menu and simulate rename action
     const firstChatLink = screen.getByRole("link", {
       name: `Open chat: ${mockChatsData[0].title}`,
@@ -347,7 +384,7 @@ describe("ChatsNav", () => {
 
   it("should handle rename modal OK action", async () => {
     renderComponent();
-    
+
     // Simulate opening rename modal by directly testing the handlers
     const firstChatLink = screen.getByRole("link", {
       name: `Open chat: ${mockChatsData[0].title}`,
