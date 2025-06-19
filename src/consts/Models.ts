@@ -75,7 +75,8 @@ export const MODELS: ModelInfo[] = [
     developBy: {
       name: "Google",
       link: "https://gemini.google.com/",
-      imageUrl: "https://www.gstatic.com/lamda/images/gemini_favicon_f069958c85030456e93de685481c559f160ea06b.png",
+      imageUrl:
+        "https://www.gstatic.com/lamda/images/gemini_favicon_f069958c85030456e93de685481c559f160ea06b.png",
     },
     link: "https://cloud.google.com/vertex-ai/generative-ai/docs/models/gemini/2-0-flash-lite?hl=es-419",
     price: {
@@ -95,7 +96,8 @@ export const MODELS: ModelInfo[] = [
     developBy: {
       name: "Google",
       link: "https://gemini.google.com/",
-      imageUrl: "https://www.gstatic.com/lamda/images/gemini_favicon_f069958c85030456e93de685481c559f160ea06b.png",
+      imageUrl:
+        "https://www.gstatic.com/lamda/images/gemini_favicon_f069958c85030456e93de685481c559f160ea06b.png",
     },
     link: "https://cloud.google.com/vertex-ai/generative-ai/docs/models/gemini/2-0-flash?hl=es-419",
     price: {
@@ -109,18 +111,19 @@ export const MODELS: ModelInfo[] = [
     },
   },
   {
-    name: "Gemini 2.5 Flash Preview 04 17",
+    name: "Gemini 2.5 Flash",
     shortName: "2.5FP",
-    value: "gemini-2.5-flash-preview-04-17",
+    value: "gemini-2.5-flash",
     developBy: {
       name: "Google",
       link: "https://gemini.google.com/",
-      imageUrl: "https://www.gstatic.com/lamda/images/gemini_favicon_f069958c85030456e93de685481c559f160ea06b.png",
+      imageUrl:
+        "https://www.gstatic.com/lamda/images/gemini_favicon_f069958c85030456e93de685481c559f160ea06b.png",
     },
     link: "https://cloud.google.com/vertex-ai/generative-ai/docs/models/gemini/2-5-flash?hl=es-419",
     price: {
       input: 0.15,
-      output: 0.6,
+      output: 2.5,
     },
     metadata: {
       contextWindow: 1_048_576,
@@ -129,13 +132,14 @@ export const MODELS: ModelInfo[] = [
     },
   },
   {
-    name: "Gemini 2.5 Pro Preview 03 25",
+    name: "Gemini 2.5 Pro",
     shortName: "2.5PP",
-    value: "gemini-2.5-pro-preview-03-25",
+    value: "gemini-2.5-pro",
     developBy: {
       name: "Google",
       link: "https://gemini.google.com/",
-      imageUrl: "https://www.gstatic.com/lamda/images/gemini_favicon_f069958c85030456e93de685481c559f160ea06b.png",
+      imageUrl:
+        "https://www.gstatic.com/lamda/images/gemini_favicon_f069958c85030456e93de685481c559f160ea06b.png",
     },
     link: "https://cloud.google.com/vertex-ai/generative-ai/docs/models/gemini/2-5-pro?hl=es-419",
     price: {
