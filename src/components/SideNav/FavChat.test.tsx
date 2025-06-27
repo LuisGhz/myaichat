@@ -1,54 +1,82 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import { render, fireEvent } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 import { FavChat } from "./FavChat";
 
-// Mock icons
+// Mock Star icons
 vi.mock("assets/icons/StarIcon", () => ({
-  StarIcon: (props: any) => <svg data-testid="star-icon" {...props} />,
+  StarIcon: ({ className, onClick }: any) => (
+    <svg data-testid="star-icon" className={className} onClick={onClick} />
+  ),
 }));
-vi.mock("assets/icons/StarIconSolid", () => ({
-  StarIconSolid: (props: any) => (
-    <svg data-testid="star-icon-solid" {...props} />
+vi.mock("assets/icons/StarSolidIcon", () => ({
+  StarIconSolid: ({ className, onClick }: any) => (
+    <svg data-testid="star-solid-icon" className={className} onClick={onClick} />
   ),
 }));
 
-// Mock store hook
-const updateChatFavMock = vi.fn();
+// Mock hooks
+const mockToggleChatFav = vi.fn();
+const mockUpdateChatFav = vi.fn();
+vi.mock("hooks/useChats", () => ({
+  useChats: () => ({ toggleChatFav: mockToggleChatFav }),
+}));
 vi.mock("store/useAppStore", () => ({
-  useAppStoreUpdateChatFav: () => updateChatFavMock,
+  useAppStoreUpdateChatFav: () => mockUpdateChatFav,
 }));
 
 describe("FavChat", () => {
+  const mockId = "chat-123";
+
   beforeEach(() => {
-    updateChatFavMock.mockClear();
+    vi.clearAllMocks();
+  });
+
+  function renderComponent(props = { id: mockId, fav: false }) {
+    return render(<FavChat {...props} />);
+  }
+
+  it("renders StarIcon when fav is false", () => {
+    renderComponent({ id: mockId, fav: false });
+    expect(screen.getByTestId("star-icon")).toBeInTheDocument();
+    expect(screen.queryByTestId("star-solid-icon")).not.toBeInTheDocument();
   });
 
   it("renders StarIconSolid when fav is true", () => {
-    const { getByTestId, queryByTestId } = render(
-      <FavChat id="1" fav={true} />
-    );
-    expect(getByTestId("star-icon-solid")).toBeTruthy();
-    expect(queryByTestId("star-icon")).toBeNull();
+    renderComponent({ id: mockId, fav: true });
+    expect(screen.getByTestId("star-solid-icon")).toBeInTheDocument();
+    expect(screen.queryByTestId("star-icon")).not.toBeInTheDocument();
   });
 
-  it("renders StarIcon when fav is false", () => {
-    const { getByTestId, queryByTestId } = render(
-      <FavChat id="1" fav={false} />
-    );
-    expect(getByTestId("star-icon")).toBeTruthy();
-    expect(queryByTestId("star-icon-solid")).toBeNull();
+  it("calls toggleChatFav and updateChatFav on click (fav false)", async () => {
+    mockToggleChatFav.mockResolvedValue(undefined);
+    renderComponent({ id: mockId, fav: false });
+    await userEvent.click(screen.getByTestId("star-icon"));
+    expect(mockToggleChatFav).toHaveBeenCalledWith(mockId);
+    expect(mockUpdateChatFav).toHaveBeenCalledWith(mockId, true);
   });
 
-  it("calls updateChatFav with correct arguments when StarIconSolid is clicked", () => {
-    const { getByTestId } = render(<FavChat id="abc" fav={true} />);
-    fireEvent.click(getByTestId("star-icon-solid"));
-    expect(updateChatFavMock).toHaveBeenCalledWith("abc", false);
+  it("calls toggleChatFav and updateChatFav on click (fav true)", async () => {
+    mockToggleChatFav.mockResolvedValue(undefined);
+    renderComponent({ id: mockId, fav: true });
+    await userEvent.click(screen.getByTestId("star-solid-icon"));
+    expect(mockToggleChatFav).toHaveBeenCalledWith(mockId);
+    expect(mockUpdateChatFav).toHaveBeenCalledWith(mockId, false);
   });
 
-  it("calls updateChatFav with correct arguments when StarIcon is clicked", () => {
-    const { getByTestId } = render(<FavChat id="xyz" fav={false} />);
-    fireEvent.click(getByTestId("star-icon"));
-    expect(updateChatFavMock).toHaveBeenCalledWith("xyz", true);
+  it("logs error if toggleChatFav throws", async () => {
+    const errorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
+    mockToggleChatFav.mockRejectedValue(new Error("fail"));
+    renderComponent({ id: mockId, fav: false });
+    await userEvent.click(screen.getByTestId("star-icon"));
+    expect(errorSpy).toHaveBeenCalledWith("Error toggling favorite chat status");
+    errorSpy.mockRestore();
+  });
+
+  it("has accessible clickable icons", () => {
+    renderComponent({ id: mockId, fav: false });
+    const icon = screen.getByTestId("star-icon");
+    expect(icon).toHaveClass("cursor-pointer");
   });
 });
