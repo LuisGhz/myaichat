@@ -159,6 +159,7 @@ export const CurrentChat = () => {
         addChat({
           id: res.chatId,
           title: res.chatTitle,
+          fav: false,
         });
         // Add a small delay to ensure the state is not going to be reset on useEffect
         setTimeout(() => {
