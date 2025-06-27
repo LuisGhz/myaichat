@@ -224,13 +224,6 @@ export const CurrentChat = () => {
             </div>
           </section>
         )}
-        {/* {currentModel && messages.length > 1 && (
-          <CurrentModelSummary
-            currentModel={currentModel}
-            totalCompletionTokens={totalCompletionTokens}
-            totalPromptTokens={totalPromptTokens}
-          />
-        )} */}
         <InputSection onEnter={onEnter} isSending={isSending} />
       </div>
     </>
