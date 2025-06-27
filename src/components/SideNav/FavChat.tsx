@@ -26,10 +26,11 @@ export const FavChat = ({ id, fav }: Props) => {
       {fav ? (
         <StarIconSolid
           className="size-5 mt-2 cursor-pointer"
+          aria-label="Unfavorite chat"
           onClick={toggleFav}
         />
       ) : (
-        <StarIcon className="size-5 mt-2 cursor-pointer" onClick={toggleFav} />
+        <StarIcon className="size-5 mt-2 cursor-pointer" aria-label="Favorite chat" onClick={toggleFav} />
       )}
     </>
   );
