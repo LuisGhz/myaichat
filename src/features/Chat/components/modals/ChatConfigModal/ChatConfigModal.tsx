@@ -3,6 +3,10 @@ import { InformationIcon } from "assets/icons/InformationIcon";
 import { useFormat } from "hooks/useFormat";
 import { useEffect, useState } from "react";
 import { FeatureCheckbox } from "./components/FeatureCheckbox";
+import {
+  useCurrentChatStoreGetIsWebSearchMode,
+  useCurrentChatStoreSetIsWebSearchMode,
+} from "store/features/chat/useCurrentChatStore";
 
 type Props = {
   isOpen: boolean;
@@ -17,8 +21,9 @@ export const ChatConfigModal = ({
 }: Props) => {
   const [maxTokens, setMaxTokens] = useState<number>(maxOutputTokens);
   const [isThinkingMode, setisThinkingMode] = useState<boolean>(false);
-  const [isWebSearchMode, setisWebSearchMode] = useState<boolean>(false);
   const { fNumber } = useFormat();
+  const isWebSearchMode = useCurrentChatStoreGetIsWebSearchMode();
+  const setIsWebSearchMode = useCurrentChatStoreSetIsWebSearchMode();
   const modalWidth = 360;
   const minTokens = 1000;
   const maxTokensLimit = 8000;
@@ -87,7 +92,7 @@ export const ChatConfigModal = ({
 
         <FeatureCheckbox
           isActive={isWebSearchMode}
-          onToggle={setisWebSearchMode}
+          onToggle={setIsWebSearchMode}
           id="web-search-mode"
           featureDescription="Enable this to allow the model to perform web searches for more up-to-date information."
           labelText="Web Search Mode"
