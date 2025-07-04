@@ -51,6 +51,7 @@ export const useChats = () => {
     const formData = new FormData();
     formData.append("prompt", newMessageOps.prompt);
     formData.append("maxOutputTokens", String(newMessageOps.maxOutputTokens));
+    formData.append("isWebSearchMode", String(newMessageOps.isWebSearchMode));
     if (newMessageOps.model) formData.append("model", newMessageOps.model);
     if (newMessageOps.chatId) formData.append("chatId", newMessageOps.chatId);
     if (newMessageOps.image) formData.append("image", newMessageOps.image);
