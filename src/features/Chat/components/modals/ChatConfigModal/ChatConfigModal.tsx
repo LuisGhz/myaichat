@@ -2,6 +2,7 @@ import { Modal, Input, Tooltip } from "antd";
 import { InformationIcon } from "assets/icons/InformationIcon";
 import { useFormat } from "hooks/useFormat";
 import { useEffect, useState } from "react";
+import { FeatureCheckbox } from "./components/FeatureCheckbox";
 
 type Props = {
   isOpen: boolean;
@@ -75,43 +76,12 @@ export const ChatConfigModal = ({
             {fNumber(maxTokensLimit)}.
           </div>
         </div>
-        <div className="mt-4">
-          <div
-            className={`flex justify-center items-center gap-1 border border-gray-600 rounded-xl w-36 py-2 cursor-pointer transition-colors duration-150 hover:bg-cop-3 ${
-              isThinkingMode ? "bg-cop-6" : ""
-            }`}
-          >
-            <label
-              htmlFor="thinking-mode"
-              className="cursor-pointer flex items-center gap-1"
-            >
-              Thinking Mode
-              <Tooltip
-                title="Enable this to allow the model to think before responding, which can improve response quality."
-                placement="top"
-              >
-                <InformationIcon
-                  className="size-4"
-                  aria-label="Information about thinking mode"
-                  role="img"
-                />
-              </Tooltip>
-            </label>
-            <input
-              className="hidden"
-              type="checkbox"
-              name="thinking-mode"
-              id="thinking-mode"
-              checked={isThinkingMode}
-              onChange={(e) => setisThinkingMode(e.target.checked)}
-              aria-describedby="thinking-mode-help"
-            />
-          </div>
-          <div id="thinking-mode-help" className="sr-only">
-            Enable this to allow the model to think before responding, which can
-            improve response quality.
-          </div>
-        </div>
+        <FeatureCheckbox
+          isActive={isThinkingMode}
+          onToggle={setisThinkingMode}
+          id="thinking-mode"
+          featureDescription="Enable this to allow the model to think before responding, which can improve response quality."
+        />
       </div>
     </Modal>
   );
