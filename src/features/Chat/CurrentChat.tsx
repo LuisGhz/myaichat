@@ -12,8 +12,10 @@ import { ChatsLoading } from "./components/ChatsLoading";
 import { useAppAddChatStore } from "store/useAppStore";
 import {
   useCurrentChatStoreGetDefaultMaxOutputTokens,
+  useCurrentChatStoreGetIsWebSearchMode,
   useCurrentChatStoreGetMaxOutputTokens,
   useCurrentChatStoreSetCurrentModelData,
+  useCurrentChatStoreSetIsWebSearchMode,
   useCurrentChatStoreSetMaxOutputTokens,
 } from "store/features/chat/useCurrentChatStore";
 
@@ -34,6 +36,8 @@ export const CurrentChat = () => {
   const setMaxOutputTokens = useCurrentChatStoreSetMaxOutputTokens();
   const defaultMaxOutputTokens = useCurrentChatStoreGetDefaultMaxOutputTokens();
   const maxOutputTokens = useCurrentChatStoreGetMaxOutputTokens();
+  const isWebSearchMode = useCurrentChatStoreGetIsWebSearchMode();
+  const setIsWebSearchMode = useCurrentChatStoreSetIsWebSearchMode();
   const params = useParams();
   const navigate = useNavigate();
   const {
@@ -108,6 +112,7 @@ export const CurrentChat = () => {
     setTotalPromptTokens(res?.totalPromptTokens || 0);
     setTotalCompletionTokens(res?.totalCompletionTokens || 0);
     setMaxOutputTokens(res?.maxOutputTokens || defaultMaxOutputTokens);
+    setIsWebSearchMode(res?.isWebSearchMode || false);
     setTimeout(() => {
       setIsFirstLoaded(() => true);
     }, 250);
@@ -133,6 +138,7 @@ export const CurrentChat = () => {
       image,
       promptId,
       maxOutputTokens,
+      isWebSearchMode,
     };
     req.model = params.id ? undefined : model;
 
