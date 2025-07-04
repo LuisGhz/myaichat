@@ -1,5 +1,5 @@
 import { CogSixToothIcon } from "assets/icons/CogSixToothIcon";
-import { ChatConfigModal } from "./modals/ChatConfigModal";
+import { ChatConfigModal } from "../modals/ChatConfigModal";
 import { useState } from "react";
 import {
   useCurrentChatStoreGetMaxOutputTokens,
