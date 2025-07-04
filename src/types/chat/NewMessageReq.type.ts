@@ -7,4 +7,5 @@ export type NewMessageReq = {
   image? : File;
   promptId?: string;
   maxOutputTokens: number;
+  isWebSearchMode: boolean;
 }

@@ -6,4 +6,5 @@ export type ChatMessagesRes = {
   totalPromptTokens: number;
   totalCompletionTokens: number;
   maxOutputTokens: number;
+  isWebSearchMode: boolean;
 }
