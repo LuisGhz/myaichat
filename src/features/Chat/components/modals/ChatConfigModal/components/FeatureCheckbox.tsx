@@ -6,6 +6,7 @@ type Props = {
   onToggle: (isActive: boolean) => void;
   id: string;
   featureDescription: string;
+  labelText: string;
 };
 
 export const FeatureCheckbox = ({
@@ -13,6 +14,7 @@ export const FeatureCheckbox = ({
   onToggle,
   id,
   featureDescription,
+  labelText,
 }: Props) => {
   return (
     <div className="mt-4">
@@ -25,11 +27,11 @@ export const FeatureCheckbox = ({
           htmlFor={id}
           className="cursor-pointer flex items-center gap-1"
         >
-          {id === "thinking-mode" ? "Thinking Mode" : "Other Mode"}
+          {labelText}
           <Tooltip title={featureDescription} placement="top">
             <InformationIcon
               className="size-4"
-              aria-label="Information about thinking mode"
+              aria-label={`Information about ${labelText}`}
               role="img"
             />
           </Tooltip>
