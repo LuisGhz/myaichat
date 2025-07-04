@@ -17,6 +17,7 @@ export const ChatConfigModal = ({
 }: Props) => {
   const [maxTokens, setMaxTokens] = useState<number>(maxOutputTokens);
   const [isThinkingMode, setisThinkingMode] = useState<boolean>(false);
+  const [isWebSearchMode, setisWebSearchMode] = useState<boolean>(false);
   const { fNumber } = useFormat();
   const modalWidth = 360;
   const minTokens = 1000;
@@ -81,6 +82,15 @@ export const ChatConfigModal = ({
           onToggle={setisThinkingMode}
           id="thinking-mode"
           featureDescription="Enable this to allow the model to think before responding, which can improve response quality."
+          labelText="Thinking Mode"
+        />
+
+        <FeatureCheckbox
+          isActive={isWebSearchMode}
+          onToggle={setisWebSearchMode}
+          id="web-search-mode"
+          featureDescription="Enable this to allow the model to perform web searches for more up-to-date information."
+          labelText="Web Search Mode"
         />
       </div>
     </Modal>
