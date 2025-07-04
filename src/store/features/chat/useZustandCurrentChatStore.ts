@@ -10,14 +10,18 @@ interface CurrentChatState {
   currentModelData: ModelData | null;
   defaultMaxOutputTokens: number;
   maxOutputTokens: number;
+  isWebSearchMode: boolean;
   setCurrentModelData: (data: ModelData | null) => void;
   setMaxOutputTokens: (maxOutputTokens: number) => void;
+  setIsWebSearchMode: (isWebSearchMode: boolean) => void;
 }
 
 export const useZustandCurrentChatStore = create<CurrentChatState>((set) => ({
   currentModelData: null,
   defaultMaxOutputTokens: 2000,
   maxOutputTokens: 2000,
+  isWebSearchMode: false,
   setCurrentModelData: (data) => set({ currentModelData: data }),
   setMaxOutputTokens: (maxOutputTokens) => set({ maxOutputTokens }),
+  setIsWebSearchMode: (isWebSearchMode) => set({ isWebSearchMode }),
 }));
