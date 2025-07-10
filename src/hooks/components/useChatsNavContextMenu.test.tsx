@@ -30,6 +30,7 @@ describe("useChatsNavContextMenu", () => {
   const mockChat: ChatSummary = {
     id: "chat-1",
     title: "Test Chat",
+    fav: false,
   };
 
   beforeEach(() => {
