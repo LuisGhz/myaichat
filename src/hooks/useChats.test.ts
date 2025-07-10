@@ -7,6 +7,7 @@ import * as useAppStore from "store/useAppStore";
 import { ChatMessagesRes } from "types/chat/ChatMessagesRes.type";
 import { NewMessageRes } from "types/chat/NewMessageRes.type";
 import { NewMessageReq } from "types/chat/NewMessageReq.type";
+import { ChatSummary } from "types/chat/ChatSummary.type";
 
 vi.mock("hooks/useToast");
 
@@ -32,7 +33,7 @@ describe("useChats", () => {
   });
 
   it("getAllChats returns chats", async () => {
-    const chatsRes = [{ id: "1", title: "Chat 1" }];
+    const chatsRes: ChatSummary[] = [{ id: "1", title: "Chat 1", fav: false }];
     vi.spyOn(chatService, "getAllChatsService").mockResolvedValue({
       chats: chatsRes,
     });
@@ -68,6 +69,7 @@ describe("useChats", () => {
       totalCompletionTokens: 100,
       totalPromptTokens: 100,
       maxOutputTokens: 2000,
+      isWebSearchMode: false,
     };
     vi.spyOn(chatService, "getChatMessagesService").mockResolvedValue(mockRes);
     const { result } = renderHook(() => useChats());
@@ -86,6 +88,7 @@ describe("useChats", () => {
       totalCompletionTokens: 100,
       totalPromptTokens: 100,
       maxOutputTokens: 2000,
+      isWebSearchMode: false,
     });
     const { result } = renderHook(() => useChats());
     await act(async () => {
@@ -123,6 +126,7 @@ describe("useChats", () => {
       prompt: "hi",
       chatId: "chat1",
       maxOutputTokens: 2000,
+      isWebSearchMode: false,
     };
     let ress;
     await act(async () => {
@@ -141,6 +145,7 @@ describe("useChats", () => {
       prompt: "hi",
       chatId: "chat1",
       maxOutputTokens: 2000,
+      isWebSearchMode: false,
     };
     await act(async () => {
       await result.current.sendNewMessage(req);
