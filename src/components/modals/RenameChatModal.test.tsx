@@ -6,6 +6,7 @@ import { ChatSummary } from "types/chat/ChatSummary.type";
 const mockChat: ChatSummary = {
   id: "chat-1",
   title: "Original Chat Title",
+  fav: false,
 };
 
 const mockOnOk = vi.fn();
