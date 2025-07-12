@@ -4,8 +4,8 @@ import { AttachFile } from "./AttachFile";
 import { useAttachedFilesValidator } from "hooks/useAttachedFilesValidator";
 
 // Mock dependencies
-vi.mock("assets/icons/PlusIcon", () => ({
-  PlusIcon: () => <div data-testid="plus-icon" />,
+vi.mock("assets/icons/PaperClipIcon", () => ({
+  PaperClipIcon: () => <div data-testid="paper-clip-icon" />,
 }));
 
 vi.mock("hooks/useAttachedFilesValidator", () => ({
@@ -54,7 +54,7 @@ describe("AttachFile", () => {
   it("renders without crashing", () => {
     render(<AttachFile onSelectImage={onSelectImageMock} />);
     expect(screen.getByLabelText("Attach file")).toBeInTheDocument();
-    expect(screen.getByTestId("plus-icon")).toBeInTheDocument();
+    expect(screen.getByTestId("paper-clip-icon")).toBeInTheDocument();
   });
 
   it("shows options menu when button is clicked", () => {
