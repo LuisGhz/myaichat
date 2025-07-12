@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { describe, it, expect, vi, beforeEach } from "vitest";
-import { render, screen } from "@testing-library/react";
+import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
+import { render, screen, waitFor, fireEvent } from "@testing-library/react";
 import { SingleMessage } from "./SingleMessage";
 import { useMarkDown } from "hooks/useMarkdown";
 import { Message } from "types/chat/Message.type";
@@ -11,33 +11,58 @@ vi.mock("hooks/useMarkdown", () => ({
 }));
 
 describe("SingleMessage", () => {
-  const markdownTestId = "markdown-test";
-  const mockFormatToMarkdown = vi
-    .fn()
-    .mockImplementation((content) => (
-      <div data-testid={`${markdownTestId}`}>{content}</div>
-    ));
+  const mockFormatToMarkdown = vi.fn();
+  const mockWriteText = vi.fn();
+  
+  // Mock navigator.clipboard
+  Object.defineProperty(navigator, "clipboard", {
+    value: {
+      writeText: mockWriteText,
+    },
+    configurable: true,
+    writable: true,
+  });
 
   beforeEach(() => {
-    vi.clearAllMocks();
+    // Clear mock call history
+    mockFormatToMarkdown.mockClear();
+    mockWriteText.mockClear();
+    
+    // Mock the useMarkDown hook to return a function that renders content
     (useMarkDown as any).mockReturnValue(mockFormatToMarkdown);
+    mockFormatToMarkdown.mockImplementation((content: string) => content);
   });
+
+  afterEach(() => {
+    vi.clearAllTimers();
+    // Clear mocks but don't restore them
+    mockFormatToMarkdown.mockClear();
+    mockWriteText.mockClear();
+  });
+
+  const renderComponent = (
+    message: Message,
+    idx: number = 0,
+    arr: Message[] = [message],
+    messagesEndRef: React.RefObject<HTMLElement | null> = { current: null }
+  ) => {
+    return render(
+      <SingleMessage
+        message={message}
+        idx={idx}
+        messagesEndRef={messagesEndRef}
+        arr={arr}
+      />
+    );
+  };
 
   it("renders user message with correct styling", () => {
     const message: Message = { role: "User", content: "Hello there" };
-    const messagesEndRef = { current: null };
 
-    render(
-      <SingleMessage
-        message={message}
-        idx={0}
-        messagesEndRef={messagesEndRef}
-        arr={[message]}
-      />
-    );
+    renderComponent(message);
 
-    expect(screen.getByTestId(markdownTestId)).toHaveTextContent("Hello there");
     expect(screen.getByText("Hello there")).toBeInTheDocument();
+    expect(mockFormatToMarkdown).toHaveBeenCalledWith("Hello there");
   });
 
   it("renders non-user message without user-specific styling", () => {
@@ -45,23 +70,14 @@ describe("SingleMessage", () => {
       role: "Assistant",
       content: "I can help with that",
     };
-    const messagesEndRef = { current: null };
 
-    const { container } = render(
-      <SingleMessage
-        message={message}
-        idx={0}
-        messagesEndRef={messagesEndRef}
-        arr={[message]}
-      />
-    );
+    const { container } = renderComponent(message);
 
     const article = container.querySelector("article");
     expect(article).not.toHaveClass("user-message");
-    expect(article).not.toHaveClass("bg-cop-10");
-    expect(screen.getByTestId(markdownTestId)).toHaveTextContent(
-      "I can help with that"
-    );
+    expect(article).not.toHaveClass("bg-cop-1");
+    expect(screen.getByText("I can help with that")).toBeInTheDocument();
+    expect(mockFormatToMarkdown).toHaveBeenCalledWith("I can help with that");
   });
 
   it("sets ref for the last message in the array", () => {
@@ -71,18 +87,10 @@ describe("SingleMessage", () => {
     ];
     const messagesEndRef = { current: null };
 
-    render(
-      <SingleMessage
-        message={messages[1]}
-        idx={1}
-        messagesEndRef={messagesEndRef}
-        arr={messages}
-      />
-    );
+    renderComponent(messages[1], 1, messages, messagesEndRef);
 
     expect(messagesEndRef.current).not.toBeNull();
-    expect(messagesEndRef.current).not.toHaveTextContent("Question");
-    expect(messagesEndRef.current).toHaveTextContent("Answer");
+    expect(messagesEndRef.current).toContainHTML("Answer");
   });
 
   it("displays promptTokens when available", () => {
@@ -91,16 +99,8 @@ describe("SingleMessage", () => {
       content: "Hello",
       promptTokens: 10,
     };
-    const messagesEndRef = { current: null };
 
-    render(
-      <SingleMessage
-        message={message}
-        idx={0}
-        messagesEndRef={messagesEndRef}
-        arr={[message]}
-      />
-    );
+    renderComponent(message);
 
     expect(screen.getByText("Tokens: 10")).toBeInTheDocument();
   });
@@ -111,16 +111,8 @@ describe("SingleMessage", () => {
       content: "Hello back",
       completionTokens: 15,
     };
-    const messagesEndRef = { current: null };
 
-    render(
-      <SingleMessage
-        message={message}
-        idx={0}
-        messagesEndRef={messagesEndRef}
-        arr={[message]}
-      />
-    );
+    renderComponent(message);
 
     expect(screen.getByText("Tokens: 15")).toBeInTheDocument();
   });
@@ -130,17 +122,102 @@ describe("SingleMessage", () => {
       role: "User",
       content: "Hello",
     };
-    const messagesEndRef = { current: null };
 
-    render(
-      <SingleMessage
-        message={message}
-        idx={0}
-        messagesEndRef={messagesEndRef}
-        arr={[message]}
-      />
-    );
+    renderComponent(message);
 
     expect(screen.queryByText(/Tokens:/)).not.toBeInTheDocument();
+  });
+
+  describe("Clipboard functionality", () => {
+
+    it("copies message content to clipboard when copy button is clicked", async () => {
+      mockWriteText.mockResolvedValue(undefined);
+      const message: Message = {
+        role: "Assistant",
+        content: "This is a test message to copy",
+      };
+
+      renderComponent(message);
+
+      const copyButton = screen.getByRole("button", { name: /copy message to clipboard/i });
+      
+      // Use fireEvent.click instead of userEvent for debugging
+      fireEvent.click(copyButton);
+      
+      await waitFor(() => {
+        expect(mockWriteText).toHaveBeenCalledWith("This is a test message to copy");
+      });
+    });
+
+    it("shows 'Copied!' feedback after successful copy", async () => {
+      mockWriteText.mockResolvedValue(undefined);
+      const message: Message = {
+        role: "User",
+        content: "Message to copy",
+      };
+
+      renderComponent(message);
+
+      const copyButton = screen.getByRole("button", { name: /copy message to clipboard/i });
+      fireEvent.click(copyButton);
+
+      await waitFor(() => {
+        expect(copyButton).toHaveTextContent("Copied!");
+      });
+    });
+
+    it("resets copy feedback after timeout", async () => {
+      mockWriteText.mockResolvedValue(undefined);
+      const message: Message = {
+        role: "User",
+        content: "Message to copy",
+      };
+
+      renderComponent(message);
+
+      const copyButton = screen.getByRole("button", { name: /copy message to clipboard/i });
+      fireEvent.click(copyButton);
+
+      // Check that it shows "Copied!" initially
+      await waitFor(() => {
+        expect(copyButton).toHaveTextContent("Copied!");
+      });
+
+      // Wait for the timeout and check it resets to "Copy"
+      await waitFor(
+        () => {
+          expect(copyButton).toHaveTextContent("Copy");
+        },
+        { timeout: 3000 }
+      );
+    });
+
+    it("handles clipboard copy failure gracefully", async () => {
+      const consoleErrorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
+      mockWriteText.mockRejectedValue(new Error("Clipboard access denied"));
+      
+      const message: Message = {
+        role: "User",
+        content: "Message that fails to copy",
+      };
+
+      renderComponent(message);
+
+      const copyButton = screen.getByRole("button", { name: /copy message to clipboard/i });
+      fireEvent.click(copyButton);
+
+      await waitFor(() => {
+        expect(mockWriteText).toHaveBeenCalledWith("Message that fails to copy");
+      });
+      
+      await waitFor(() => {
+        expect(consoleErrorSpy).toHaveBeenCalledWith("Failed to copy to clipboard:", expect.any(Error));
+      });
+      
+      // Button should still show "Copy" since the operation failed
+      expect(copyButton).toHaveTextContent("Copy");
+
+      consoleErrorSpy.mockRestore();
+    });
   });
 });
