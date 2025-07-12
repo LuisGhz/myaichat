@@ -21,6 +21,8 @@ vi.mock("hooks/useChats", () => ({
 vi.mock("store/features/chat/useCurrentChatStore", () => ({
   useCurrentChatStoreGetMaxOutputTokens: vi.fn(),
   useCurrentChatStoreSetMaxOutputTokens: vi.fn(),
+  useCurrentChatStoreGetIsWebSearchMode: vi.fn(),
+  useCurrentChatStoreSetIsWebSearchMode: vi.fn(),
 }));
 
 vi.mock("assets/icons/CogSixToothIcon", () => ({
@@ -29,7 +31,7 @@ vi.mock("assets/icons/CogSixToothIcon", () => ({
   ),
 }));
 
-vi.mock("./modals/ChatConfigModal", () => ({
+vi.mock("../modals/ChatConfigModal/ChatConfigModal", () => ({
   ChatConfigModal: ({ isOpen, maxOutputTokens, onCancel }: any) => (
     <div data-testid="chat-config-modal">
       {isOpen && (
