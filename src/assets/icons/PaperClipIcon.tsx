@@ -2,7 +2,7 @@ import { SVGProps } from "react";
 
 type Props = SVGProps<SVGSVGElement>;
 
-export const PaperClip = (props: Props) => {
+export const PaperClipIcon = (props: Props) => {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
