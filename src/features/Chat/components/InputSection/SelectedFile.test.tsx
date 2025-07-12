@@ -2,6 +2,16 @@ import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { SelectedFile } from "./SelectedFile";
 
+vi.mock("../ImageViewer", () => ({
+  ImageViewer: ({ image }: { image: string }) => (
+    <img
+      src={image}
+      alt="Selected attachment"
+      className="max-h-40 rounded-md object-contain"
+    />
+  ),
+}));
+
 describe("SelectedFile", () => {
   const mockClearSelectedImage = vi.fn();
   const mockSelectedImage = "blob://test-url";
@@ -53,7 +63,7 @@ describe("SelectedFile", () => {
     const containerDiv = container.firstChild as HTMLElement;
     expect(containerDiv).toHaveClass(
       "w-full",
-      "max-w-2/12", 
+      "max-w-2/12",
       "mb-2",
       "relative"
     );
@@ -88,7 +98,7 @@ describe("SelectedFile", () => {
     renderComponent();
 
     const removeButton = screen.getByLabelText("Remove image");
-    const icon = removeButton.querySelector('svg');
+    const icon = removeButton.querySelector("svg");
     expect(icon).toBeInTheDocument();
   });
 });
