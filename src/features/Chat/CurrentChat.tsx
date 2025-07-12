@@ -18,6 +18,7 @@ import {
   useCurrentChatStoreSetIsWebSearchMode,
   useCurrentChatStoreSetMaxOutputTokens,
 } from "store/features/chat/useCurrentChatStore";
+import { ChatTitle } from "./components/ChatTitle";
 
 export const CurrentChat = () => {
   const addChat = useAppAddChatStore();
@@ -197,7 +198,8 @@ export const CurrentChat = () => {
 
   return (
     <>
-      <div className="flex flex-col h-full max-w-full md:max-w-11/12 xl:max-w-9/12 mx-auto pt-10 lg:px-2">
+      <div className="flex flex-col h-full max-w-full md:max-w-11/12 xl:max-w-9/12 mx-auto lg:px-2">
+        {params.id && <ChatTitle />}
         {messages.length === 0 && !isChatLoading && !params.id && (
           <section className="grow flex items-center justify-center">
             <NewConversation
