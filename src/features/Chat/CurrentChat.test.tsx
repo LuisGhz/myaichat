@@ -63,6 +63,7 @@ vi.mock("./components/CurrentModelSummary", () => ({
 vi.mock("./components/ChatsLoading", () => ({
   ChatsLoading: () => <div data-testid="chats-loading">Loading...</div>,
 }));
+vi.mock("./components/ChatTitle");
 
 describe("CurrentChat", () => {
   const mockNavigate = vi.fn();
@@ -200,6 +201,7 @@ describe("CurrentChat", () => {
           promptId: "",
           model: "gemini-2.0-flash",
           maxOutputTokens: 2000,
+          isWebSearchMode: false,
         });
       });
     });
@@ -229,6 +231,7 @@ describe("CurrentChat", () => {
         expect(mockAddChat).toHaveBeenCalledWith({
           id: "new-chat-123",
           title: "New Chat",
+          fav: false,
         });
       });
     });
