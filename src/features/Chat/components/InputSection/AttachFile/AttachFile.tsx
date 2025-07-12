@@ -1,8 +1,8 @@
 import { PaperClipIcon } from "assets/icons/PaperClipIcon";
 import { InfoDialog } from "components/Dialogs/InfoDialog";
-import { useAttachedFilesValidator } from "hooks/useAttachedFilesValidator";
 import { useEffect, useRef, useState } from "react";
 import { PasteFromClipboard } from "./PasteFromClipboard";
+import { UploadFromSelection } from "./UploadFromSelection";
 
 type Props = {
   onSelectImage: (file: File) => void;
@@ -12,8 +12,6 @@ export const AttachFile = ({ onSelectImage }: Props) => {
   const [isInfoDialogOpen, setInfoDialogOpen] = useState(false);
   const optionsRef = useRef<HTMLUListElement>(null);
   const buttonRef = useRef<HTMLButtonElement>(null);
-  const inputFileRef = useRef<HTMLInputElement>(null);
-  const { validateFiles } = useAttachedFilesValidator();
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -28,26 +26,6 @@ export const AttachFile = ({ onSelectImage }: Props) => {
     document.addEventListener("click", handleClickOutside);
     return () => document.removeEventListener("click", handleClickOutside);
   }, []);
-
-  const makeClickToInputFile = () => {
-    if (!optionsRef.current?.classList.contains("hidden"))
-      optionsRef.current?.classList.add("hidden");
-    inputFileRef.current?.click();
-  };
-
-  const onSelectFile = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (!file) return;
-    const isValid = validateFiles(file);
-    if (!isValid) {
-      console.error("Invalid file type or size exceeded.");
-      event.target.value = "";
-      setInfoDialogOpen(true);
-      return;
-    }
-    onSelectImage(file);
-    event.target.value = "";
-  };
 
   return (
     <>
@@ -73,25 +51,11 @@ export const AttachFile = ({ onSelectImage }: Props) => {
           className="hidden bg-cop-4 text-white rounded-lg mt-2 w-40 shadow-lg transition-all duration-200 delay-150 absolute z-10 bottom-full"
           ref={optionsRef}
         >
-          <li
-            className="py-1.5 hover:bg-cop-6 rounded-t-lg transition-colors duration-200 cursor-pointer"
-            onClick={(e) => {
-              e.stopPropagation();
-              makeClickToInputFile();
-            }}
-          >
-            Upload
-            <input
-              className="hidden"
-              accept="image/jpeg, image/png, image/jpg, image/gif"
-              type="file"
-              name="attach-file"
-              id="attach-file"
-              ref={inputFileRef}
-              onChange={onSelectFile}
-              data-testid="file-input"
-            />
-          </li>
+          <UploadFromSelection
+            onSelectImage={onSelectImage}
+            setInfoDialogOpen={setInfoDialogOpen}
+            optionsRef={optionsRef}
+          />
           <PasteFromClipboard
             optionsRef={optionsRef}
             setInfoDialogOpen={setInfoDialogOpen}
