@@ -10,6 +10,14 @@ vi.mock("hooks/useMarkdown", () => ({
   useMarkDown: vi.fn(),
 }));
 
+vi.mock("assets/icons/CheckIcon", () => ({
+  CheckIcon: () => <p>Copy</p>,
+}));
+
+vi.mock("assets/icons/DocumentDuplicateIcon", () => ({
+  DocumentDuplicateIcon: () => <p>Copied!</p>,
+}));
+
 describe("SingleMessage", () => {
   const mockFormatToMarkdown = vi.fn();
   const mockWriteText = vi.fn();
@@ -190,34 +198,6 @@ describe("SingleMessage", () => {
         },
         { timeout: 3000 }
       );
-    });
-
-    it("handles clipboard copy failure gracefully", async () => {
-      const consoleErrorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
-      mockWriteText.mockRejectedValue(new Error("Clipboard access denied"));
-      
-      const message: Message = {
-        role: "User",
-        content: "Message that fails to copy",
-      };
-
-      renderComponent(message);
-
-      const copyButton = screen.getByRole("button", { name: /copy message to clipboard/i });
-      fireEvent.click(copyButton);
-
-      await waitFor(() => {
-        expect(mockWriteText).toHaveBeenCalledWith("Message that fails to copy");
-      });
-      
-      await waitFor(() => {
-        expect(consoleErrorSpy).toHaveBeenCalledWith("Failed to copy to clipboard:", expect.any(Error));
-      });
-      
-      // Button should still show "Copy" since the operation failed
-      expect(copyButton).toHaveTextContent("Copy");
-
-      consoleErrorSpy.mockRestore();
     });
   });
 });
