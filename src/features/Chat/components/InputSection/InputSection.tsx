@@ -5,7 +5,7 @@ import { useParams } from "react-router";
 import { ScreensWidth } from "consts/ScreensWidth";
 import { Microphone } from "./Microphone";
 import { ArrowUpIcon } from "assets/icons/ArrowUpIcon";
-import { AttachFile } from "./AttachFile";
+import { AttachFile } from "./AttachFile/AttachFile";
 import { XMarkIcon } from "assets/icons/XMarkIcon";
 import { useAppIsOfflineStore } from "store/useAppStore";
 import { CurrentModelSummary } from "../CurrentModelSummary";
