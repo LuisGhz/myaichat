@@ -1,4 +1,4 @@
-import { PlusIcon } from "assets/icons/PlusIcon";
+import { PaperClipIcon } from "assets/icons/PaperClipIcon";
 import { InfoDialog } from "components/Dialogs/InfoDialog";
 import { useAttachedFilesValidator } from "hooks/useAttachedFilesValidator";
 import { useEffect, useRef, useState } from "react";
@@ -67,7 +67,7 @@ export const AttachFile = ({ onSelectImage }: Props) => {
         }}
         ref={buttonRef}
       >
-        <PlusIcon className="size-6" />
+        <PaperClipIcon className="size-6" />
         <ul
           className="hidden bg-cop-4 text-white rounded-lg mt-2 w-40 shadow-lg transition-all duration-200 delay-150 absolute z-10 bottom-full"
           ref={optionsRef}
