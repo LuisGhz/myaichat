@@ -58,6 +58,7 @@ export const PasteFromClipboard = ({
         handlePasteFromClipboard();
       }}
       data-testid="paste-from-clipboard"
+      aria-label="Paste from Clipboard"
     >
       Paste from Clipboard
     </li>
