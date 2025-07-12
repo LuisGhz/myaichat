@@ -40,6 +40,25 @@ vi.mock("./ChatConfig", () => {
   };
 });
 
+vi.mock("./InputSection/SelectedFile", () => ({
+  SelectedFile: ({ selectedImage, clearSelectedImage }: any) => (
+    <div>
+      <img
+        src={selectedImage}
+        alt="Selected attachment"
+        className="max-h-40 rounded-md object-contain"
+      />
+      <button
+        aria-label="Remove image"
+        onClick={clearSelectedImage}
+        className="remove-btn"
+      >
+        Remove
+      </button>
+    </div>
+  ),
+}));
+
 describe("InputSection", () => {
   const onEnter = vi.fn();
 
