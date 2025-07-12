@@ -19,14 +19,11 @@ export const FeatureCheckbox = ({
   return (
     <div className="mt-4">
       <div
-        className={`flex justify-center items-center gap-1 border border-gray-600 rounded-xl w-36 py-2 cursor-pointer transition-colors duration-150 hover:bg-cop-3 ${
+        className={`flex justify-center items-center gap-1 border border-gray-600 rounded-xl max-w-max p-2 cursor-pointer transition-colors duration-150 hover:bg-cop-3 ${
           isActive ? "bg-cop-6" : ""
         }`}
       >
-        <label
-          htmlFor={id}
-          className="cursor-pointer flex items-center gap-1"
-        >
+        <label htmlFor={id} className="cursor-pointer flex items-center gap-1">
           {labelText}
           <Tooltip title={featureDescription} placement="top">
             <InformationIcon
