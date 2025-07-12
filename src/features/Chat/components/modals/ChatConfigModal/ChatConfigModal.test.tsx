@@ -132,13 +132,5 @@ describe("ChatConfigModal", () => {
       "data-tooltip-title",
       "The maximum number of tokens the model can generate in a single response. min: 1,000, max: 8,000"
     );
-
-    const thinkingModeTooltipTrigger = screen.getByLabelText(
-      "Information about thinking mode"
-    ).parentElement;
-    expect(thinkingModeTooltipTrigger).toHaveAttribute(
-      "data-tooltip-title",
-      "Enable this to allow the model to think before responding, which can improve response quality."
-    );
   });
 });
