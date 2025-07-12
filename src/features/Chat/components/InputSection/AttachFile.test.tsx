@@ -12,10 +12,6 @@ vi.mock("hooks/useAttachedFilesValidator", () => ({
   useAttachedFilesValidator: vi.fn(),
 }));
 
-type MockedLinkProps = {
-  to: string;
-  children: React.ReactNode;
-};
 
 vi.mock("components/Dialogs/InfoDialog", () => ({
   InfoDialog: ({
@@ -38,10 +34,6 @@ vi.mock("components/Dialogs/InfoDialog", () => ({
         <button onClick={onConfirm}>Ok</button>
       </div>
     ),
-}));
-
-vi.mock("react-router", () => ({
-  Link: ({ to, children }: MockedLinkProps) => <a href={to}>{children}</a>,
 }));
 
 describe("AttachFile", () => {
@@ -71,7 +63,6 @@ describe("AttachFile", () => {
     const button = screen.getByLabelText("Attach file");
     fireEvent.click(button);
 
-    expect(screen.getByText("New conversation")).toBeVisible();
     expect(screen.getByText("Upload")).toBeVisible();
   });
 
@@ -133,16 +124,6 @@ describe("AttachFile", () => {
     consoleSpy.mockRestore();
   });
 
-  it("contains a New conversation link", () => {
-    render(<AttachFile onSelectImage={onSelectImageMock} />);
-
-    // Show the menu first
-    fireEvent.click(screen.getByLabelText("Attach file"));
-
-    const link = screen.getByText("New conversation");
-    expect(link).toBeInTheDocument();
-    expect(link.closest("a")).toHaveAttribute("href", "/chat");
-  });
 
   it("triggers file input click when Upload is clicked", () => {
     render(<AttachFile onSelectImage={onSelectImageMock} />);
