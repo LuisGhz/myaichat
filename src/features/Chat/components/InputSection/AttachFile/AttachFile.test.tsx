@@ -1,15 +1,10 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import { render, screen, fireEvent } from "@testing-library/react";
 import { AttachFile } from "./AttachFile";
-import { useAttachedFilesValidator } from "hooks/useAttachedFilesValidator";
 
 // Mock dependencies
 vi.mock("assets/icons/PaperClipIcon", () => ({
   PaperClipIcon: () => <div data-testid="paper-clip-icon" />,
-}));
-
-vi.mock("hooks/useAttachedFilesValidator", () => ({
-  useAttachedFilesValidator: vi.fn(),
 }));
 
 vi.mock("components/Dialogs/InfoDialog", () => ({
@@ -43,15 +38,26 @@ vi.mock("./PasteFromClipboard", () => {
   };
 });
 
+vi.mock("./UploadFromSelection", () => {
+  return {
+    UploadFromSelection: () => (
+      <li data-testid="upload-from-selection">
+        Upload
+        <input
+          data-testid="file-input"
+          type="file"
+          className="hidden"
+        />
+      </li>
+    ),
+  };
+});
+
 describe("AttachFile", () => {
   const onSelectImageMock = vi.fn();
 
   beforeEach(() => {
     vi.clearAllMocks();
-    // Mock the validator hook to return a validateFiles function
-    vi.mocked(useAttachedFilesValidator).mockReturnValue({
-      validateFiles: vi.fn().mockReturnValue(true),
-    });
   });
 
   afterEach(() => {
@@ -88,75 +94,6 @@ describe("AttachFile", () => {
     // Menu should now be hidden
     const menu = container.querySelector("ul");
     expect(menu).toHaveClass("hidden");
-  });
-
-  it("handles valid file selection correctly", () => {
-    render(<AttachFile onSelectImage={onSelectImageMock} />);
-
-    // Create a mock file
-    const file = new File(["test"], "test.png", { type: "image/png" });
-    const input = screen.getByTestId("file-input");
-
-    // Simulate file selection
-    fireEvent.change(input, { target: { files: [file] } });
-
-    // Check if onSelectImage was called with the file
-    expect(onSelectImageMock).toHaveBeenCalledWith(file);
-  });
-
-  it("handles invalid file selection correctly", () => {
-    // Mock validateFiles to return false for this test
-    vi.mocked(useAttachedFilesValidator).mockReturnValue({
-      validateFiles: vi.fn().mockReturnValue(false),
-    });
-
-    const consoleSpy = vi.spyOn(console, "error").mockImplementation(() => {});
-
-    render(<AttachFile onSelectImage={onSelectImageMock} />);
-
-    const file = new File(["test"], "test.png", { type: "image/png" });
-    const input = screen.getByTestId("file-input");
-
-    fireEvent.change(input, {
-      target: { files: [file] },
-    });
-
-    // onSelectImage should not have been called
-    expect(onSelectImageMock).not.toHaveBeenCalled();
-    // Error should have been logged
-    expect(consoleSpy).toHaveBeenCalledWith(
-      "Invalid file type or size exceeded."
-    );
-
-    consoleSpy.mockRestore();
-  });
-
-  it("triggers file input click when Upload is clicked", () => {
-    render(<AttachFile onSelectImage={onSelectImageMock} />);
-
-    // Show the menu first
-    fireEvent.click(screen.getByLabelText("Attach file"));
-
-    // Get and mock the input
-    const input = screen.getByTestId("file-input");
-    const clickSpy = vi.spyOn(input, "click").mockImplementation(() => {});
-
-    // Click Upload
-    fireEvent.click(screen.getByText("Upload"));
-
-    // Check if input.click() was called
-    expect(clickSpy).toHaveBeenCalledTimes(1);
-  });
-
-  it("does nothing when no file is selected", () => {
-    render(<AttachFile onSelectImage={onSelectImageMock} />);
-
-    const input = screen.getByTestId("file-input");
-
-    // Simulate empty file selection
-    fireEvent.change(input, { target: { files: [] } });
-
-    expect(onSelectImageMock).not.toHaveBeenCalled();
   });
 
   it("toggles menu visibility on button click", () => {
