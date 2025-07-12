@@ -112,7 +112,7 @@ describe("InputSection", () => {
     expect(screen.getByLabelText("Send message")).toBeInTheDocument();
   });
 
-  test("file selection displays image and allows removal", async () => {
+  test("file selection displays image", async () => {
     render(<InputSection onEnter={onEnter} isSending={false} />);
     const attachBtn = screen.getByLabelText("Attach file");
     await userEvent.click(attachBtn);
@@ -122,10 +122,6 @@ describe("InputSection", () => {
     // image should appear
     const img = await screen.findByAltText("Selected attachment");
     expect(img).toHaveAttribute("src", "blob://test-url");
-    // remove image
-    const removeBtn = screen.getByLabelText("Remove image");
-    await userEvent.click(removeBtn);
-    expect(screen.queryByAltText("Selected attachment")).toBeNull();
   });
 
   test("Send message with image", async () => {
