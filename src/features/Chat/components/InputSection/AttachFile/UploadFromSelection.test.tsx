@@ -10,14 +10,14 @@ vi.mock("hooks/useAttachedFilesValidator", () => ({
 }));
 
 describe("UploadFromSelection", () => {
-  const mockOnSelectImage = vi.fn();
+  const mockOnSelectFile = vi.fn();
   const mockSetInfoDialogOpen = vi.fn();
   
   const renderComponent = (optionsRefOverride?: React.RefObject<HTMLUListElement | null>) => {
     const mockOptionsRef = optionsRefOverride || createRef<HTMLUListElement | null>();
     return render(
       <UploadFromSelection
-        onSelectImage={mockOnSelectImage}
+        onSelectFile={mockOnSelectFile}
         setInfoDialogOpen={mockSetInfoDialogOpen}
         optionsRef={mockOptionsRef}
       />
@@ -89,7 +89,7 @@ describe("UploadFromSelection", () => {
     
     fireEvent.change(input, { target: { files: [file] } });
     
-    expect(mockOnSelectImage).toHaveBeenCalledWith(file);
+    expect(mockOnSelectFile).toHaveBeenCalledWith(file);
     expect(input.value).toBe("");
   });
 
@@ -108,7 +108,7 @@ describe("UploadFromSelection", () => {
     
     fireEvent.change(input, { target: { files: [file] } });
     
-    expect(mockOnSelectImage).not.toHaveBeenCalled();
+    expect(mockOnSelectFile).not.toHaveBeenCalled();
     expect(mockSetInfoDialogOpen).toHaveBeenCalledWith(true);
     expect(consoleSpy).toHaveBeenCalledWith("Invalid file type or size exceeded.");
     expect(input.value).toBe("");
@@ -123,7 +123,7 @@ describe("UploadFromSelection", () => {
     
     fireEvent.change(input, { target: { files: [] } });
     
-    expect(mockOnSelectImage).not.toHaveBeenCalled();
+    expect(mockOnSelectFile).not.toHaveBeenCalled();
     expect(mockSetInfoDialogOpen).not.toHaveBeenCalled();
   });
 

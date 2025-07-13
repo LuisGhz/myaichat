@@ -54,7 +54,7 @@ vi.mock("./UploadFromSelection", () => {
 });
 
 describe("AttachFile", () => {
-  const onSelectImageMock = vi.fn();
+  const onSelectFileMock = vi.fn();
 
   beforeEach(() => {
     vi.clearAllMocks();
@@ -65,13 +65,13 @@ describe("AttachFile", () => {
   });
 
   it("renders without crashing", () => {
-    render(<AttachFile onSelectImage={onSelectImageMock} />);
+    render(<AttachFile onSelectFile={onSelectFileMock} />);
     expect(screen.getByLabelText("Attach file")).toBeInTheDocument();
     expect(screen.getByTestId("paper-clip-icon")).toBeInTheDocument();
   });
 
   it("shows options menu when button is clicked", () => {
-    render(<AttachFile onSelectImage={onSelectImageMock} />);
+    render(<AttachFile onSelectFile={onSelectFileMock} />);
 
     const button = screen.getByLabelText("Attach file");
     fireEvent.click(button);
@@ -81,7 +81,7 @@ describe("AttachFile", () => {
 
   it("hides options menu when clicking outside", () => {
     const { container } = render(
-      <AttachFile onSelectImage={onSelectImageMock} />
+      <AttachFile onSelectFile={onSelectFileMock} />
     );
 
     // First show the menu
@@ -98,7 +98,7 @@ describe("AttachFile", () => {
 
   it("toggles menu visibility on button click", () => {
     const { container } = render(
-      <AttachFile onSelectImage={onSelectImageMock} />
+      <AttachFile onSelectFile={onSelectFileMock} />
     );
     const menu = container.querySelector("ul");
     const button = screen.getByLabelText("Attach file");

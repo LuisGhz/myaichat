@@ -9,7 +9,7 @@ vi.mock("hooks/useAttachedFilesValidator", () => ({
 
 describe("PasteFromClipboard", () => {
   let mockClipboardRead: ReturnType<typeof vi.fn>;
-  const onSelectImageMock = vi.fn();
+  const onSelectFileMock = vi.fn();
   const setInfoDialogOpenMock = vi.fn();
   let optionsRef: React.RefObject<HTMLUListElement>;
 
@@ -34,7 +34,7 @@ describe("PasteFromClipboard", () => {
         <PasteFromClipboard
           optionsRef={optionsRef as React.RefObject<HTMLUListElement>}
           setInfoDialogOpen={setInfoDialogOpenMock}
-          onSelectImage={onSelectImageMock}
+          onSelectFile={onSelectFileMock}
         />
       </ul>
     );
@@ -52,7 +52,7 @@ describe("PasteFromClipboard", () => {
     fireEvent.click(screen.getByTestId("paste-from-clipboard"));
 
     await vi.waitFor(() => {
-      expect(onSelectImageMock).toHaveBeenCalledWith(
+      expect(onSelectFileMock).toHaveBeenCalledWith(
         expect.objectContaining({
           name: "clipboard-image.png",
           type: "image/png",
@@ -79,7 +79,7 @@ describe("PasteFromClipboard", () => {
     fireEvent.click(screen.getByTestId("paste-from-clipboard"));
 
     await vi.waitFor(() => {
-      expect(onSelectImageMock).not.toHaveBeenCalled();
+      expect(onSelectFileMock).not.toHaveBeenCalled();
       expect(consoleSpy).toHaveBeenCalledWith(
         "Invalid file type or size exceeded."
       );
@@ -101,7 +101,7 @@ describe("PasteFromClipboard", () => {
     fireEvent.click(screen.getByTestId("paste-from-clipboard"));
 
     await vi.waitFor(() => {
-      expect(onSelectImageMock).not.toHaveBeenCalled();
+      expect(onSelectFileMock).not.toHaveBeenCalled();
       expect(consoleSpy).toHaveBeenCalledWith("No image found in clipboard.");
     });
     consoleSpy.mockRestore();
@@ -115,7 +115,7 @@ describe("PasteFromClipboard", () => {
     fireEvent.click(screen.getByTestId("paste-from-clipboard"));
 
     await vi.waitFor(() => {
-      expect(onSelectImageMock).not.toHaveBeenCalled();
+      expect(onSelectFileMock).not.toHaveBeenCalled();
       expect(consoleSpy).toHaveBeenCalledWith(
         "Failed to read clipboard contents:",
         expect.any(Error)

@@ -3,9 +3,9 @@ import userEvent from "@testing-library/user-event";
 import { SelectedFile } from "./SelectedFile";
 
 vi.mock("../ImageViewer", () => ({
-  ImageViewer: ({ image }: { image: string }) => (
+  ImageViewer: ({ file }: { file: string }) => (
     <img
-      src={image}
+      src={file}
       alt="Selected attachment"
       className="max-h-40 rounded-md object-contain"
     />
@@ -13,21 +13,21 @@ vi.mock("../ImageViewer", () => ({
 }));
 
 describe("SelectedFile", () => {
-  const mockClearSelectedImage = vi.fn();
-  const mockSelectedImage = "blob://test-url";
+  const mockClearSelectedFile = vi.fn();
+  const mockSelectedFile = "blob://test-url";
 
   beforeEach(() => {
-    mockClearSelectedImage.mockClear();
+    mockClearSelectedFile.mockClear();
   });
 
   const renderComponent = (
-    selectedImage = mockSelectedImage,
-    clearSelectedImage = mockClearSelectedImage
+    selectedFile = mockSelectedFile,
+    clearSelectedFile = mockClearSelectedFile
   ) => {
     return render(
       <SelectedFile
-        selectedImage={selectedImage}
-        clearSelectedImage={clearSelectedImage}
+        selectedFile={selectedFile}
+        clearSelectedFile={clearSelectedFile}
       />
     );
   };
@@ -37,24 +37,24 @@ describe("SelectedFile", () => {
 
     const image = screen.getByAltText("Selected attachment");
     expect(image).toBeInTheDocument();
-    expect(image).toHaveAttribute("src", mockSelectedImage);
+    expect(image).toHaveAttribute("src", mockSelectedFile);
     expect(image).toHaveClass("max-h-40", "rounded-md", "object-contain");
   });
 
   test("renders remove button with correct aria-label", () => {
     renderComponent();
 
-    const removeButton = screen.getByLabelText("Remove image");
+    const removeButton = screen.getByLabelText("Remove file");
     expect(removeButton).toBeInTheDocument();
   });
 
-  test("calls clearSelectedImage when remove button is clicked", async () => {
+  test("calls clearSelectedFile when remove button is clicked", async () => {
     renderComponent();
 
-    const removeButton = screen.getByLabelText("Remove image");
+    const removeButton = screen.getByLabelText("Remove file");
     await userEvent.click(removeButton);
 
-    expect(mockClearSelectedImage).toHaveBeenCalledTimes(1);
+    expect(mockClearSelectedFile).toHaveBeenCalledTimes(1);
   });
 
   test("applies correct styling classes to container", () => {
@@ -72,7 +72,7 @@ describe("SelectedFile", () => {
   test("applies correct styling classes to remove button", () => {
     renderComponent();
 
-    const removeButton = screen.getByLabelText("Remove image");
+    const removeButton = screen.getByLabelText("Remove file");
     expect(removeButton).toHaveClass(
       "absolute",
       "top-1",
@@ -86,18 +86,18 @@ describe("SelectedFile", () => {
     );
   });
 
-  test("renders with different image URL", () => {
-    const customImageUrl = "blob://custom-test-url";
-    renderComponent(customImageUrl);
+  test("renders with different file URL", () => {
+    const customFileUrl = "blob://custom-test-url";
+    renderComponent(customFileUrl);
 
     const image = screen.getByAltText("Selected attachment");
-    expect(image).toHaveAttribute("src", customImageUrl);
+    expect(image).toHaveAttribute("src", customFileUrl);
   });
 
   test("XMarkIcon is rendered inside remove button", () => {
     renderComponent();
 
-    const removeButton = screen.getByLabelText("Remove image");
+    const removeButton = screen.getByLabelText("Remove file");
     const icon = removeButton.querySelector("svg");
     expect(icon).toBeInTheDocument();
   });

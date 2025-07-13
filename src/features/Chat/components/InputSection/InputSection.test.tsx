@@ -40,17 +40,17 @@ vi.mock("./ChatConfig", () => {
   };
 });
 
-vi.mock("./InputSection/SelectedFile", () => ({
-  SelectedFile: ({ selectedImage, clearSelectedImage }: any) => (
+vi.mock("./SelectedFile", () => ({
+  SelectedFile: ({ selectedFile, clearSelectedFile }: any) => (
     <div>
       <img
-        src={selectedImage}
+        src={selectedFile}
         alt="Selected attachment"
         className="max-h-40 rounded-md object-contain"
       />
       <button
-        aria-label="Remove image"
-        onClick={clearSelectedImage}
+        aria-label="Remove file"
+        onClick={clearSelectedFile}
         className="remove-btn"
       >
         Remove
@@ -131,22 +131,22 @@ describe("InputSection", () => {
     expect(screen.getByLabelText("Send message")).toBeInTheDocument();
   });
 
-  test("file selection displays image", async () => {
+  test("file selection displays file", async () => {
     render(<InputSection onEnter={onEnter} isSending={false} />);
     const attachBtn = screen.getByLabelText("Attach file");
     await userEvent.click(attachBtn);
     const fileInput = screen.getByTestId("file-input") as HTMLInputElement;
     const file = new File(["dummy"], "test.png", { type: "image/png" });
     fireEvent.change(fileInput, { target: { files: [file] } });
-    // image should appear
+    // file should appear
     const img = await screen.findByAltText("Selected attachment");
     expect(img).toHaveAttribute("src", "blob://test-url");
   });
 
-  test("Send message with image", async () => {
+  test("Send message with file", async () => {
     render(<InputSection onEnter={onEnter} isSending={false} />);
     const textarea = screen.getByRole("textbox", { name: /Message input/i });
-    await userEvent.type(textarea, "Test message with image");
+    await userEvent.type(textarea, "Test message with file");
     const attachBtn = screen.getByLabelText("Attach file");
     await userEvent.click(attachBtn);
     const fileInput = screen.getByTestId("file-input") as HTMLInputElement;
@@ -155,7 +155,7 @@ describe("InputSection", () => {
     const sendBtn = screen.getByLabelText("Send message");
     await userEvent.click(sendBtn);
     expect(onEnter).toHaveBeenCalledWith(
-      "Test message with image",
+      "Test message with file",
       expect.any(File)
     );
   });

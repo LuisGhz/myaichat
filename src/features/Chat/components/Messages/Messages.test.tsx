@@ -120,10 +120,10 @@ describe("Messages", () => {
     expect(listItems[1]).not.toHaveClass("items-end"); // Assistant message should not have this class
   });
 
-  it("renders ImageViewer for messages with images", () => {
+  it("renders ImageViewer for messages with files", () => {
     const messages: Message[] = [
-      { role: "User", content: "Hello", image: "user-image-data" },
-      { role: "Assistant", content: "Hi there", image: "assistant-image-data" },
+      { role: "User", content: "Hello", file: "user-file-data" },
+      { role: "Assistant", content: "Hi there", file: "assistant-file-data" },
     ];
 
     render(
@@ -138,20 +138,20 @@ describe("Messages", () => {
     expect(ImageViewer).toHaveBeenCalledTimes(2);
     expect(screen.getAllByTestId("image-viewer")).toHaveLength(2);
 
-    // Check image props were passed correctly
+    // Check file props were passed correctly
     expect(ImageViewer).toHaveBeenNthCalledWith(
       1,
-      { image: "user-image-data" },
+      { file: "user-file-data" },
       undefined
     );
     expect(ImageViewer).toHaveBeenNthCalledWith(
       2,
-      { image: "assistant-image-data" },
+      { file: "assistant-file-data" },
       undefined
     );
   });
 
-  it("does not render ImageViewer for messages without images", () => {
+  it("does not render ImageViewer for messages without files", () => {
     const messages: Message[] = [
       { role: "User", content: "Hello" },
       { role: "Assistant", content: "Hi there" },

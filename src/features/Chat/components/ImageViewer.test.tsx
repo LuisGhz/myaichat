@@ -11,13 +11,13 @@ describe("ImageViewer", () => {
 
   it("should render the image with the correct src when image is a string", () => {
     const imageUrl = "https://example.com/image.jpg";
-    render(<ImageViewer image={imageUrl} />);
-    const imageElement = screen.getByAltText("Image uploaded by user");
+    render(<ImageViewer file={imageUrl} />);
+    const imageElement = screen.getByAltText("File uploaded by user");
     expect(imageElement).toBeInTheDocument();
     expect(imageElement).toHaveAttribute("src", imageUrl);
   });
 
-  it("should render the image with the correct src when image is a File object", () => {
+  it("should render the image with the correct src when file is a File object", () => {
     const mockFile = new File(["(⌐□_□)"], "chucknorris.png", {
       type: "image/png",
     });
@@ -26,11 +26,11 @@ describe("ImageViewer", () => {
     const createObjectURLMock = vi.fn().mockReturnValue(mockUrl);
     window.URL.createObjectURL = createObjectURLMock;
 
-    render(<ImageViewer image={mockFile} />);
+    render(<ImageViewer file={mockFile} />);
 
     expect(createObjectURLMock).toHaveBeenCalledWith(mockFile);
 
-    const imageElement = screen.getByAltText("Image uploaded by user");
+    const imageElement = screen.getByAltText("File uploaded by user");
     expect(imageElement).toBeInTheDocument();
     expect(imageElement).toHaveAttribute("src", mockUrl);
   });
