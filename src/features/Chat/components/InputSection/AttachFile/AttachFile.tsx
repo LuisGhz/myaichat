@@ -1,8 +1,8 @@
 import { PaperClipIcon } from "assets/icons/PaperClipIcon";
 import { InfoDialog } from "components/Dialogs/InfoDialog";
-import { useEffect, useRef, useState } from "react";
-import { PasteFromClipboard } from "./PasteFromClipboard";
+import { useEffect, useRef, useState, Suspense, lazy } from "react";
 import { UploadFromSelection } from "./UploadFromSelection";
+import { ScreensWidth } from "consts/ScreensWidth";
 
 type Props = {
   onSelectFile: (file: File) => void;
@@ -10,8 +10,17 @@ type Props = {
 
 export const AttachFile = ({ onSelectFile }: Props) => {
   const [isInfoDialogOpen, setInfoDialogOpen] = useState(false);
+  const [isMobile, setIsMobile] = useState(true);
   const optionsRef = useRef<HTMLUListElement>(null);
   const buttonRef = useRef<HTMLButtonElement>(null);
+
+  const PasteFromClipboard = !isMobile
+    ? lazy(() =>
+        import("./PasteFromClipboard").then((module) => ({
+          default: module.PasteFromClipboard,
+        }))
+      )
+    : undefined;
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -25,6 +34,16 @@ export const AttachFile = ({ onSelectFile }: Props) => {
 
     document.addEventListener("click", handleClickOutside);
     return () => document.removeEventListener("click", handleClickOutside);
+  }, []);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < ScreensWidth.tablet);
+    };
+
+    handleResize(); // Set initial state
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
   }, []);
 
   return (
@@ -56,11 +75,15 @@ export const AttachFile = ({ onSelectFile }: Props) => {
             setInfoDialogOpen={setInfoDialogOpen}
             optionsRef={optionsRef}
           />
-          <PasteFromClipboard
-            optionsRef={optionsRef}
-            setInfoDialogOpen={setInfoDialogOpen}
-            onSelectFile={onSelectFile}
-          />
+          {!isMobile && PasteFromClipboard && (
+            <Suspense fallback={null}>
+              <PasteFromClipboard
+                optionsRef={optionsRef}
+                setInfoDialogOpen={setInfoDialogOpen}
+                onSelectFile={onSelectFile}
+              />
+            </Suspense>
+          )}
         </ul>
       </button>
     </>
