@@ -3,13 +3,13 @@ import { useRef } from "react";
 
 // Add Props type for not founded names
 type Props = {
-  onSelectImage: (file: File) => void;
+  onSelectFile: (file: File) => void;
   setInfoDialogOpen: (open: boolean) => void;
   optionsRef: React.RefObject<HTMLUListElement | null>;
 };
 
 export const UploadFromSelection = ({
-  onSelectImage,
+  onSelectFile,
   setInfoDialogOpen,
   optionsRef,
 }: Props) => {
@@ -22,7 +22,7 @@ export const UploadFromSelection = ({
     inputFileRef.current?.click();
   };
 
-  const onSelectFile = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileSelection = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (!file) return;
     const isValid = validateFiles(file);
@@ -32,7 +32,7 @@ export const UploadFromSelection = ({
       setInfoDialogOpen(true);
       return;
     }
-    onSelectImage(file);
+    onSelectFile(file);
     event.target.value = "";
   };
 
@@ -52,7 +52,7 @@ export const UploadFromSelection = ({
         name="attach-file"
         id="attach-file"
         ref={inputFileRef}
-        onChange={onSelectFile}
+        onChange={handleFileSelection}
         data-testid="file-input"
       />
     </li>

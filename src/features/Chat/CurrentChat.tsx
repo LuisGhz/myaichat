@@ -132,11 +132,11 @@ export const CurrentChat = () => {
     setMaxOutputTokens(defaultMaxOutputTokens);
   };
 
-  const sendMessage = async (newUserMessage: string, image?: File) => {
+  const sendMessage = async (newUserMessage: string, file?: File) => {
     const req: NewMessageReq = {
       chatId: params.id,
       prompt: newUserMessage,
-      image,
+      file,
       promptId,
       maxOutputTokens,
       isWebSearchMode,
@@ -176,16 +176,16 @@ export const CurrentChat = () => {
     }
   };
 
-  const onEnter = async (newUserMessage: string, image: File | undefined) => {
+  const onEnter = async (newUserMessage: string, file: File | undefined) => {
     setMessages((prevMessages) => [
       ...prevMessages,
       {
         role: "User",
         content: newUserMessage,
-        image: image,
+        file: file,
       },
     ]);
-    await sendMessage(newUserMessage, image);
+    await sendMessage(newUserMessage, file);
   };
 
   const incrementPageOnScrollTop = (event: React.UIEvent<HTMLDivElement>) => {

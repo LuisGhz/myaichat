@@ -54,7 +54,7 @@ export const useChats = () => {
     formData.append("isWebSearchMode", String(newMessageOps.isWebSearchMode));
     if (newMessageOps.model) formData.append("model", newMessageOps.model);
     if (newMessageOps.chatId) formData.append("chatId", newMessageOps.chatId);
-    if (newMessageOps.image) formData.append("image", newMessageOps.image);
+    if (newMessageOps.file) formData.append("file", newMessageOps.file);
     if (newMessageOps.promptId)
       formData.append("promptId", newMessageOps.promptId);
     setIsSending(true);

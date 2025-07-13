@@ -3,13 +3,13 @@ import { useAttachedFilesValidator } from "hooks/useAttachedFilesValidator";
 type Props = {
   optionsRef: React.RefObject<HTMLElement | null>;
   setInfoDialogOpen: (open: boolean) => void;
-  onSelectImage: (file: File) => void;
+  onSelectFile: (file: File) => void;
 };
 
 export const PasteFromClipboard = ({
   optionsRef,
   setInfoDialogOpen,
-  onSelectImage,
+  onSelectFile,
 }: Props) => {
   const { validateFiles } = useAttachedFilesValidator();
 
@@ -38,7 +38,7 @@ export const PasteFromClipboard = ({
               return;
             }
 
-            onSelectImage(file);
+            onSelectFile(file);
             return;
           }
         }

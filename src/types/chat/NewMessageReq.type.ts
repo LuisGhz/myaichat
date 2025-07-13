@@ -4,7 +4,7 @@ export type NewMessageReq = {
   chatId?: string;
   prompt: string;
   model?: ModelsValues;
-  image? : File;
+  file? : File;
   promptId?: string;
   maxOutputTokens: number;
   isWebSearchMode: boolean;

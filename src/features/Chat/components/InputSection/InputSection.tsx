@@ -19,8 +19,8 @@ type InputSectionProps = {
 export const InputSection = ({ onEnter, isSending }: InputSectionProps) => {
   const isOffline = useAppIsOfflineStore();
   const [userInput, setUserInput] = useState("");
-  const [selectedImage, setSelectedImage] = useState<string | null>(null);
-  const selectedFile = useRef<File | null>(null);
+  const [selectedFile, setSelectedFile] = useState<string | null>(null);
+  const selectedFileRef = useRef<File | null>(null);
   const textareaContainerRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const params = useParams();
@@ -32,8 +32,8 @@ export const InputSection = ({ onEnter, isSending }: InputSectionProps) => {
       textareaRef.current?.focus();
 
     setUserInput("");
-    setSelectedImage(null);
-    selectedFile.current = null;
+    setSelectedFile(null);
+    selectedFileRef.current = null;
   }, [params.id]);
 
   const onMessageKeyDown = (event: KeyboardEvent<HTMLTextAreaElement>) => {
@@ -47,10 +47,10 @@ export const InputSection = ({ onEnter, isSending }: InputSectionProps) => {
 
   const sendMessage = () => {
     if (userInput.trim().length === 0 || isSending || isOffline) return;
-    onEnter(userInput, selectedFile.current || undefined);
+    onEnter(userInput, selectedFileRef.current || undefined);
     setUserInput("");
-    setSelectedImage(null);
-    selectedFile.current = null;
+    setSelectedFile(null);
+    selectedFileRef.current = null;
   };
 
   const onFocusTextarea = () => {
@@ -67,17 +67,17 @@ export const InputSection = ({ onEnter, isSending }: InputSectionProps) => {
     setUserInput(text);
   };
 
-  const onSelectImage = (file: File) => {
-    clearSelectedImage();
-    const imageUrl = URL.createObjectURL(file);
-    selectedFile.current = file;
-    setSelectedImage(imageUrl);
+  const onSelectFile = (file: File) => {
+    clearSelectedFile();
+    const fileUrl = URL.createObjectURL(file);
+    selectedFileRef.current = file;
+    setSelectedFile(fileUrl);
   };
 
-  const clearSelectedImage = () => {
-    if (!selectedImage) return;
-    URL.revokeObjectURL(selectedImage);
-    setSelectedImage(null);
+  const clearSelectedFile = () => {
+    if (!selectedFile) return;
+    URL.revokeObjectURL(selectedFile);
+    setSelectedFile(null);
   };
 
   return (
@@ -90,10 +90,10 @@ export const InputSection = ({ onEnter, isSending }: InputSectionProps) => {
           className={`input-container w-full transition-all duration-500 z-10 py-2 px-4 overflow-y-auto bg-cop-1 text-white hide-scrollbar`}
           ref={textareaContainerRef}
         >
-          {selectedImage && (
+          {selectedFile && (
             <SelectedFile
-              selectedImage={selectedImage}
-              clearSelectedImage={clearSelectedImage}
+              selectedFile={selectedFile}
+              clearSelectedFile={clearSelectedFile}
             />
           )}
           <div className="flex justify-between hide-scrollbar items-end">
@@ -131,7 +131,7 @@ export const InputSection = ({ onEnter, isSending }: InputSectionProps) => {
           </div>
         </div>
         <div className="flex justify-between w-full px-2 mt-1">
-          <AttachFile onSelectImage={onSelectImage} />
+          <AttachFile onSelectFile={onSelectFile} />
           <CurrentModelSummary />
           <div className="flex items-center gap-2">
             <ChatConfig />

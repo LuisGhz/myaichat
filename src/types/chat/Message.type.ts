@@ -5,5 +5,5 @@ export type Message = {
   content: string;
   promptTokens?: number;
   completionTokens?: number;
-  image?: File | string;
+  file?: File | string;
 }

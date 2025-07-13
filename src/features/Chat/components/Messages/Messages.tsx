@@ -36,8 +36,8 @@ export const Messages = ({
             }`}
             key={idx}
           >
-            {message.image && message.role === "User" && (
-              <ImageViewer image={message.image} />
+            {message.file && message.role === "User" && (
+              <ImageViewer file={message.file} />
             )}
             <SingleMessage
               arr={arr}
@@ -45,8 +45,8 @@ export const Messages = ({
               message={message}
               messagesEndRef={messagesEndRef}
             />
-            {message.image && message.role === "Assistant" && (
-              <ImageViewer image={message.image} />
+            {message.file && message.role === "Assistant" && (
+              <ImageViewer file={message.file} />
             )}
           </li>
         ))}

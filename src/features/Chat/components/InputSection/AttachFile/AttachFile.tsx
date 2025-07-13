@@ -5,10 +5,10 @@ import { PasteFromClipboard } from "./PasteFromClipboard";
 import { UploadFromSelection } from "./UploadFromSelection";
 
 type Props = {
-  onSelectImage: (file: File) => void;
+  onSelectFile: (file: File) => void;
 };
 
-export const AttachFile = ({ onSelectImage }: Props) => {
+export const AttachFile = ({ onSelectFile }: Props) => {
   const [isInfoDialogOpen, setInfoDialogOpen] = useState(false);
   const optionsRef = useRef<HTMLUListElement>(null);
   const buttonRef = useRef<HTMLButtonElement>(null);
@@ -52,14 +52,14 @@ export const AttachFile = ({ onSelectImage }: Props) => {
           ref={optionsRef}
         >
           <UploadFromSelection
-            onSelectImage={onSelectImage}
+            onSelectFile={onSelectFile}
             setInfoDialogOpen={setInfoDialogOpen}
             optionsRef={optionsRef}
           />
           <PasteFromClipboard
             optionsRef={optionsRef}
             setInfoDialogOpen={setInfoDialogOpen}
-            onSelectImage={onSelectImage}
+            onSelectFile={onSelectFile}
           />
         </ul>
       </button>

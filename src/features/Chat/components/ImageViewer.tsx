@@ -1,17 +1,17 @@
 import { useEffect, useState } from "react";
 import { PhotoProvider, PhotoView } from "react-photo-view";
 type Props = {
-  image: File | string;
+  file: File | string;
 };
 
-export const ImageViewer = ({ image }: Props) => {
+export const ImageViewer = ({ file }: Props) => {
   const [finalImage, setFinalImage] = useState<string>("");
 
   useEffect(() => {
-    if (typeof image === "string") {
-      setFinalImage(image);
+    if (typeof file === "string") {
+      setFinalImage(file);
     } else {
-      const imageUrl = URL.createObjectURL(image);
+      const imageUrl = URL.createObjectURL(file);
       setFinalImage(imageUrl);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -25,7 +25,7 @@ export const ImageViewer = ({ image }: Props) => {
             <img
               className="w-48 mb-3 rounded-sm cursor-pointer"
               src={finalImage}
-              alt="Image uploaded by user"
+              alt="File uploaded by user"
             />
           </PhotoView>
         </PhotoProvider>
