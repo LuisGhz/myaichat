@@ -6,6 +6,8 @@ export const useCurrentChatStoreGetDefaultMaxOutputTokens = () =>
   useZustandCurrentChatStore((state) => state.defaultMaxOutputTokens);
 export const useCurrentChatStoreGetIsWebSearchMode = () =>
   useZustandCurrentChatStore((state) => state.isWebSearchMode);
+export const useCurrentChatStoreGetIsSendingMessage = () =>
+  useZustandCurrentChatStore((state) => state.isSendingMessage);
 export const useCurrentChatStoreGetIsRecordingAudio = () =>
   useZustandCurrentChatStore((state) => state.isRecordingAudio);
 export const useCurrentChatStoreGetIsSendingAudio = () =>
@@ -17,6 +19,8 @@ export const useCurrentChatStoreSetMaxOutputTokens = () =>
   useZustandCurrentChatStore((state) => state.setMaxOutputTokens);
 export const useCurrentChatStoreSetIsWebSearchMode = () =>
   useZustandCurrentChatStore((state) => state.setIsWebSearchMode);
+export const useCurrentChatStoreSetIsSendingMessage = () =>
+  useZustandCurrentChatStore((state) => state.setIsSendingMessage);
 export const useCurrentChatStoreSetIsRecordingAudio = () =>
   useZustandCurrentChatStore((state) => state.setIsRecordingAudio);
 export const useCurrentChatStoreSetIsSendingAudio = () =>

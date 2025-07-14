@@ -1,6 +1,5 @@
 import { create } from "zustand";
 
-
 type ModelData = {
   model: string;
   totalPromptTokens: number;
@@ -12,11 +11,13 @@ interface CurrentChatState {
   defaultMaxOutputTokens: number;
   maxOutputTokens: number;
   isWebSearchMode: boolean;
+  isSendingMessage: boolean;
   isRecordingAudio: boolean;
   isSendingAudio: boolean;
   setCurrentModelData: (data: ModelData | null) => void;
   setMaxOutputTokens: (maxOutputTokens: number) => void;
   setIsWebSearchMode: (isWebSearchMode: boolean) => void;
+  setIsSendingMessage: (isSending: boolean) => void;
   setIsRecordingAudio: (isRecording: boolean) => void;
   setIsSendingAudio: (isSending: boolean) => void;
 }
@@ -26,11 +27,13 @@ export const useZustandCurrentChatStore = create<CurrentChatState>((set) => ({
   defaultMaxOutputTokens: 2000,
   maxOutputTokens: 2000,
   isWebSearchMode: false,
+  isSendingMessage: false,
   isRecordingAudio: false,
   isSendingAudio: false,
   setCurrentModelData: (data) => set({ currentModelData: data }),
   setMaxOutputTokens: (maxOutputTokens) => set({ maxOutputTokens }),
   setIsWebSearchMode: (isWebSearchMode) => set({ isWebSearchMode }),
+  setIsSendingMessage: (isSending) => set({ isSendingMessage: isSending }),
   setIsRecordingAudio: (isRecording) => set({ isRecordingAudio: isRecording }),
   setIsSendingAudio: (isSending) => set({ isSendingAudio: isSending }),
 }));
