@@ -6,7 +6,7 @@ type Props = {
   duration?: number; // duration in seconds, optional, defaults to 60
 };
 
-export const DURATION = 30; // Default duration in seconds
+export const DURATION = 60; // Default duration in seconds
 
 export const Counter = ({ isRecording, onTimedOut }: Props) => {
   const [time, setTime] = useState<number>(DURATION);
