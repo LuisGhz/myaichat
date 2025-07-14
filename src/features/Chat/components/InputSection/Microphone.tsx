@@ -1,10 +1,14 @@
 import { useRef, useEffect } from "react";
+import { Spin } from "antd";
 import { MicrophoneIcon } from "assets/icons/MicrophoneIcon";
 import { useMicrophone } from "hooks/useMicrophone";
-import { useCurrentChatStoreGetIsRecordingAudio, useCurrentChatStoreSetIsRecordingAudio, useCurrentChatStoreGetIsSendingAudio } from "store/features/chat/useCurrentChatStore";
+import {
+  useCurrentChatStoreGetIsRecordingAudio,
+  useCurrentChatStoreSetIsRecordingAudio,
+  useCurrentChatStoreGetIsSendingAudio,
+} from "store/features/chat/useCurrentChatStore";
 import "./Microphone.css";
 import { Counter } from "./Counter";
-
 
 type Props = {
   onTranscription: (text: string) => void;
@@ -70,23 +74,30 @@ export const Microphone = ({ onTranscription }: Props) => {
   return (
     <div className="relative">
       <Counter isRecording={isRecordingAudio} onTimedOut={onTimedOut} />
-      <button
-        className={`text-white transition-all delay-150 duration-200 ${
-          isRecordingAudio
-            ? "bg-red-600 hover:bg-red-700 recording-button"
-            : "hover:bg-cop-6"
-        } p-2 rounded-full cursor-pointer z-10 relative bg-cop-1`}
-        aria-label={
-          isRecordingAudio ? "Recording in progress" : "Activate voice input"
-        }
-        type="button"
-        onClick={handleRecording}
-        ref={buttonRef}
-        disabled={isSendingAudio}
-      >
-        <MicrophoneIcon className="size-6" />
-        {isRecordingAudio && <span className="sr-only">Recording...</span>}
-      </button>
+      <div className="relative inline-block">
+        <button
+          className={`text-white transition-all delay-150 duration-200 ${
+            isRecordingAudio
+              ? "bg-red-600 hover:bg-red-700 recording-button"
+              : "hover:bg-cop-6"
+          } p-2 rounded-full cursor-pointer z-10 relative bg-cop-1`}
+          aria-label={
+            isRecordingAudio ? "Recording in progress" : "Activate voice input"
+          }
+          type="button"
+          onClick={handleRecording}
+          ref={buttonRef}
+          disabled={isSendingAudio}
+        >
+          <MicrophoneIcon className="size-6" />
+          {isRecordingAudio && <span className="sr-only">Recording...</span>}
+        </button>
+        {isSendingAudio && (
+          <span className="absolute inset-0 flex items-center justify-center z-20 bg-black bg-opacity-30 rounded-full">
+            <Spin size="small" />
+          </span>
+        )}
+      </div>
     </div>
   );
 };
