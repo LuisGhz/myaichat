@@ -1,9 +1,10 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import { render, screen, act } from "@testing-library/react";
-import { Counter } from "./Counter";
+import { Counter, DURATION } from "./Counter";
 
 describe("Counter", () => {
   let mockOnTimedOut: ReturnType<typeof vi.fn>;
+  // Duration variable to sync with component's default duration
   const renderComponent = (isRecording = false, onTimedOut = mockOnTimedOut) =>
     render(<Counter isRecording={isRecording} onTimedOut={onTimedOut} />);
 
@@ -17,41 +18,46 @@ describe("Counter", () => {
     vi.useRealTimers();
   });
 
-  it("renders initial time as 0:30 when not recording", () => {
+  it("renders initial time as formatted duration when not recording", () => {
     renderComponent(false);
-    expect(screen.getByText("0:30")).toBeInTheDocument();
+    const expectedTime = `0:${DURATION.toString().padStart(2, "0")}`;
+    expect(screen.getByText(expectedTime)).toBeInTheDocument();
   });
 
-  it("shows 0:30 and starts countdown when isRecording is true", () => {
+  it("shows initial duration and starts countdown when isRecording is true", () => {
     renderComponent(true);
-    expect(screen.getByText("0:30")).toBeInTheDocument();
+    const expectedInitialTime = `0:${DURATION.toString().padStart(2, "0")}`;
+    expect(screen.getByText(expectedInitialTime)).toBeInTheDocument();
     act(() => {
       vi.advanceTimersByTime(1000);
     });
-    expect(screen.getByText("0:29")).toBeInTheDocument();
+    const expectedTimeAfter1Sec = `0:${(DURATION - 1).toString().padStart(2, "0")}`;
+    expect(screen.getByText(expectedTimeAfter1Sec)).toBeInTheDocument();
   });
 
   it("counts down to 0:00 and calls onTimedOut", () => {
     renderComponent(true);
     act(() => {
-      vi.advanceTimersByTime(30001); // 30 seconds
+      vi.advanceTimersByTime(DURATION * 1000 + 1); // Full duration + 1ms
     });
     expect(screen.getByText("0:00")).toBeInTheDocument();
     expect(mockOnTimedOut).toHaveBeenCalledTimes(1);
   });
 
-  it("resets timer to 0:30 when isRecording changes from true to false", () => {
+  it("resets timer to initial duration when isRecording changes from true to false", () => {
     const { rerender } = render(<Counter isRecording={true} onTimedOut={mockOnTimedOut} />);
     act(() => {
       vi.advanceTimersByTime(5000);
     });
-    expect(screen.getByText("0:25")).toBeInTheDocument();
+    const expectedTimeAfter5Sec = `0:${(DURATION - 5).toString().padStart(2, "0")}`;
+    expect(screen.getByText(expectedTimeAfter5Sec)).toBeInTheDocument();
     rerender(<Counter isRecording={false} onTimedOut={mockOnTimedOut} />);
     // Wait for reset (100ms timeout in component)
     act(() => {
       vi.advanceTimersByTime(150);
     });
-    expect(screen.getByText("0:30")).toBeInTheDocument();
+    const expectedResetTime = `0:${DURATION.toString().padStart(2, "0")}`;
+    expect(screen.getByText(expectedResetTime)).toBeInTheDocument();
   });
 
   it("has accessible role and visible timer", () => {

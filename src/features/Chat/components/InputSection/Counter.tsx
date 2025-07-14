@@ -6,20 +6,22 @@ type Props = {
   duration?: number; // duration in seconds, optional, defaults to 60
 };
 
+export const DURATION = 30; // Default duration in seconds
+
 export const Counter = ({ isRecording, onTimedOut }: Props) => {
-  const duration = 30; // Default duration in seconds
-  const [time, setTime] = useState<number>(duration);
+  const [time, setTime] = useState<number>(DURATION);
 
   useEffect(() => {
     let interval: number | undefined;
 
     if (isRecording) {
-      setTime(duration); // Reset to duration when recording starts
+      setTime(DURATION); // Reset to duration when recording starts
       interval = setInterval(() => {
         setTime((prevTime) => {
-          if (prevTime > 0) {
+          if (prevTime > 1) {
             return prevTime - 1;
           } else {
+            // Time has reached 1, so next tick will be 0
             clearInterval(interval);
             onTimedOut();
             return 0;
@@ -27,7 +29,7 @@ export const Counter = ({ isRecording, onTimedOut }: Props) => {
         });
       }, 1000);
     } else {
-      setTimeout(() => setTime(duration), 100);
+      setTimeout(() => setTime(DURATION), 100);
     }
 
     return () => {
