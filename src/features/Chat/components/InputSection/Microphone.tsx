@@ -1,24 +1,27 @@
-import { useState, useRef, useEffect } from "react";
+import { useRef, useEffect } from "react";
 import { MicrophoneIcon } from "assets/icons/MicrophoneIcon";
 import { useMicrophone } from "hooks/useMicrophone";
+import { useCurrentChatStoreGetIsRecordingAudio, useCurrentChatStoreSetIsRecordingAudio, useCurrentChatStoreGetIsSendingAudio } from "store/features/chat/useCurrentChatStore";
 import "./Microphone.css";
 import { Counter } from "./Counter";
+
 
 type Props = {
   onTranscription: (text: string) => void;
 };
 
 export const Microphone = ({ onTranscription }: Props) => {
-  const [isRecording, setIsRecording] = useState(false);
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const buttonRef = useRef<HTMLButtonElement | null>(null);
-  const { transcribeAudio, isSendingAudio } = useMicrophone();
+  const isRecordingAudio = useCurrentChatStoreGetIsRecordingAudio();
+  const setIsRecordingAudio = useCurrentChatStoreSetIsRecordingAudio();
+  const isSendingAudio = useCurrentChatStoreGetIsSendingAudio();
+  const { transcribeAudio } = useMicrophone();
 
   useEffect(() => {
     navigator.mediaDevices.getUserMedia({ audio: true }).then((stream) => {
       mediaRecorderRef.current = new MediaRecorder(stream);
     });
-
     return () => {
       if (mediaRecorderRef.current?.state === "recording")
         mediaRecorderRef.current.stop();
@@ -27,7 +30,7 @@ export const Microphone = ({ onTranscription }: Props) => {
 
   const handleRecording = () => {
     if (isSendingAudio) return;
-    if (isRecording) {
+    if (isRecordingAudio) {
       stopRecording();
     } else {
       startRecording();
@@ -35,7 +38,7 @@ export const Microphone = ({ onTranscription }: Props) => {
   };
 
   const startRecording = async () => {
-    setIsRecording(true);
+    setIsRecordingAudio(true);
     if (!mediaRecorderRef.current) return;
     mediaRecorderRef.current.start();
 
@@ -56,7 +59,7 @@ export const Microphone = ({ onTranscription }: Props) => {
   const stopRecording = () => {
     if (mediaRecorderRef.current) {
       mediaRecorderRef.current.stop();
-      setIsRecording(false);
+      setIsRecordingAudio(false);
     }
   };
 
@@ -66,15 +69,15 @@ export const Microphone = ({ onTranscription }: Props) => {
 
   return (
     <div className="relative">
-      <Counter isRecording={isRecording} onTimedOut={onTimedOut} />
+      <Counter isRecording={isRecordingAudio} onTimedOut={onTimedOut} />
       <button
         className={`text-white transition-all delay-150 duration-200 ${
-          isRecording
+          isRecordingAudio
             ? "bg-red-600 hover:bg-red-700 recording-button"
             : "hover:bg-cop-6"
         } p-2 rounded-full cursor-pointer z-10 relative bg-cop-1`}
         aria-label={
-          isRecording ? "Recording in progress" : "Activate voice input"
+          isRecordingAudio ? "Recording in progress" : "Activate voice input"
         }
         type="button"
         onClick={handleRecording}
@@ -82,7 +85,7 @@ export const Microphone = ({ onTranscription }: Props) => {
         disabled={isSendingAudio}
       >
         <MicrophoneIcon className="size-6" />
-        {isRecording && <span className="sr-only">Recording...</span>}
+        {isRecordingAudio && <span className="sr-only">Recording...</span>}
       </button>
     </div>
   );

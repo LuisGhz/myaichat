@@ -1,8 +1,8 @@
-import { useState } from "react";
 import { transcribeAudioService } from "services/Microphone.service";
+import { useCurrentChatStoreSetIsSendingAudio } from "store/features/chat/useCurrentChatStore";
 
 export const useMicrophone = () => {
-  const [isSendingAudio, setIsSendingAudio] = useState(false);
+  const setIsSendingAudio = useCurrentChatStoreSetIsSendingAudio();
 
   const transcribeAudio = async (audioBlob: Blob) => {
     setIsSendingAudio(true);
@@ -13,6 +13,5 @@ export const useMicrophone = () => {
 
   return {
     transcribeAudio,
-    isSendingAudio,
   };
 };
