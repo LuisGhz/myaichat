@@ -16,6 +16,7 @@ type Props = {
 
 export const Microphone = ({ onTranscription }: Props) => {
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
+  const streamRef = useRef<MediaStream | null>(null);
   const buttonRef = useRef<HTMLButtonElement | null>(null);
   const isRecordingAudio = useCurrentChatStoreGetIsRecordingAudio();
   const setIsRecordingAudio = useCurrentChatStoreSetIsRecordingAudio();
@@ -23,12 +24,9 @@ export const Microphone = ({ onTranscription }: Props) => {
   const { transcribeAudio } = useMicrophone();
 
   useEffect(() => {
-    navigator.mediaDevices.getUserMedia({ audio: true }).then((stream) => {
-      mediaRecorderRef.current = new MediaRecorder(stream);
-    });
     return () => {
-      if (mediaRecorderRef.current?.state === "recording")
-        mediaRecorderRef.current.stop();
+      cleanStreamRef();
+      cleanMediaRecorderRef();
     };
   }, []);
 
@@ -42,6 +40,12 @@ export const Microphone = ({ onTranscription }: Props) => {
   };
 
   const startRecording = async () => {
+    await navigator.mediaDevices
+      .getUserMedia({ audio: true })
+      .then((stream) => {
+        mediaRecorderRef.current = new MediaRecorder(stream);
+        streamRef.current = stream;
+      });
     setIsRecordingAudio(true);
     if (!mediaRecorderRef.current) return;
     mediaRecorderRef.current.start();
@@ -54,10 +58,25 @@ export const Microphone = ({ onTranscription }: Props) => {
     mediaRecorderRef.current.onstop = async () => {
       const audioBlob = new Blob(audioChunks, { type: "audio/wav" });
       const res = await transcribeAudio(audioBlob);
-      if (res) {
-        onTranscription(res.content);
-      }
+      if (res) onTranscription(res.content);
+      cleanStreamRef();
+      cleanMediaRecorderRef();
     };
+  };
+
+  const cleanStreamRef = () => {
+    if (streamRef.current) {
+      streamRef.current.getTracks().forEach((track) => track.stop());
+      streamRef.current = null;
+    }
+  };
+
+  const cleanMediaRecorderRef = () => {
+    if (mediaRecorderRef.current) {
+      mediaRecorderRef.current.ondataavailable = null;
+      mediaRecorderRef.current.onstop = null;
+      mediaRecorderRef.current = null;
+    }
   };
 
   const stopRecording = () => {
