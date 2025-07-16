@@ -46,20 +46,17 @@ export const CurrentChat = () => {
     sendNewMessage,
     isSending,
     isEmptyPage,
-    setIsEmptyPage,
     isChatLoading,
   } = useChats();
   const isSendingFirstMessage = useRef(false);
 
   useEffect(() => {
     (async () => {
-      if (!isSendingFirstMessage.current) resetState();
       if (!params.id || isSendingFirstMessage.current) return;
 
       const res = await getChatMessages(params.id);
       if (!res) {
         navigate("/chat");
-        resetState();
         return;
       }
       handleFirstPageLoad(res);
@@ -73,7 +70,6 @@ export const CurrentChat = () => {
       const res = await getChatMessages(params.id!, page);
       if (!res) {
         navigate("/chat");
-        resetState();
         return;
       }
       handleNewPageLoad(res);
@@ -117,19 +113,6 @@ export const CurrentChat = () => {
     setTimeout(() => {
       setIsFirstLoaded(() => true);
     }, 250);
-  };
-
-  const resetState = () => {
-    setMessages([]);
-    setModel("gemini-2.0-flash");
-    setPromptId("");
-    setCurrentModel("");
-    setPage(() => 0);
-    setIsEmptyPage(() => false);
-    setTotalPromptTokens(() => 0);
-    setTotalCompletionTokens(() => 0);
-    setCurrentModelData(null);
-    setMaxOutputTokens(defaultMaxOutputTokens);
   };
 
   const sendMessage = async (newUserMessage: string, file?: File) => {
