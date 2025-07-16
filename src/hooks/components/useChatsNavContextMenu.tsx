@@ -1,8 +1,6 @@
 import { PencilIcon } from "assets/icons/PencilIcon";
 import { TrashIcon } from "assets/icons/TrashIcon";
-// import { useChats } from "hooks/useChats";
 import { useState, ReactNode, Dispatch, SetStateAction } from "react";
-// import { useNavigate, useParams } from "react-router";
 import { ChatSummary } from "types/chat/ChatSummary.type";
 
 type Props = {
