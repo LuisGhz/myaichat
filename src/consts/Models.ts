@@ -79,8 +79,8 @@ export const MODELS: ModelInfo[] = [
     },
     link: "https://platform.openai.com/docs/models/gpt-4.1",
     price: {
-      input: 3.0,
-      output: 12,
+      input: 2,
+      output: 8,
     },
     metadata: {
       contextWindow: 1_047_576,
@@ -99,8 +99,8 @@ export const MODELS: ModelInfo[] = [
     },
     link: "https://platform.openai.com/docs/models/gpt-4.1-mini",
     price: {
-      input: 0.2,
-      output: 0.8,
+      input: 0.4,
+      output: 1.6,
     },
     metadata: {
       contextWindow: 1_047_576,
