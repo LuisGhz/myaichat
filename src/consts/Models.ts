@@ -69,6 +69,46 @@ export const MODELS: ModelInfo[] = [
     },
   },
   {
+    name: "GPT 4.1",
+    shortName: "4.1",
+    value: "gpt-4.1-2025-04-14",
+    developBy: {
+      name: "OpenAI",
+      link: "https://openai.com",
+      imageUrl: "https://openai.com/favicon.ico",
+    },
+    link: "https://platform.openai.com/docs/models/gpt-4.1",
+    price: {
+      input: 3.0,
+      output: 12,
+    },
+    metadata: {
+      contextWindow: 1_047_576,
+      maxOutputTokens: 32_768,
+      knowledgeCutoff: "May 2024",
+    },
+  },
+  {
+    name: "GPT 4.1 Mini",
+    shortName: "4.1m",
+    value: "gpt-4.1-mini-2025-04-14",
+    developBy: {
+      name: "OpenAI",
+      link: "https://openai.com",
+      imageUrl: "https://openai.com/favicon.ico",
+    },
+    link: "https://platform.openai.com/docs/models/gpt-4.1-mini",
+    price: {
+      input: 0.2,
+      output: 0.8,
+    },
+    metadata: {
+      contextWindow: 1_047_576,
+      maxOutputTokens: 32_768,
+      knowledgeCutoff: "May 2024",
+    },
+  },
+  {
     name: "Gemini 2.0 Flash Lite",
     shortName: "2.0FL",
     value: "gemini-2.0-flash-lite",
