@@ -3,7 +3,12 @@ import { CurrentChat } from "features/Chat/CurrentChat";
 import { Prompts } from "features/Prompts/Prompts";
 import { PromptsForm } from "features/Prompts/PromptsForm";
 import { Welcome } from "features/Welcome/Welcome";
-import { BrowserRouter, Routes, Route } from "react-router";
+import { BrowserRouter, Routes, Route, useParams } from "react-router";
+
+const CurrentChatWithKey = () => {
+  const params = useParams<{ id?: string }>();
+  return <CurrentChat key={params.id || "new"} />;
+};
 
 export const AppRouter = () => {
   return (
@@ -11,8 +16,8 @@ export const AppRouter = () => {
       <Routes>
         <Route element={<App />}>
           <Route index element={<Welcome />}></Route>
-          <Route path="chat" element={<CurrentChat />}></Route>
-          <Route path="chat/:id" element={<CurrentChat />}></Route>
+          <Route path="chat" element={<CurrentChatWithKey />}></Route>
+          <Route path="chat/:id" element={<CurrentChatWithKey />}></Route>
           <Route path="prompts" element={<Prompts />}></Route>
           <Route path="prompts/form" element={<PromptsForm />}></Route>
           <Route path="prompts/form/:id" element={<PromptsForm />}></Route>
