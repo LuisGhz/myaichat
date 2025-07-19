@@ -2,6 +2,7 @@ import { Link } from "react-router";
 import { ArrowLeftCircleIcon } from "assets/icons/ArrowLeftCircleIcon";
 import { PencilSquareIcon } from "assets/icons/PencilSquareIcon";
 import { ScreensWidth } from "consts/ScreensWidth";
+import { SimpleUserProfile } from "features/Auth";
 import {
   useAppIsMenuOpenStore,
   useAppSetIsMenuOpenStore,
@@ -44,6 +45,12 @@ export const HeaderNav = () => {
             <ArrowLeftCircleIcon className="size-7 cursor-pointer text-white hover:text-gray-300 transition-colors duration-300 mt-1" />
           </button>
         </li>
+        
+        {/* User Profile Section - Simple OAuth2 */}
+        <li className="px-2 py-3 border-b border-cop-2 mb-3">
+          <SimpleUserProfile className="text-white" />
+        </li>
+        
         <li className="bg-cop-1 hover:bg-cop-2 cursor-pointer text-white px-2 py-1 text-center w-10/12 mx-auto rounded-sm transition-colors duration-300 my-3">
           <Link
             className="flex justify-center"
