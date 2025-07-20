@@ -1,5 +1,4 @@
 // Legacy components (keep for backward compatibility)
-export { Login } from './Login';
 export { AuthSuccess } from './AuthSuccess';
 export { ProtectedRoute } from './ProtectedRoute';
 export { UserProfile } from './UserProfile';
