@@ -1,6 +1,15 @@
 import { useCallback, useEffect } from 'react';
 import { useAuthStore } from 'store/features/auth/useAuthStore';
-import { AuthService } from 'services/auth/auth.service';
+import {
+  getStoredTokenService,
+  getStoredUserService,
+  validateTokenService,
+  getLoginInfoService,
+  storeTokenService,
+  storeUserService,
+  getCurrentUserService,
+  removeTokenService,
+} from 'services/auth/auth.service';
 import { AuthContextType } from 'types/auth/Auth.type';
 
 export const useAuth = (): AuthContextType => {
@@ -23,28 +32,27 @@ export const useAuth = (): AuthContextType => {
    * Initialize authentication state from localStorage
    */
   const initializeAuth = useCallback(async () => {
-    const storedToken = AuthService.getStoredToken();
-    const storedUser = AuthService.getStoredUser();
+    const storedToken = getStoredTokenService();
+    const storedUser = getStoredUserService();
 
     if (storedToken && storedUser) {
       setToken(storedToken);
       setUser(storedUser);
-      
       // Validate token with backend
       try {
-        const validation = await AuthService.validateToken(storedToken);
+        const validation = await validateTokenService(storedToken);
         if (validation.valid && validation.user) {
           setAuthenticated(true);
           setUser(validation.user);
-          AuthService.storeUser(validation.user);
+          storeUserService(validation.user);
         } else {
           // Token is invalid, clear everything
-          AuthService.removeToken();
+          removeTokenService();
           reset();
         }
       } catch (error) {
         console.error('Token validation failed:', error);
-        AuthService.removeToken();
+        removeTokenService();
         reset();
       }
     }
@@ -56,14 +64,11 @@ export const useAuth = (): AuthContextType => {
   const login = useCallback(async () => {
     setLoading(true);
     setError(null);
-    
     try {
-      const loginInfo = await AuthService.getLoginInfo();
-      
+      const loginInfo = await getLoginInfoService();
       // Get the full backend URL and construct the OAuth URL
       const backendUrl = import.meta.env.VITE_API_URL;
       const oauthUrl = `${backendUrl}${loginInfo.githubLoginUrl}`;
-      
       // Redirect to GitHub OAuth
       window.location.href = oauthUrl;
     } catch (error) {
@@ -77,7 +82,7 @@ export const useAuth = (): AuthContextType => {
    * Handle logout
    */
   const logout = useCallback(() => {
-    AuthService.removeToken();
+    removeTokenService();
     reset();
   }, [reset]);
 
@@ -85,25 +90,22 @@ export const useAuth = (): AuthContextType => {
    * Validate current token
    */
   const validateToken = useCallback(async (): Promise<boolean> => {
-    const currentToken = token || AuthService.getStoredToken();
-    
+    const currentToken = token || getStoredTokenService();
     if (!currentToken) {
       return false;
     }
-
     try {
-      const validation = await AuthService.validateToken(currentToken);
+      const validation = await validateTokenService(currentToken);
       if (validation.valid && validation.user) {
         setAuthenticated(true);
         setUser(validation.user);
         setToken(currentToken);
-        AuthService.storeUser(validation.user);
+        storeUserService(validation.user);
         return true;
       }
     } catch (error) {
       console.error('Token validation error:', error);
     }
-    
     return false;
   }, [token, setAuthenticated, setUser, setToken]);
 
@@ -114,17 +116,14 @@ export const useAuth = (): AuthContextType => {
   const handleOAuthCallback = useCallback(async (authToken: string) => {
     setLoading(true);
     setError(null);
-
     try {
       // Store the token
-      AuthService.storeToken(authToken);
+      storeTokenService(authToken);
       setToken(authToken);
-
       // Get user information
-      const user = await AuthService.getCurrentUser(authToken);
+      const user = await getCurrentUserService(authToken);
       setUser(user);
-      AuthService.storeUser(user);
-      
+      storeUserService(user);
       setAuthenticated(true);
     } catch (error) {
       setError(error instanceof Error ? error.message : 'Authentication failed');

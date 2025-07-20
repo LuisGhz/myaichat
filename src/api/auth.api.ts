@@ -1,9 +1,9 @@
 import { apiClient } from 'api/fetch.api';
-import { AuthService } from 'services/auth/auth.service';
+import { getStoredTokenService } from 'services/auth/auth.service';
 
 export const createAuthenticatedApiClient = () => {
   const getAuthHeaders = (): Record<string, string> => {
-    const token = AuthService.getStoredToken();
+    const token = getStoredTokenService();
     return token ? { Authorization: `Bearer ${token}` } : {};
   };
 
