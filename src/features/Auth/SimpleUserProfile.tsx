@@ -1,10 +1,12 @@
-import { useSimpleAuth } from 'hooks/auth/useSimpleAuth';
+import { useSimpleAuth } from "hooks/auth/useSimpleAuth";
 
 interface SimpleUserProfileProps {
   className?: string;
 }
 
-export const SimpleUserProfile = ({ className = '' }: SimpleUserProfileProps) => {
+export const SimpleUserProfile = ({
+  className = "",
+}: SimpleUserProfileProps) => {
   const { isAuthenticated, user, logout } = useSimpleAuth();
 
   if (!isAuthenticated) {
@@ -25,11 +27,11 @@ export const SimpleUserProfile = ({ className = '' }: SimpleUserProfileProps) =>
     if (user?.email) {
       return user.email[0].toUpperCase();
     }
-    return 'U';
+    return "U";
   };
 
   const getUserDisplayName = () => {
-    return user?.name || user?.githubLogin || user?.email || 'GitHub User';
+    return user?.name || user?.githubLogin || user?.email || "GitHub User";
   };
 
   return (
@@ -49,17 +51,13 @@ export const SimpleUserProfile = ({ className = '' }: SimpleUserProfileProps) =>
           </div>
         )}
         <div className="flex flex-col">
-          <span className="text-sm font-medium">
-            {getUserDisplayName()}
-          </span>
-          <span className="text-xs text-gray-500">
-            Authenticated
-          </span>
+          <span className="text-sm font-medium">{getUserDisplayName()}</span>
+          <span className="text-xs text-gray-500">Authenticated</span>
         </div>
       </div>
       <button
         onClick={handleLogout}
-        className="text-xs px-3 py-1 bg-red-600 text-white rounded hover:bg-red-700 transition-colors duration-200"
+        className="text-xs px-3 py-1 bg-red-600 text-white rounded hover:bg-red-700 transition-colors duration-200 cursor-pointer"
       >
         Logout
       </button>
