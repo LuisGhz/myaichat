@@ -10,7 +10,7 @@ export interface AuthState {
 
 export interface LoginResponse {
   message: string;
-  github_login_url: string;
+  githubLoginUrl: string;
 }
 
 export interface ValidateTokenResponse {
