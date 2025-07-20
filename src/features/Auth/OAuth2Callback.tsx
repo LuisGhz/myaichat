@@ -7,7 +7,7 @@ export const OAuth2Callback = () => {
 
   const validateTokenAndRedirect = useCallback(async (token: string) => {
     try {
-      const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:8080/api';
+      const apiUrl = import.meta.env.VITE_API_URL;
       const response = await fetch(`${apiUrl}/auth/validate`, {
         method: 'POST',
         headers: {
