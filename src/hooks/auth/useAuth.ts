@@ -61,7 +61,7 @@ export const useAuth = (): AuthContextType => {
       const loginInfo = await AuthService.getLoginInfo();
       
       // Get the full backend URL and construct the OAuth URL
-      const backendUrl = import.meta.env.VITE_API_URL || 'http://localhost:8080/api';
+      const backendUrl = import.meta.env.VITE_API_URL;
       const oauthUrl = `${backendUrl}${loginInfo.githubLoginUrl}`;
       
       // Redirect to GitHub OAuth
