@@ -7,9 +7,8 @@ export const SimpleOAuth2Login = () => {
 
   const handleGitHubLogin = () => {
     // Use your backend's OAuth2 authorization endpoint
-    const api = (import.meta.env.VITE_API_URL as string).replace("/api", "");
+    const api = (import.meta.env.VITE_API_URL as string).replace("/myaichat/api", "/myaichat");
     window.location.href = `${api}/oauth2/authorization/github`;
-    console.log(`Redirecting to ${api}/oauth2/authorization/github`);
   };
 
   const getErrorMessage = () => {
