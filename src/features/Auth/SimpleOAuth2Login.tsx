@@ -7,7 +7,8 @@ export const SimpleOAuth2Login = () => {
 
   const handleGitHubLogin = () => {
     // Use your backend's OAuth2 authorization endpoint
-    window.location.href = 'http://localhost:8080/oauth2/authorization/github';
+    const api = (import.meta.env.VITE_API_URL as string).replace("/api", "");
+    window.location.href = `${api}/oauth2/authorization/github`;
   };
 
   const getErrorMessage = () => {
