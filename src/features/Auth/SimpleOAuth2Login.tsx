@@ -11,6 +11,7 @@ export const SimpleOAuth2Login = () => {
     if (api.endsWith("/myaichat/api"))
       api = api.replace("/myaichat/api", "/myaichat");
     else if (api.endsWith("/api")) api = api.replace("/api", "");
+    console.log(`${api}/oauth2/authorization/github`);
     window.location.href = `${api}/oauth2/authorization/github`;
   };
 
