@@ -29,10 +29,6 @@ vi.mock("./components/MessagesForm", () => ({
   ),
 }));
 
-vi.mock("./components/ParamsForm", () => ({
-  ParamsForm: () => <div data-testid="params-form">ParamsForm Component</div>,
-}));
-
 // Mock react-router hooks
 vi.mock("react-router", async () => {
   const actual = await vi.importActual("react-router");
@@ -57,7 +53,6 @@ describe("PromptsForm", () => {
     name: "Test Prompt",
     content: "Test content",
     messages: [],
-    params: [],
   };
 
   const mockingUseForm = (formState: { errors: any; isValid: boolean }) => {
@@ -88,7 +83,6 @@ describe("PromptsForm", () => {
       prompts: [],
       getPromptById: mockGetPromptById,
       loading: false,
-      deletePromptParam: vi.fn(),
       deletePromptMessage: vi.fn(),
       getPrompts: vi.fn(),
       deletePrompt: vi.fn(),
@@ -108,7 +102,6 @@ describe("PromptsForm", () => {
     expect(screen.getByTestId("input-name")).toBeInTheDocument();
     expect(screen.getByTestId("input-content")).toBeInTheDocument();
     expect(screen.getByTestId("messages-form")).toBeInTheDocument();
-    expect(screen.getByTestId("params-form")).toBeInTheDocument();
   });
 
   it("renders form in edit mode when ID is provided and shows loading state", () => {
@@ -117,7 +110,6 @@ describe("PromptsForm", () => {
       prompts: [],
       getPromptById: mockGetPromptById,
       loading: true,
-      deletePromptParam: vi.fn(),
       deletePromptMessage: vi.fn(),
       getPrompts: vi.fn(),
       deletePrompt: vi.fn(),

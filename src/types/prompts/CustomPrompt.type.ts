@@ -1,5 +1,4 @@
 import { PromptMessages } from "./PromptMessages.type";
-import { PromptParams } from "./PromptParams.type";
 
 export type CustomPrompt = {
   id: string;
@@ -8,5 +7,4 @@ export type CustomPrompt = {
   createdAt: Date;
   updatedAt?: Date;
   messages?: PromptMessages[];
-  params?: PromptParams[];
 };

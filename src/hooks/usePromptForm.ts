@@ -18,11 +18,6 @@ export const usePromptForm = () => {
         role: message.role,
         content: message.content,
       })),
-      params: data.params?.map((param) => ({
-        id: cleanDefaultsIds(param.id),
-        name: param.name,
-        value: param.value,
-      })),
     };
 
     try {
@@ -43,11 +38,6 @@ export const usePromptForm = () => {
         id: cleanDefaultsIds(message.id),
         role: message.role,
         content: message.content,
-      })),
-      params: data.params?.map((param) => ({
-        id: cleanDefaultsIds(param.id),
-        name: param.name,
-        value: param.value,
       })),
     };
 

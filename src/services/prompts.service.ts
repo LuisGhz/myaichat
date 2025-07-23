@@ -30,10 +30,6 @@ export const deletePromptService = (promptId: string) => {
   return authenticatedApiClient.del(`/custom-prompts/${promptId}/delete`);
 };
 
-export const deletePromptParamService = (promptId: string, paramId: string) => {
-  return authenticatedApiClient.del(`/custom-prompts/${promptId}/${paramId}/delete-param`);
-};
-
 export const deletePromptMessageService = (
   promptId: string,
   messageId: string

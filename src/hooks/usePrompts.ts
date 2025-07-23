@@ -2,7 +2,6 @@ import { useState } from "react";
 import { useToast } from "./useToast";
 import {
   deletePromptMessageService,
-  deletePromptParamService,
   deletePromptService,
   getPromptByIdService,
   getPromptsService,
@@ -41,17 +40,6 @@ export const usePrompts = () => {
     }
   };
 
-  const deletePromptParam = async (promptId: string, paramId: string) => {
-    try {
-      setLoading(true);
-      await deletePromptParamService(promptId, paramId);
-    } catch {
-      toastError("Failed to delete prompt parameter. Please try again later.");
-    } finally {
-      setLoading(false);
-    }
-  };
-
   const deletePromptMessage = async (promptId: string, messageId: string) => {
     try {
       setLoading(true);
@@ -78,7 +66,6 @@ export const usePrompts = () => {
     prompts,
     loading,
     getPromptById,
-    deletePromptParam,
     deletePromptMessage,
     getPrompts,
     deletePrompt,

@@ -4,7 +4,6 @@ import { PromptForm, promptSchema } from "./PromptSchema";
 import { InputName } from "./components/InputName";
 import { InputContent } from "./components/InputContent";
 import { MessagesForm } from "./components/MessagesForm";
-import { ParamsForm } from "./components/ParamsForm";
 import { usePromptForm } from "hooks/usePromptForm";
 import { Link, useNavigate, useParams } from "react-router";
 import { usePrompts } from "hooks/usePrompts";
@@ -25,7 +24,7 @@ export const PromptsForm = () => {
     reset,
   } = useForm<PromptForm>({
     resolver: zodResolver(promptSchema),
-    defaultValues: { params: [], messages: [] },
+    defaultValues: { messages: [] },
   });
   const { onPromptFormSubmit, onPromptUpdateFormSubmit } = usePromptForm();
   const { getPromptById, loading } = usePrompts();
@@ -39,7 +38,6 @@ export const PromptsForm = () => {
             name: prompt.name,
             content: prompt.content,
             messages: prompt.messages || [],
-            params: prompt.params || [],
           });
         }
         setIsLoaded(true);
@@ -85,15 +83,6 @@ export const PromptsForm = () => {
               register={register}
               errors={errors}
               setValue={setValue}
-              control={control}
-              getValues={getValues}
-            />
-          )}
-          {/* Dynamic Params Section */}
-          {isLoaded && (
-            <ParamsForm
-              register={register}
-              errors={errors}
               control={control}
               getValues={getValues}
             />

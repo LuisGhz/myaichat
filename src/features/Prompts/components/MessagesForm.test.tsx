@@ -74,7 +74,7 @@ describe("MessagesForm Component", () => {
   const { result: useFormResult } = renderHook(() =>
     useForm<PromptForm>({
       resolver: zodResolver(promptSchema),
-      defaultValues: { params: [], messages: [] },
+      defaultValues: { messages: [] },
     })
   );
 
@@ -101,7 +101,7 @@ describe("MessagesForm Component", () => {
         register={mockRegister}
         errors={mockErrors}
         setValue={mockSetValue}
-        control={useFormResult.current.control}
+        control={useFormResult.current.control as any}
         getValues={mockGetValues}
       />
     );

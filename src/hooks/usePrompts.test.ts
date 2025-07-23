@@ -50,7 +50,6 @@ describe("usePrompts", () => {
       content: "Description 1",
       createdAt: new Date(),
       messages: [],
-      params: [],
       updatedAt: new Date(),
     };
     vi.spyOn(promptsService, "getPromptByIdService").mockResolvedValue(
@@ -75,32 +74,6 @@ describe("usePrompts", () => {
     });
     expect(mockToastError).toHaveBeenCalledWith(
       "Failed to fetch prompt. Please try again later."
-    );
-    expect(result.current.loading).toBe(false);
-  });
-
-  it("deletePromptParam calls service and sets loading", async () => {
-    const spy = vi
-      .spyOn(promptsService, "deletePromptParamService")
-      .mockResolvedValue(undefined);
-    const { result } = renderHook(() => usePrompts());
-    await act(async () => {
-      await result.current.deletePromptParam("pid", "paramid");
-    });
-    expect(spy).toHaveBeenCalledWith("pid", "paramid");
-    expect(result.current.loading).toBe(false);
-  });
-
-  it("deletePromptParam calls toastError on error", async () => {
-    vi.spyOn(promptsService, "deletePromptParamService").mockRejectedValue(
-      new Error("fail")
-    );
-    const { result } = renderHook(() => usePrompts());
-    await act(async () => {
-      await result.current.deletePromptParam("pid", "paramid");
-    });
-    expect(mockToastError).toHaveBeenCalledWith(
-      "Failed to delete prompt parameter. Please try again later."
     );
     expect(result.current.loading).toBe(false);
   });
