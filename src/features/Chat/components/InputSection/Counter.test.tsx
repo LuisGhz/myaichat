@@ -20,18 +20,18 @@ describe("Counter", () => {
 
   it("renders initial time as formatted duration when not recording", () => {
     renderComponent(false);
-    const expectedTime = `0:${DURATION.toString().padStart(2, "0")}`;
+    const expectedTime = "1:00"; // 60 seconds = 1 minute
     expect(screen.getByText(expectedTime)).toBeInTheDocument();
   });
 
   it("shows initial duration and starts countdown when isRecording is true", () => {
     renderComponent(true);
-    const expectedInitialTime = `0:${DURATION.toString().padStart(2, "0")}`;
+    const expectedInitialTime = "1:00"; // 60 seconds = 1 minute
     expect(screen.getByText(expectedInitialTime)).toBeInTheDocument();
     act(() => {
       vi.advanceTimersByTime(1000);
     });
-    const expectedTimeAfter1Sec = `0:${(DURATION - 1).toString().padStart(2, "0")}`;
+    const expectedTimeAfter1Sec = "0:59"; // 59 seconds remaining
     expect(screen.getByText(expectedTimeAfter1Sec)).toBeInTheDocument();
   });
 
@@ -49,14 +49,14 @@ describe("Counter", () => {
     act(() => {
       vi.advanceTimersByTime(5000);
     });
-    const expectedTimeAfter5Sec = `0:${(DURATION - 5).toString().padStart(2, "0")}`;
+    const expectedTimeAfter5Sec = "0:55"; // 55 seconds remaining
     expect(screen.getByText(expectedTimeAfter5Sec)).toBeInTheDocument();
     rerender(<Counter isRecording={false} onTimedOut={mockOnTimedOut} />);
     // Wait for reset (100ms timeout in component)
     act(() => {
       vi.advanceTimersByTime(150);
     });
-    const expectedResetTime = `0:${DURATION.toString().padStart(2, "0")}`;
+    const expectedResetTime = "1:00"; // Reset to 60 seconds = 1 minute
     expect(screen.getByText(expectedResetTime)).toBeInTheDocument();
   });
 
