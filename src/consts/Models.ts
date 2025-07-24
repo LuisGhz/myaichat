@@ -109,6 +109,26 @@ export const MODELS: ModelInfo[] = [
     },
   },
   {
+    name: "o4 Mini",
+    shortName: "o4m",
+    value: "o4-mini",
+    developBy: {
+      name: "OpenAI",
+      link: "https://openai.com",
+      imageUrl: "https://openai.com/favicon.ico",
+    },
+    link: "https://platform.openai.com/docs/models/o4-mini",
+    price: {
+      input: 1.1,
+      output: 4.4,
+    },
+    metadata: {
+      contextWindow: 200_000,
+      maxOutputTokens: 100_000,
+      knowledgeCutoff: "May 2024",
+    },
+  },
+  {
     name: "Gemini 2.0 Flash Lite",
     shortName: "2.0FL",
     value: "gemini-2.0-flash-lite",
