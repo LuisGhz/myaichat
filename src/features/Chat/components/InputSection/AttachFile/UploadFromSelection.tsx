@@ -1,4 +1,4 @@
-import { useAttachedFilesValidator } from "hooks/useAttachedFilesValidator";
+import { useAttachedFilesValidator } from "hooks/features/Chat/useAttachedFilesValidator";
 import { useRef } from "react";
 
 // Add Props type for not founded names
