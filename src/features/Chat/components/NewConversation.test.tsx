@@ -4,7 +4,7 @@ import userEvent from "@testing-library/user-event";
 import { NewConversation } from "./NewConversation";
 
 // Mock the usePrompts hook
-vi.mock("hooks/usePrompts", () => {
+vi.mock("hooks/features/Prompts/usePrompts", () => {
   return {
     usePrompts: () => ({
       prompts: [

@@ -1,9 +1,9 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { render, screen, fireEvent } from "@testing-library/react";
 import { PasteFromClipboard } from "./PasteFromClipboard";
-import { useAttachedFilesValidator } from "hooks/useAttachedFilesValidator";
+import { useAttachedFilesValidator } from "hooks/features/Chat/useAttachedFilesValidator";
 
-vi.mock("hooks/useAttachedFilesValidator", () => ({
+vi.mock("hooks/features/Chat/useAttachedFilesValidator", () => ({
   useAttachedFilesValidator: vi.fn(),
 }));
 

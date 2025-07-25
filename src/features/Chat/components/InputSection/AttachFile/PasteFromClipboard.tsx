@@ -1,4 +1,4 @@
-import { useAttachedFilesValidator } from "hooks/useAttachedFilesValidator";
+import { useAttachedFilesValidator } from "hooks/features/Chat/useAttachedFilesValidator";
 
 type Props = {
   optionsRef: React.RefObject<HTMLElement | null>;

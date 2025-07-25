@@ -29,7 +29,7 @@ vi.mock("react-router", async () => {
 });
 
 // Mock hooks and components
-vi.mock("hooks/useContextMenu", () => ({
+vi.mock("hooks/components/useContextMenu", () => ({
   useContextMenu: vi.fn(),
 }));
 
@@ -89,7 +89,7 @@ vi.mock("./ChatItem", () => ({
 
 vi.mock("store/useAppStore");
 
-vi.mock("hooks/useChats");
+vi.mock("hooks/features/Chat/useChats");
 
 vi.mock("hooks/components/useChatsNavContextMenu");
 

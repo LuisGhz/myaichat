@@ -7,7 +7,7 @@ import { useNavigate, useParams } from "react-router";
 import { useAppAddChatStore } from "store/useAppStore";
 
 // Mock all external dependencies
-vi.mock("hooks/useChats");
+vi.mock("hooks/features/Chat/useChats");
 vi.mock("react-router");
 vi.mock("store/useAppStore");
 vi.mock("./components/Messages/Messages", () => ({

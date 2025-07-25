@@ -10,7 +10,7 @@ import {
 } from 'store/features/chat/useCurrentChatStore';
 
 // Mock the useMicrophone hook
-vi.mock('hooks/useMicrophone', () => ({
+vi.mock('hooks/features/Chat/useMicrophone', () => ({
   useMicrophone: vi.fn(() => ({
     transcribeAudio: vi.fn(),
     isSendingAudio: false,

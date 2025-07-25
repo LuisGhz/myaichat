@@ -4,10 +4,10 @@ import { Prompts } from "./Prompts";
 import { Prompt } from "types/prompts/GetAllPromptsRes.type";
 import { usePrompts } from "hooks/features/Prompts/usePrompts";
 
-vi.mock("hooks/usePrompts");
+vi.mock("hooks/features/Prompts/usePrompts");
 const mockUsePrompts = usePrompts as unknown as Mock;
 
-vi.mock("hooks/useContextMenu", () => ({
+vi.mock("hooks/components/useContextMenu", () => ({
   useContextMenu: () => ({
     onTouchStart: vi.fn((_, cb) => cb()),
     onTouchEnd: vi.fn(),

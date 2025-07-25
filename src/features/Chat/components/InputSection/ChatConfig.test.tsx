@@ -14,7 +14,7 @@ vi.mock("react-router", () => ({
   useParams: vi.fn(),
 }));
 
-vi.mock("hooks/useChats", () => ({
+vi.mock("hooks/features/Chat/useChats", () => ({
   useChats: vi.fn(),
 }));
 

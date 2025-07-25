@@ -6,7 +6,7 @@ import { useMarkDown } from "hooks/features/Chat/useMarkdown";
 import { Message } from "types/chat/Message.type";
 
 // Mock the useMarkDown hook
-vi.mock("hooks/useMarkdown", () => ({
+vi.mock("hooks/features/Chat/useMarkdown", () => ({
   useMarkDown: vi.fn(),
 }));
 
