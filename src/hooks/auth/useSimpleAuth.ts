@@ -4,6 +4,7 @@ interface User {
   id: string;
   email: string;
   name: string;
+  roleName: string;
   githubLogin?: string;
   avatarUrl?: string;
 }
