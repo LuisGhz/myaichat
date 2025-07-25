@@ -1,6 +1,6 @@
+import { ChangeEvent, Dispatch, SetStateAction, useEffect } from "react";
 import { MODELS } from "consts/Models";
 import { usePrompts } from "hooks/features/Prompts/usePrompts";
-import { ChangeEvent, Dispatch, SetStateAction, useEffect } from "react";
 import { ModelsValues } from "types/chat/ModelsValues.type";
 
 type Props = {
@@ -16,7 +16,7 @@ export const NewConversation = ({
   setModel,
   promptId,
   setPromptId,
-  setIsWelcomeLoaded
+  setIsWelcomeLoaded,
 }: Props) => {
   const { prompts, getPrompts } = usePrompts();
 
