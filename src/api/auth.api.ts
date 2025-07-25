@@ -28,6 +28,7 @@ export const createAuthenticatedApiClient = () => {
       ...options,
       headers: {
         ...authHeaders,
+        'Content-Type': 'application/json',
         ...(options?.headers as Record<string, string>),
       },
     });
@@ -69,6 +70,7 @@ export const createAuthenticatedApiClient = () => {
       ...options,
       headers: {
         ...authHeaders,
+        'Content-Type': 'application/json',
         ...(options?.headers as Record<string, string>),
       },
     });
