@@ -1,5 +1,5 @@
 import { MODELS } from "consts/Models";
-import { usePrompts } from "hooks/usePrompts";
+import { usePrompts } from "hooks/features/Prompts/usePrompts";
 import { ChangeEvent, Dispatch, SetStateAction, useEffect } from "react";
 import { ModelsValues } from "types/chat/ModelsValues.type";
 

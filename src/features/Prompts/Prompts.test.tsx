@@ -2,7 +2,7 @@ import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import { Mock, vi } from "vitest";
 import { Prompts } from "./Prompts";
 import { Prompt } from "types/prompts/GetAllPromptsRes.type";
-import { usePrompts } from "hooks/usePrompts";
+import { usePrompts } from "hooks/features/Prompts/usePrompts";
 
 vi.mock("hooks/usePrompts");
 const mockUsePrompts = usePrompts as unknown as Mock;

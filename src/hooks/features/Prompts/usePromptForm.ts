@@ -4,7 +4,7 @@ import {
   updatePromptService,
 } from "services/prompts.service";
 import { NewPromptReq } from "types/prompts/NewPromptReq.type";
-import { useToast } from "./useToast";
+import { useToast } from "../../useToast";
 import { UpdatePromptReq } from "types/prompts/UpdatePromptReq.type";
 
 export const usePromptForm = () => {

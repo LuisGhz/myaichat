@@ -11,7 +11,7 @@ import { PromptForm } from "../PromptSchema";
 import { useState } from "react";
 import { ConfirmDialog } from "components/Dialogs/ConfirmDialog";
 import { XMarkIcon } from "assets/icons/XMarkIcon";
-import { usePrompts } from "hooks/usePrompts";
+import { usePrompts } from "hooks/features/Prompts/usePrompts";
 import { PromptsURLParams } from "types/prompts/PromptsUrlParams.type";
 import { useParams } from "react-router";
 import { PlusIcon } from "assets/icons/PlusIcon";

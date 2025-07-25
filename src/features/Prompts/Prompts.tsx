@@ -1,7 +1,7 @@
 import { TrashIcon } from "assets/icons/TrashIcon";
 import { ContextMenu } from "components/ContextMenu";
 import { useContextMenu } from "hooks/useContextMenu";
-import { usePrompts } from "hooks/usePrompts";
+import { usePrompts } from "hooks/features/Prompts/usePrompts";
 import React, { useState, ReactNode, useRef, useEffect } from "react";
 import { Link } from "react-router";
 

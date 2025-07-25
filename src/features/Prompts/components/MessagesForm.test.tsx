@@ -8,7 +8,7 @@ import { PromptForm, promptSchema } from "../PromptSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { v4 } from "uuid";
 import { useParams } from "react-router";
-import { usePrompts } from "hooks/usePrompts";
+import { usePrompts } from "hooks/features/Prompts/usePrompts";
 
 // Mock necessary dependencies
 vi.mock("react-hook-form", async () => {

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useToast } from "./useToast";
+import { useToast } from "../../useToast";
 import {
   deletePromptMessageService,
   deletePromptService,

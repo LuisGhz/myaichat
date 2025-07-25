@@ -4,9 +4,9 @@ import { PromptForm, promptSchema } from "./PromptSchema";
 import { InputName } from "./components/InputName";
 import { InputContent } from "./components/InputContent";
 import { MessagesForm } from "./components/MessagesForm";
-import { usePromptForm } from "hooks/usePromptForm";
+import { usePromptForm } from "hooks/features/Prompts/usePromptForm";
 import { Link, useNavigate, useParams } from "react-router";
-import { usePrompts } from "hooks/usePrompts";
+import { usePrompts } from "hooks/features/Prompts/usePrompts";
 import { useEffect, useState } from "react";
 import { PromptsURLParams } from "types/prompts/PromptsUrlParams.type";
 

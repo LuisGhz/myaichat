@@ -2,7 +2,7 @@ import { renderHook, act } from "@testing-library/react";
 import { vi, describe, it, expect, beforeEach, Mock } from "vitest";
 import { usePrompts } from "./usePrompts";
 import * as promptsService from "services/prompts.service";
-import * as toastHook from "./useToast";
+import * as toastHook from "../../useToast";
 import { CustomPrompt } from "types/prompts/CustomPrompt.type";
 
 vi.mock("./useToast");
