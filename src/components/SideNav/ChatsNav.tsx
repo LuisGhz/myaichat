@@ -1,7 +1,7 @@
 import { ScreensWidth } from "consts/ScreensWidth";
 import { useEffect, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router";
-import { useContextMenu } from "hooks/useContextMenu";
+import { useContextMenu } from "hooks/components/useContextMenu";
 import { ContextMenu } from "components/ContextMenu";
 import { ChatSummary } from "types/chat/ChatSummary.type";
 import { useChats } from "hooks/features/Chat/useChats";
