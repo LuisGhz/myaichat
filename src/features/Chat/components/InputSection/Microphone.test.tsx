@@ -2,7 +2,7 @@
 import { render, fireEvent, act } from '@testing-library/react';
 import { vi } from 'vitest';
 import { Microphone } from './Microphone';
-import { useMicrophone } from 'hooks/useMicrophone';
+import { useMicrophone } from 'hooks/features/Chat/useMicrophone';
 import {
   useCurrentChatStoreGetIsRecordingAudio,
   useCurrentChatStoreSetIsRecordingAudio,

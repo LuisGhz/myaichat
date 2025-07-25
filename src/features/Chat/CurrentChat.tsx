@@ -1,4 +1,4 @@
-import { useChats } from "hooks/useChats";
+import { useChats } from "hooks/features/Chat/useChats";
 import { useEffect, useState, useRef } from "react";
 import { useNavigate, useParams } from "react-router";
 import { Message } from "types/chat/Message.type";

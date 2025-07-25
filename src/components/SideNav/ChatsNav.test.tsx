@@ -7,7 +7,7 @@ import { ChatSummary } from "types/chat/ChatSummary.type";
 import * as reactRouter from "react-router";
 import * as useContextMenu from "hooks/useContextMenu";
 import * as useAppStore from "store/useAppStore";
-import * as useChats from "hooks/useChats";
+import * as useChats from "hooks/features/Chat/useChats";
 import * as useChatsNavContextMenu from "hooks/components/useChatsNavContextMenu";
 import { AppStoreProps } from "types/store/AppStore";
 

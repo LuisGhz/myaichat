@@ -4,7 +4,7 @@ import { useNavigate, useParams } from "react-router";
 import { useContextMenu } from "hooks/useContextMenu";
 import { ContextMenu } from "components/ContextMenu";
 import { ChatSummary } from "types/chat/ChatSummary.type";
-import { useChats } from "hooks/useChats";
+import { useChats } from "hooks/features/Chat/useChats";
 import {
   useAppChatsStore,
   useAppIsMenuOpenStore,

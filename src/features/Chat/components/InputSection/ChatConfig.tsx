@@ -6,7 +6,7 @@ import {
   useCurrentChatStoreSetMaxOutputTokens,
 } from "store/features/chat/useCurrentChatStore";
 import { useParams } from "react-router";
-import { useChats } from "hooks/useChats";
+import { useChats } from "hooks/features/Chat/useChats";
 
 export const ChatConfig = () => {
   const [isOpen, setIsOpen] = useState(false);

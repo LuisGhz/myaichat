@@ -2,7 +2,7 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import { render, screen, waitFor, fireEvent } from "@testing-library/react";
 import { SingleMessage } from "./SingleMessage";
-import { useMarkDown } from "hooks/useMarkdown";
+import { useMarkDown } from "hooks/features/Chat/useMarkdown";
 import { Message } from "types/chat/Message.type";
 
 // Mock the useMarkDown hook

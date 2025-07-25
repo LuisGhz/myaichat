@@ -1,6 +1,6 @@
 import { transcribeAudioService } from "services/Microphone.service";
 import { useCurrentChatStoreSetIsSendingAudio } from "store/features/chat/useCurrentChatStore";
-import { useToast } from "./useToast";
+import { useToast } from "../../useToast";
 
 export const useMicrophone = () => {
   const setIsSendingAudio = useCurrentChatStoreSetIsSendingAudio();

@@ -1,4 +1,4 @@
-import { useMarkDown } from "hooks/useMarkdown";
+import { useMarkDown } from "hooks/features/Chat/useMarkdown";
 import { Message } from "types/chat/Message.type";
 import { useState } from "react";
 import { CheckIcon } from "assets/icons/CheckIcon";

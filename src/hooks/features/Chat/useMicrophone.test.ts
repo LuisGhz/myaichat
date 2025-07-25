@@ -2,7 +2,7 @@ import { renderHook, act } from '@testing-library/react';
 import { vi, describe, it, expect, beforeEach, afterEach } from 'vitest';
 import * as MicrophoneService from 'services/Microphone.service';
 import * as ChatStore from 'store/features/chat/useCurrentChatStore';
-import * as ToastHook from './useToast';
+import * as ToastHook from '../../useToast';
 import { useMicrophone } from './useMicrophone';
 
 describe('useMicrophone', () => {

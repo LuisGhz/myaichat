@@ -2,7 +2,7 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import { CurrentChat } from "./CurrentChat";
-import { useChats } from "hooks/useChats";
+import { useChats } from "hooks/features/Chat/useChats";
 import { useNavigate, useParams } from "react-router";
 import { useAppAddChatStore } from "store/useAppStore";
 

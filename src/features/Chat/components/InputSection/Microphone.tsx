@@ -1,7 +1,7 @@
 import { useRef, useEffect } from "react";
 import { Spin } from "antd";
 import { MicrophoneIcon } from "assets/icons/MicrophoneIcon";
-import { useMicrophone } from "hooks/useMicrophone";
+import { useMicrophone } from "hooks/features/Chat/useMicrophone";
 import {
   useCurrentChatStoreGetIsRecordingAudio,
   useCurrentChatStoreSetIsRecordingAudio,

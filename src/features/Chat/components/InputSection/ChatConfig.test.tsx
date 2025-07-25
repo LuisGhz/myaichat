@@ -3,7 +3,7 @@ import { describe, it, expect, vi, beforeEach } from "vitest";
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import { ChatConfig } from "./ChatConfig";
 import { useParams } from "react-router";
-import { useChats } from "hooks/useChats";
+import { useChats } from "hooks/features/Chat/useChats";
 import {
   useCurrentChatStoreGetMaxOutputTokens,
   useCurrentChatStoreSetMaxOutputTokens,
