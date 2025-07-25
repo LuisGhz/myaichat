@@ -19,7 +19,7 @@ vi.mock("assets/icons/StarSolidIcon", () => ({
 // Mock hooks
 const mockToggleChatFav = vi.fn();
 const mockUpdateChatFav = vi.fn();
-vi.mock("hooks/useChats", () => ({
+vi.mock("hooks/features/Chat/useChats", () => ({
   useChats: () => ({ toggleChatFav: mockToggleChatFav }),
 }));
 vi.mock("store/useAppStore", () => ({
