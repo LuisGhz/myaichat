@@ -2,7 +2,7 @@ import { Link } from "react-router";
 import { ArrowLeftCircleIcon } from "assets/icons/ArrowLeftCircleIcon";
 import { PencilSquareIcon } from "assets/icons/PencilSquareIcon";
 import { ScreensWidth } from "consts/ScreensWidth";
-import { SimpleUserProfile } from "features/Auth";
+import { SimpleUserProfile } from "features/Profile/SimpleUserProfile";
 import {
   useAppIsMenuOpenStore,
   useAppSetIsMenuOpenStore,
