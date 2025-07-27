@@ -22,10 +22,12 @@ interface CurrentChatState {
   setIsSendingAudio: (isSending: boolean) => void;
 }
 
+const defaultMaxTokens = 2000;
+
 export const useZustandCurrentChatStore = create<CurrentChatState>((set) => ({
   currentModelData: null,
-  defaultMaxOutputTokens: 2000,
-  maxOutputTokens: 2000,
+  defaultMaxOutputTokens: defaultMaxTokens,
+  maxOutputTokens: defaultMaxTokens,
   isWebSearchMode: false,
   isSendingMessage: false,
   isRecordingAudio: false,
