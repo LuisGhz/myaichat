@@ -39,14 +39,6 @@ export const ChatConfigModal = ({
     }
   }, [isThinkingMode]);
 
-  useEffect(() => {
-    if (isWebSearchMode) {
-      alert("No available yet.");
-      setIsWebSearchMode(false);
-    }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isWebSearchMode]);
-
   return (
     <Modal
       className="chat-configuration-modal"
