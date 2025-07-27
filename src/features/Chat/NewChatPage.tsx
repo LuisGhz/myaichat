@@ -7,12 +7,9 @@ import { NewConversation } from "./components/NewConversation";
 import { ModelsValues } from "types/chat/ModelsValues.type";
 import { useAppAddChatStore } from "store/useAppStore";
 import {
-  useCurrentChatStoreGetDefaultMaxOutputTokens,
   useCurrentChatStoreGetIsWebSearchMode,
   useCurrentChatStoreGetMaxOutputTokens,
-  useCurrentChatStoreSetCurrentModelData,
-  useCurrentChatStoreSetIsWebSearchMode,
-  useCurrentChatStoreSetMaxOutputTokens,
+  useCurrentChatStoreResetData,
 } from "store/features/chat/useCurrentChatStore";
 import { useChats } from "hooks/features/Chat/useChats";
 
@@ -20,33 +17,18 @@ export const NewChatPage = () => {
   const addChat = useAppAddChatStore();
   const [isLoading, setIsLoading] = useState(false);
   const [model, setModel] = useState<ModelsValues>("gemini-2.0-flash");
-  const [totalPromptTokens, setTotalPromptTokens] = useState(0);
-  const [totalCompletionTokens, setTotalCompletionTokens] = useState(0);
   const [promptId, setPromptId] = useState<string>("");
-  const setCurrentModelData = useCurrentChatStoreSetCurrentModelData();
-  const setMaxOutputTokens = useCurrentChatStoreSetMaxOutputTokens();
-  const defaultMaxOutputTokens = useCurrentChatStoreGetDefaultMaxOutputTokens();
   const maxOutputTokens = useCurrentChatStoreGetMaxOutputTokens();
   const isWebSearchMode = useCurrentChatStoreGetIsWebSearchMode();
-  const setIsWebSearchMode = useCurrentChatStoreSetIsWebSearchMode();
+  const resetChatData = useCurrentChatStoreResetData();
   const navigate = useNavigate();
   const { sendNewMessage, isSending } = useChats();
 
   useEffect(() => {
     // Reset state for new chat
-    setTotalPromptTokens(0);
-    setTotalCompletionTokens(0);
-    setMaxOutputTokens(defaultMaxOutputTokens);
-    setIsWebSearchMode(false);
-  }, [defaultMaxOutputTokens, setMaxOutputTokens, setIsWebSearchMode]);
-
-  useEffect(() => {
-    setCurrentModelData({
-      model,
-      totalPromptTokens,
-      totalCompletionTokens,
-    });
-  }, [model, totalPromptTokens, totalCompletionTokens, setCurrentModelData]);
+    resetChatData(model);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const sendMessage = async (newUserMessage: string, file?: File) => {
     const req: NewMessageReq = {
