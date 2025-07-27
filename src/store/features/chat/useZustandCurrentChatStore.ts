@@ -20,6 +20,7 @@ interface CurrentChatState {
   setIsSendingMessage: (isSending: boolean) => void;
   setIsRecordingAudio: (isRecording: boolean) => void;
   setIsSendingAudio: (isSending: boolean) => void;
+  resetChatData: (model: string) => void;
 }
 
 const defaultMaxTokens = 2000;
@@ -38,4 +39,17 @@ export const useZustandCurrentChatStore = create<CurrentChatState>((set) => ({
   setIsSendingMessage: (isSending) => set({ isSendingMessage: isSending }),
   setIsRecordingAudio: (isRecording) => set({ isRecordingAudio: isRecording }),
   setIsSendingAudio: (isSending) => set({ isSendingAudio: isSending }),
+  resetChatData: (model: string) =>
+    set({
+      currentModelData: {
+        model,
+        totalPromptTokens: 0,
+        totalCompletionTokens: 0,
+      },
+      maxOutputTokens: defaultMaxTokens,
+      isWebSearchMode: false,
+      isSendingMessage: false,
+      isRecordingAudio: false,
+      isSendingAudio: false,
+    }),
 }));

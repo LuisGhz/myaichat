@@ -25,3 +25,5 @@ export const useCurrentChatStoreSetIsRecordingAudio = () =>
   useZustandCurrentChatStore((state) => state.setIsRecordingAudio);
 export const useCurrentChatStoreSetIsSendingAudio = () =>
   useZustandCurrentChatStore((state) => state.setIsSendingAudio);
+export const useCurrentChatStoreResetData = () =>
+  useZustandCurrentChatStore((state) => state.resetChatData);
