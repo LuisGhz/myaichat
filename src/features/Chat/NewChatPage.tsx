@@ -33,7 +33,6 @@ export const NewChatPage = () => {
   const setIsWebSearchMode = useCurrentChatStoreSetIsWebSearchMode();
   const navigate = useNavigate();
   const { sendNewMessage, isSending } = useChats();
-  const isSendingFirstMessage = useRef(false);
 
   useEffect(() => {
     // Reset state for new chat
@@ -80,7 +79,6 @@ export const NewChatPage = () => {
       });
 
       if (res.chatId && res.chatTitle) {
-        isSendingFirstMessage.current = true;
         navigate(`/chat/${res.chatId}`, { replace: true });
         addChat({
           id: res.chatId,
