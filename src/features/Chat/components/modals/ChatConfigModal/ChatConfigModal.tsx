@@ -20,7 +20,6 @@ export const ChatConfigModal = ({
   onCancel,
 }: Props) => {
   const [maxTokens, setMaxTokens] = useState<number>(maxOutputTokens);
-  const [isThinkingMode, setisThinkingMode] = useState<boolean>(false);
   const { fNumber } = useFormat();
   const isWebSearchMode = useCurrentChatStoreGetIsWebSearchMode();
   const setIsWebSearchMode = useCurrentChatStoreSetIsWebSearchMode();
@@ -31,13 +30,6 @@ export const ChatConfigModal = ({
   useEffect(() => {
     setMaxTokens(maxOutputTokens);
   }, [maxOutputTokens]);
-
-  useEffect(() => {
-    if (isThinkingMode) {
-      alert("No available yet.");
-      setisThinkingMode(false);
-    }
-  }, [isThinkingMode]);
 
   return (
     <Modal
@@ -82,14 +74,6 @@ export const ChatConfigModal = ({
             {fNumber(maxTokensLimit)}.
           </div>
         </div>
-        <FeatureCheckbox
-          isActive={isThinkingMode}
-          onToggle={setisThinkingMode}
-          id="thinking-mode"
-          featureDescription="Enable this to allow the model to think before responding, which can improve response quality."
-          labelText="Thinking Mode"
-        />
-
         <FeatureCheckbox
           isActive={isWebSearchMode}
           onToggle={setIsWebSearchMode}
