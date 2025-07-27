@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 import { Message } from "types/chat/Message.type";
 import { InputSection } from "./components/InputSection/InputSection";
