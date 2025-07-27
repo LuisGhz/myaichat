@@ -1,5 +1,6 @@
 import App from "App";
 import { CurrentChat } from "features/Chat/CurrentChat";
+import { NewChatPage } from "features/Chat/NewChatPage";
 import { Prompts } from "features/Prompts/Prompts";
 import { PromptsForm } from "features/Prompts/PromptsForm";
 import { Welcome } from "features/Welcome/Welcome";
@@ -34,7 +35,7 @@ export const AppRouter = () => {
         >
           <Route index element={<Welcome />}></Route>
           <Route path="user" element={<UserProfile />}></Route>
-          <Route path="chat" element={<CurrentChatWithKey />}></Route>
+          <Route path="chat" element={<NewChatPage />}></Route>
           <Route path="chat/:id" element={<CurrentChatWithKey />}></Route>
           <Route path="prompts" element={<Prompts />}></Route>
           <Route path="prompts/form" element={<PromptsForm />}></Route>

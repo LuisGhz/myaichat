@@ -1,15 +1,12 @@
 import { useChats } from "hooks/features/Chat/useChats";
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router";
 import { Message } from "types/chat/Message.type";
 import { Messages } from "./components/Messages/Messages";
 import { InputSection } from "./components/InputSection/InputSection";
 import { NewMessageReq } from "types/chat/NewMessageReq.type";
-import { NewConversation } from "./components/NewConversation";
-import { ModelsValues } from "types/chat/ModelsValues.type";
 import { ChatMessagesRes } from "types/chat/ChatMessagesRes.type";
 import { ChatsLoading } from "./components/ChatsLoading";
-import { useAppAddChatStore } from "store/useAppStore";
 import {
   useCurrentChatStoreGetDefaultMaxOutputTokens,
   useCurrentChatStoreGetIsWebSearchMode,
@@ -21,16 +18,12 @@ import {
 import { ChatTitle } from "./components/ChatTitle";
 
 export const CurrentChat = () => {
-  const addChat = useAppAddChatStore();
   const [messages, setMessages] = useState<Message[]>([]);
-  const [model, setModel] = useState<ModelsValues>("gemini-2.0-flash");
   const [totalPromptTokens, setTotalPromptTokens] = useState(0);
   const [totalCompletionTokens, setTotalCompletionTokens] = useState(0);
-  const [promptId, setPromptId] = useState<string>("");
   const [currentModel, setCurrentModel] = useState("");
   const [isFirstLoaded, setIsFirstLoaded] = useState(false);
   const [page, setPage] = useState(0);
-  const [isWelcomeLoaded, setIsWelcomeLoaded] = useState(false);
   const [isUpdatingMessagesFromScroll, setIsUpdatingMessagesFromScroll] =
     useState(false);
   const setCurrentModelData = useCurrentChatStoreSetCurrentModelData();
@@ -48,11 +41,14 @@ export const CurrentChat = () => {
     isEmptyPage,
     isChatLoading,
   } = useChats();
-  const isSendingFirstMessage = useRef(false);
 
   useEffect(() => {
     (async () => {
-      if (!params.id || isSendingFirstMessage.current) return;
+      if (!params.id) {
+        // Redirect to new chat page if no ID
+        navigate("/chat");
+        return;
+      }
 
       const res = await getChatMessages(params.id);
       if (!res) {
@@ -116,15 +112,16 @@ export const CurrentChat = () => {
   };
 
   const sendMessage = async (newUserMessage: string, file?: File) => {
+    if (!params.id) return; // Should always have an ID for existing chats
+
     const req: NewMessageReq = {
       chatId: params.id,
       prompt: newUserMessage,
       file,
-      promptId,
+      promptId: "", // Not needed for existing chats
       maxOutputTokens,
       isWebSearchMode,
     };
-    req.model = params.id ? undefined : model;
 
     const res = await sendNewMessage(req);
     if (res) {
@@ -141,21 +138,6 @@ export const CurrentChat = () => {
           },
         ];
       });
-
-      if (!params.id && res.chatId && res.chatTitle) {
-        isSendingFirstMessage.current = true;
-        navigate(`/chat/${res.chatId}`, { replace: true });
-        setCurrentModel(model);
-        addChat({
-          id: res.chatId,
-          title: res.chatTitle,
-          fav: false,
-        });
-        // Add a small delay to ensure the state is not going to be reset on useEffect
-        setTimeout(() => {
-          isSendingFirstMessage.current = false;
-        }, 250);
-      }
     }
   };
 
@@ -182,22 +164,7 @@ export const CurrentChat = () => {
   return (
     <>
       <div className="flex flex-col h-full max-w-full md:max-w-11/12 xl:max-w-9/12 mx-auto lg:px-2">
-        {params.id && <ChatTitle />}
-        {messages.length === 0 && !isChatLoading && !params.id && (
-          <section className="grow flex items-center justify-center">
-            <NewConversation
-              model={model}
-              setModel={setModel}
-              promptId={promptId}
-              setPromptId={setPromptId}
-              setIsWelcomeLoaded={setIsWelcomeLoaded}
-            />
-          </section>
-        )}
-        {/* Add empty to keep view constancy while ChatsLoading is showing up */}
-        {messages.length === 0 && !isChatLoading && !isWelcomeLoaded && (
-          <div className="grow"></div>
-        )}
+        <ChatTitle />
         {isChatLoading && page === 0 && messages.length === 0 && (
           <ChatsLoading />
         )}
