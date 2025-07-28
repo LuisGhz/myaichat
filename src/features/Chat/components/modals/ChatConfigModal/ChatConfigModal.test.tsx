@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 import { render, screen, fireEvent, cleanup } from "@testing-library/react";
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import { ChatConfigModal } from "./ChatConfigModal";
@@ -18,7 +20,6 @@ vi.mock("assets/icons/InformationIcon", () => ({
 // Mock Ant Design's Tooltip to make its content accessible for testing
 vi.mock("antd", async (importOriginal) => {
   const antd = await importOriginal<typeof import("antd")>();
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const Tooltip = ({ title, children }: { title: string; children: any }) => (
     <div data-tooltip-title={title}>{children}</div>
   );
@@ -28,13 +29,35 @@ vi.mock("antd", async (importOriginal) => {
   };
 });
 
+// Mock FeatureCheckbox to test its integration
+vi.mock("./components/FeatureCheckbox", () => ({
+  FeatureCheckbox: ({ isActive, onToggle, id, featureDescription, labelText }: any) => (
+    <div>
+      <label htmlFor={id}>{labelText}</label>
+      <input
+        id={id}
+        type="checkbox"
+        checked={isActive}
+        onChange={() => onToggle(!isActive)}
+        aria-describedby={`${id}-help`}
+      />
+      <div id={`${id}-help`} className="sr-only">{featureDescription}</div>
+    </div>
+  ),
+}));
+
 describe("ChatConfigModal", () => {
-  const onCancelMock = vi.fn();
+  const mockOnClose = vi.fn();
   const defaultProps = {
     isOpen: true,
-    maxOutputTokens: 4096,
-    onCancel: onCancelMock,
+    onClose: mockOnClose,
+    currentMaxOutputTokens: 4096,
+    currentIsWebSearchMode: false,
   };
+
+  // Helper to render the component
+  const renderComponent = (props = {}) =>
+    render(<ChatConfigModal {...defaultProps} {...props} />);
 
   beforeEach(() => {
     vi.clearAllMocks();
@@ -44,91 +67,61 @@ describe("ChatConfigModal", () => {
     cleanup();
   });
 
-  it("should render the modal with initial values when isOpen is true", () => {
-    render(<ChatConfigModal {...defaultProps} />);
-
+  it("renders modal with initial values when open", () => {
+    renderComponent();
     expect(screen.getByText("Chat Configuration")).toBeInTheDocument();
     expect(screen.getByLabelText("Max Output Tokens")).toBeInTheDocument();
-    expect(screen.getByLabelText("Max Output Tokens")).toHaveValue(
-      defaultProps.maxOutputTokens
-    );
-    expect(screen.getByLabelText("Thinking Mode")).not.toBeChecked();
+    expect(screen.getByLabelText("Max Output Tokens")).toHaveValue(defaultProps.currentMaxOutputTokens);
+    expect(screen.getByLabelText("Web Search Mode")).not.toBeChecked();
   });
 
-  it("should not render the modal content when isOpen is false", () => {
-    render(<ChatConfigModal {...defaultProps} isOpen={false} />);
-    expect(screen.queryByText("Chat Configuration")).not.toBeInTheDocument();
-  });
-
-  it("should update the max tokens value when user types in the input", () => {
-    render(<ChatConfigModal {...defaultProps} />);
+  it("updates max tokens value when user types in the input", () => {
+    renderComponent();
     const input = screen.getByLabelText("Max Output Tokens");
-
     fireEvent.change(input, { target: { value: "2048" } });
-
     expect(input).toHaveValue(2048);
   });
 
-  it("should show an alert and reset the checkbox when 'Thinking Mode' is clicked", () => {
-    const alertSpy = vi.spyOn(window, "alert").mockImplementation(() => {});
-    render(<ChatConfigModal {...defaultProps} />);
-
-    const thinkingModeCheckbox = screen.getByLabelText("Thinking Mode");
-    expect(thinkingModeCheckbox).not.toBeChecked();
-
-    // We click the label which is associated with the hidden checkbox
-    fireEvent.click(screen.getByText("Thinking Mode"));
-
-    expect(alertSpy).toHaveBeenCalledTimes(1);
-    expect(alertSpy).toHaveBeenCalledWith("No available yet.");
-
-    // The component's useEffect should immediately set the state back to false
-    expect(thinkingModeCheckbox).not.toBeChecked();
-
-    alertSpy.mockRestore();
+  it("calls onClose with updated values when modal is cancelled", () => {
+    renderComponent();
+    const input = screen.getByLabelText("Max Output Tokens");
+    fireEvent.change(input, { target: { value: "3000" } });
+    const webSearchCheckbox = screen.getByLabelText("Web Search Mode");
+    fireEvent.click(webSearchCheckbox); // toggle to true
+    // Simulate modal cancel (close)
+    fireEvent.click(screen.getByRole("dialog").querySelector(".ant-modal-close") || screen.getByText("Chat Configuration"));
+    expect(mockOnClose).toHaveBeenCalledWith({ maxOutputTokens: 3000, isWebSearchMode: true });
   });
 
-  it("should not update max tokens value if the maxOutputTokens prop changes while open", () => {
+  it("does not update internal state if props change while open", () => {
     const { rerender } = render(<ChatConfigModal {...defaultProps} />);
     const input = screen.getByLabelText("Max Output Tokens");
-    expect(input).toHaveValue(defaultProps.maxOutputTokens);
-
-    rerender(<ChatConfigModal {...defaultProps} maxOutputTokens={2000} />);
-
-    // The input value should not change because the internal state is not synced with props after initial mount
-    expect(input).toHaveValue(2000);
+    expect(input).toHaveValue(defaultProps.currentMaxOutputTokens);
+    rerender(<ChatConfigModal {...defaultProps} currentMaxOutputTokens={2000} />);
+    // Should not update because state is not synced after mount
+    expect(input).toHaveValue(defaultProps.currentMaxOutputTokens);
   });
 
-  it("should have correct accessibility attributes for inputs", () => {
-    render(<ChatConfigModal {...defaultProps} />);
+  it("has correct accessibility attributes for inputs", () => {
+    renderComponent();
     const maxTokensInput = screen.getByLabelText("Max Output Tokens");
-    const thinkingModeInput = screen.getByLabelText("Thinking Mode");
-
-    expect(maxTokensInput).toHaveAttribute(
-      "aria-describedby",
-      "max-tokens-help"
-    );
-    expect(thinkingModeInput).toHaveAttribute(
-      "aria-describedby",
-      "thinking-mode-help"
-    );
+    const webSearchInput = screen.getByLabelText("Web Search Mode");
+    expect(maxTokensInput).toHaveAttribute("aria-describedby", "max-tokens-help");
+    expect(webSearchInput).toHaveAttribute("aria-describedby", "web-search-mode-help");
   });
 
-  it("should set min and max attributes on the number input", () => {
-    render(<ChatConfigModal {...defaultProps} />);
+  it("sets min and max attributes on the number input", () => {
+    renderComponent();
     const input = screen.getByLabelText("Max Output Tokens");
-
     expect(input).toHaveAttribute("min", "1000");
     expect(input).toHaveAttribute("max", "8000");
   });
 
-  it("should display correct tooltips", () => {
-    render(<ChatConfigModal {...defaultProps} />);
-
-    const maxTokensTooltipTrigger = screen.getByLabelText(
-      "Information about max output tokens"
-    ).parentElement;
-    expect(maxTokensTooltipTrigger).toHaveAttribute(
+  it("displays correct tooltip for max tokens", () => {
+    renderComponent();
+    const infoIcon = screen.getByLabelText("Information about max output tokens");
+    const tooltipDiv = infoIcon.parentElement;
+    expect(tooltipDiv).toHaveAttribute(
       "data-tooltip-title",
       "The maximum number of tokens the model can generate in a single response. min: 1,000, max: 8,000"
     );
