@@ -6,14 +6,12 @@ import { ChatConfigOnClose } from "types/chat/ChatConfigOnClose.type";
 import { useState } from "react";
 
 type Props = {
-  isOpen: boolean;
   onClose: (newConfig: ChatConfigOnClose) => void;
   currentMaxOutputTokens: number;
   currentIsWebSearchMode: boolean;
 };
 
 export const ChatConfigModal = ({
-  isOpen,
   onClose,
   currentMaxOutputTokens,
   currentIsWebSearchMode,
@@ -32,7 +30,7 @@ export const ChatConfigModal = ({
   return (
     <Modal
       className="chat-configuration-modal"
-      open={isOpen}
+      open
       title="Chat Configuration"
       footer={null}
       width={modalWidth}
