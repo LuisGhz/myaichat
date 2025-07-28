@@ -52,25 +52,24 @@ export const ChatConfig = () => {
   };
 
   return (
-    <button
-      className="flex items-center gap-2 relative p-2 hover:bg-cop-6 rounded-full transition-colors duration-150"
-      type="button"
-      aria-label="Chat configuration"
-    >
-      {isOpen && (
-        <ChatConfigModal
-          isOpen={isOpen}
-          onClose={onClose}
-          currentMaxOutputTokens={maxOutputTokens}
-          currentIsWebSearchMode={isWebSearchMode}
-        />
-      )}
-      <CogSixToothIcon
-        className={`text-white size-5 cursor-pointer transition-transform duration-300  ${
-          isOpen ? "rotate-180" : ""
-        }`}
+    <>
+      {isOpen && (<ChatConfigModal
+        onClose={onClose}
+        currentMaxOutputTokens={maxOutputTokens}
+        currentIsWebSearchMode={isWebSearchMode}
+      />)}
+      <button
+        className="flex items-center gap-2 relative p-2 hover:bg-cop-6 rounded-full transition-colors duration-150"
+        type="button"
+        aria-label="Chat configuration"
         onClick={() => setIsOpen(true)}
-      />
-    </button>
+      >
+        <CogSixToothIcon
+          className={`text-white size-5 cursor-pointer transition-transform duration-300  ${
+            isOpen ? "rotate-180" : ""
+          }`}
+        />
+      </button>
+    </>
   );
 };
