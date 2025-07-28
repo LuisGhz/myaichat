@@ -2,32 +2,53 @@ import { CogSixToothIcon } from "assets/icons/CogSixToothIcon";
 import { ChatConfigModal } from "../modals/ChatConfigModal/ChatConfigModal";
 import { useState } from "react";
 import {
+  useCurrentChatStoreGetIsWebSearchMode,
   useCurrentChatStoreGetMaxOutputTokens,
-  useCurrentChatStoreSetMaxOutputTokens,
 } from "store/features/chat/useCurrentChatStore";
 import { useParams } from "react-router";
 import { useChats } from "hooks/features/Chat/useChats";
+import { ChatConfigOnClose } from "types/chat/ChatConfigOnClose.type";
 
 export const ChatConfig = () => {
   const [isOpen, setIsOpen] = useState(false);
   const params = useParams<{ id?: string }>();
   const maxOutputTokens = useCurrentChatStoreGetMaxOutputTokens();
-  const setMaxOutputTokens = useCurrentChatStoreSetMaxOutputTokens();
-  const { changeMaxOutputTokens } = useChats();
+  const isWebSearchMode = useCurrentChatStoreGetIsWebSearchMode();
+  const { changeMaxOutputTokens, changeIsWebSearchMode } = useChats();
 
-  const onCancel = async (newMaxOutputTokens: number) => {
+  const onClose = async (newConfig: ChatConfigOnClose) => {
     setIsOpen(false);
-    if (newMaxOutputTokens === maxOutputTokens) return;
+    await updateMaxOutputTokens(newConfig.maxOutputTokens);
+    await updateIsWebSearchMode(newConfig.isWebSearchMode);
+  };
+
+  const updateMaxOutputTokens = async (newMaxOutputTokens: number) => {
     if (params.id) {
       try {
-        await changeMaxOutputTokens(params.id, newMaxOutputTokens);
-        setMaxOutputTokens(newMaxOutputTokens);
+        await changeMaxOutputTokens(
+          params.id,
+          maxOutputTokens,
+          newMaxOutputTokens
+        );
       } catch {
         console.error("Failed to change max output tokens.");
       }
       return;
     }
-    setMaxOutputTokens(newMaxOutputTokens);
+  };
+
+  const updateIsWebSearchMode = async (newIsWebSearchMode: boolean) => {
+    if (params.id) {
+      try {
+        await changeIsWebSearchMode(
+          params.id,
+          isWebSearchMode,
+          newIsWebSearchMode
+        );
+      } catch {
+        console.error("Failed to change web search mode.");
+      }
+    }
   };
 
   return (
@@ -36,11 +57,14 @@ export const ChatConfig = () => {
       type="button"
       aria-label="Chat configuration"
     >
-      <ChatConfigModal
-        isOpen={isOpen}
-        maxOutputTokens={maxOutputTokens}
-        onCancel={onCancel}
-      />
+      {isOpen && (
+        <ChatConfigModal
+          isOpen={isOpen}
+          onClose={onClose}
+          currentMaxOutputTokens={maxOutputTokens}
+          currentIsWebSearchMode={isWebSearchMode}
+        />
+      )}
       <CogSixToothIcon
         className={`text-white size-5 cursor-pointer transition-transform duration-300  ${
           isOpen ? "rotate-180" : ""
