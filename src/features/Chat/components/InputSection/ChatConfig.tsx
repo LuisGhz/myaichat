@@ -4,6 +4,8 @@ import { useState } from "react";
 import {
   useCurrentChatStoreGetIsWebSearchMode,
   useCurrentChatStoreGetMaxOutputTokens,
+  useCurrentChatStoreSetIsWebSearchMode,
+  useCurrentChatStoreSetMaxOutputTokens,
 } from "store/features/chat/useCurrentChatStore";
 import { useParams } from "react-router";
 import { useChats } from "hooks/features/Chat/useChats";
@@ -13,7 +15,9 @@ export const ChatConfig = () => {
   const [isOpen, setIsOpen] = useState(false);
   const params = useParams<{ id?: string }>();
   const maxOutputTokens = useCurrentChatStoreGetMaxOutputTokens();
+  const setMaxoutputTokens = useCurrentChatStoreSetMaxOutputTokens();
   const isWebSearchMode = useCurrentChatStoreGetIsWebSearchMode();
+  const setIsWebSearchMode = useCurrentChatStoreSetIsWebSearchMode();
   const { changeMaxOutputTokens, changeIsWebSearchMode } = useChats();
 
   const onClose = async (newConfig: ChatConfigOnClose) => {
@@ -30,11 +34,13 @@ export const ChatConfig = () => {
           maxOutputTokens,
           newMaxOutputTokens
         );
+        setMaxoutputTokens(newMaxOutputTokens);
       } catch {
         console.error("Failed to change max output tokens.");
       }
       return;
     }
+    setMaxoutputTokens(newMaxOutputTokens);
   };
 
   const updateIsWebSearchMode = async (newIsWebSearchMode: boolean) => {
@@ -45,19 +51,23 @@ export const ChatConfig = () => {
           isWebSearchMode,
           newIsWebSearchMode
         );
+        setIsWebSearchMode(newIsWebSearchMode);
       } catch {
         console.error("Failed to change web search mode.");
       }
     }
+    setIsWebSearchMode(newIsWebSearchMode);
   };
 
   return (
     <>
-      {isOpen && (<ChatConfigModal
-        onClose={onClose}
-        currentMaxOutputTokens={maxOutputTokens}
-        currentIsWebSearchMode={isWebSearchMode}
-      />)}
+      {isOpen && (
+        <ChatConfigModal
+          onClose={onClose}
+          currentMaxOutputTokens={maxOutputTokens}
+          currentIsWebSearchMode={isWebSearchMode}
+        />
+      )}
       <button
         className="flex items-center gap-2 relative p-2 hover:bg-cop-6 rounded-full transition-colors duration-150"
         type="button"
