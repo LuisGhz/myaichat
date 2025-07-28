@@ -69,13 +69,13 @@ export const ChatConfig = () => {
         />
       )}
       <button
-        className="flex items-center gap-2 relative p-2 hover:bg-cop-6 rounded-full transition-colors duration-150"
+        className="flex items-center gap-2 relative p-2 hover:bg-cop-6 rounded-full transition-colors duration-150 cursor-pointer"
         type="button"
         aria-label="Chat configuration"
         onClick={() => setIsOpen(true)}
       >
         <CogSixToothIcon
-          className={`text-white size-5 cursor-pointer transition-transform duration-300  ${
+          className={`text-white size-5 transition-transform duration-300  ${
             isOpen ? "rotate-180" : ""
           }`}
         />
