@@ -6,7 +6,6 @@ import { Messages } from "./components/Messages/Messages";
 import { InputSection } from "./components/InputSection/InputSection";
 import { NewMessageReq } from "types/chat/NewMessageReq.type";
 import { ChatMessagesRes } from "types/chat/ChatMessagesRes.type";
-import { ChatsLoading } from "./components/ChatsLoading";
 import {
   useCurrentChatStoreGetDefaultMaxOutputTokens,
   useCurrentChatStoreGetIsWebSearchMode,
@@ -166,7 +165,7 @@ export const CurrentChat = () => {
       <div className="flex flex-col h-full max-w-full md:max-w-11/12 xl:max-w-9/12 mx-auto lg:px-2">
         <ChatTitle />
         {isChatLoading && page === 0 && messages.length === 0 && (
-          <ChatsLoading />
+          <section className="messages-container flex justify-center items-center overflow-y-auto hide-scrollbar grow mt-0.5 px-1 md:px-5" />
         )}
         {messages.length > 0 && (
           <section
