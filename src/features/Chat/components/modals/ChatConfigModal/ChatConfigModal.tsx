@@ -1,35 +1,33 @@
 import { Modal, Input, Tooltip } from "antd";
 import { InformationIcon } from "assets/icons/InformationIcon";
 import { useFormat } from "hooks/useFormat";
-import { useEffect, useState } from "react";
 import { FeatureCheckbox } from "./components/FeatureCheckbox";
-import {
-  useCurrentChatStoreGetIsWebSearchMode,
-  useCurrentChatStoreSetIsWebSearchMode,
-} from "store/features/chat/useCurrentChatStore";
+import { ChatConfigOnClose } from "types/chat/ChatConfigOnClose.type";
+import { useState } from "react";
 
 type Props = {
   isOpen: boolean;
-  maxOutputTokens: number;
-  onCancel: (newMaxOutputTokens: number) => void;
+  onClose: (newConfig: ChatConfigOnClose) => void;
+  currentMaxOutputTokens: number;
+  currentIsWebSearchMode: boolean;
 };
 
 export const ChatConfigModal = ({
   isOpen,
-  maxOutputTokens,
-  onCancel,
+  onClose,
+  currentMaxOutputTokens,
+  currentIsWebSearchMode,
 }: Props) => {
-  const [maxTokens, setMaxTokens] = useState<number>(maxOutputTokens);
+  const [maxOutputTokens, setMaxOutputTokens] = useState(
+    currentMaxOutputTokens
+  );
+  const [isWebSearchMode, setIsWebSearchMode] = useState(
+    currentIsWebSearchMode
+  );
   const { fNumber } = useFormat();
-  const isWebSearchMode = useCurrentChatStoreGetIsWebSearchMode();
-  const setIsWebSearchMode = useCurrentChatStoreSetIsWebSearchMode();
   const modalWidth = 360;
   const minTokens = 1000;
   const maxTokensLimit = 8000;
-
-  useEffect(() => {
-    setMaxTokens(maxOutputTokens);
-  }, [maxOutputTokens]);
 
   return (
     <Modal
@@ -39,7 +37,12 @@ export const ChatConfigModal = ({
       footer={null}
       width={modalWidth}
       centered
-      onCancel={() => onCancel(maxTokens)}
+      onCancel={() =>
+        onClose({
+          maxOutputTokens,
+          isWebSearchMode,
+        })
+      }
     >
       <div className="p-4">
         <div>
@@ -64,8 +67,8 @@ export const ChatConfigModal = ({
             type="number"
             min={minTokens}
             max={maxTokensLimit}
-            value={maxTokens}
-            onChange={(e) => setMaxTokens(Number(e.target.value))}
+            value={maxOutputTokens}
+            onChange={(e) => setMaxOutputTokens(Number(e.target.value))}
             aria-describedby="max-tokens-help"
           />
           <div id="max-tokens-help" className="sr-only">
