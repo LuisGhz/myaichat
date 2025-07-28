@@ -8,6 +8,7 @@ import {
   renameChatTitleService,
   changeMaxOutputTokensService,
   toggleChatFavService,
+  changeIsWebSearchModeService,
 } from "services/chat.service";
 import { NewMessageReq } from "types/chat/NewMessageReq.type";
 import {
@@ -88,11 +89,29 @@ export const useChats = () => {
     }
   };
 
-  const changeMaxOutputTokens = async (id: string, maxOutputTokens: number) => {
+  const changeMaxOutputTokens = async (
+    id: string,
+    maxOutputTokens: number,
+    newMaxOutputTokens: number
+  ) => {
     try {
-      await changeMaxOutputTokensService(id, maxOutputTokens);
+      if (newMaxOutputTokens === maxOutputTokens) return;
+      await changeMaxOutputTokensService(id, newMaxOutputTokens);
     } catch {
       toastError("Error changing max output tokens, please try again later.");
+    }
+  };
+
+  const changeIsWebSearchMode = async (
+    id: string,
+    isWebSearchMode: boolean,
+    newIsWebSearchMode: boolean
+  ) => {
+    try {
+      if (newIsWebSearchMode === isWebSearchMode) return;
+      await changeIsWebSearchModeService(id, newIsWebSearchMode);
+    } catch {
+      toastError("Error changing web search mode, please try again later.");
     }
   };
 
@@ -113,6 +132,7 @@ export const useChats = () => {
     deleteChat,
     renameChatTitle,
     changeMaxOutputTokens,
+    changeIsWebSearchMode,
     toggleChatFav,
     isSending,
     isEmptyPage,
