@@ -8,6 +8,8 @@ import { useChats } from "hooks/features/Chat/useChats";
 import {
   useCurrentChatStoreGetMaxOutputTokens,
   useCurrentChatStoreGetIsWebSearchMode,
+  useCurrentChatStoreSetMaxOutputTokens,
+  useCurrentChatStoreSetIsWebSearchMode,
 } from "store/features/chat/useCurrentChatStore";
 
 // Mocks
@@ -16,6 +18,8 @@ vi.mock("hooks/features/Chat/useChats", () => ({ useChats: vi.fn() }));
 vi.mock("store/features/chat/useCurrentChatStore", () => ({
   useCurrentChatStoreGetMaxOutputTokens: vi.fn(),
   useCurrentChatStoreGetIsWebSearchMode: vi.fn(),
+  useCurrentChatStoreSetMaxOutputTokens: vi.fn(),
+  useCurrentChatStoreSetIsWebSearchMode: vi.fn(),
 }));
 vi.mock("assets/icons/CogSixToothIcon", () => ({
   CogSixToothIcon: ({ className, onClick }: { className?: string; onClick?: () => void }) => (
@@ -43,18 +47,26 @@ vi.mock("../modals/ChatConfigModal/ChatConfigModal", () => ({
 describe("ChatConfig", () => {
   let mockChangeMaxOutputTokens: ReturnType<typeof vi.fn>;
   let mockChangeIsWebSearchMode: ReturnType<typeof vi.fn>;
+  let mockSetMaxOutputTokens: ReturnType<typeof vi.fn>;
+  let mockSetIsWebSearchMode: ReturnType<typeof vi.fn>;
   let mockUseParams: ReturnType<typeof vi.mocked<typeof useParams>>;
   let mockUseChats: ReturnType<typeof vi.mocked<typeof useChats>>;
   let mockUseCurrentChatStoreGetMaxOutputTokens: ReturnType<typeof vi.mocked<typeof useCurrentChatStoreGetMaxOutputTokens>>;
   let mockUseCurrentChatStoreGetIsWebSearchMode: ReturnType<typeof vi.mocked<typeof useCurrentChatStoreGetIsWebSearchMode>>;
+  let mockUseCurrentChatStoreSetMaxOutputTokens: ReturnType<typeof vi.mocked<typeof useCurrentChatStoreSetMaxOutputTokens>>;
+  let mockUseCurrentChatStoreSetIsWebSearchMode: ReturnType<typeof vi.mocked<typeof useCurrentChatStoreSetIsWebSearchMode>>;
 
   beforeEach(() => {
     mockChangeMaxOutputTokens = vi.fn();
     mockChangeIsWebSearchMode = vi.fn();
+    mockSetMaxOutputTokens = vi.fn();
+    mockSetIsWebSearchMode = vi.fn();
     mockUseParams = vi.mocked(useParams);
     mockUseChats = vi.mocked(useChats);
     mockUseCurrentChatStoreGetMaxOutputTokens = vi.mocked(useCurrentChatStoreGetMaxOutputTokens);
     mockUseCurrentChatStoreGetIsWebSearchMode = vi.mocked(useCurrentChatStoreGetIsWebSearchMode);
+    mockUseCurrentChatStoreSetMaxOutputTokens = vi.mocked(useCurrentChatStoreSetMaxOutputTokens);
+    mockUseCurrentChatStoreSetIsWebSearchMode = vi.mocked(useCurrentChatStoreSetIsWebSearchMode);
 
     vi.clearAllMocks();
     mockUseParams.mockReturnValue({});
@@ -74,6 +86,8 @@ describe("ChatConfig", () => {
     });
     mockUseCurrentChatStoreGetMaxOutputTokens.mockReturnValue(1000);
     mockUseCurrentChatStoreGetIsWebSearchMode.mockReturnValue(true);
+    mockUseCurrentChatStoreSetMaxOutputTokens.mockReturnValue(mockSetMaxOutputTokens);
+    mockUseCurrentChatStoreSetIsWebSearchMode.mockReturnValue(mockSetIsWebSearchMode);
   });
 
   afterEach(() => {
@@ -114,6 +128,8 @@ describe("ChatConfig", () => {
     });
     expect(mockChangeMaxOutputTokens).not.toHaveBeenCalled();
     expect(mockChangeIsWebSearchMode).not.toHaveBeenCalled();
+    expect(mockSetMaxOutputTokens).toHaveBeenCalledWith(2000);
+    expect(mockSetIsWebSearchMode).toHaveBeenCalledWith(false);
   });
 
   it("updates config for existing chat (with id)", async () => {
@@ -127,6 +143,8 @@ describe("ChatConfig", () => {
     await waitFor(() => {
       expect(mockChangeMaxOutputTokens).toHaveBeenCalledWith("chat-123", 1000, 2000);
       expect(mockChangeIsWebSearchMode).toHaveBeenCalledWith("chat-123", true, false);
+      expect(mockSetMaxOutputTokens).toHaveBeenCalledWith(2000);
+      expect(mockSetIsWebSearchMode).toHaveBeenCalledWith(false);
       expect(screen.queryByTestId("chat-config-modal")).not.toBeInTheDocument();
     });
   });
@@ -157,6 +175,8 @@ describe("ChatConfig", () => {
     });
     expect(mockChangeMaxOutputTokens).not.toHaveBeenCalled();
     expect(mockChangeIsWebSearchMode).not.toHaveBeenCalled();
+    expect(mockSetMaxOutputTokens).toHaveBeenCalledWith(1000);
+    expect(mockSetIsWebSearchMode).toHaveBeenCalledWith(true);
   });
 
   it("is keyboard accessible (open/close modal)", async () => {
