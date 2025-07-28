@@ -25,16 +25,33 @@ export const deleteChatService = async (id: string) => {
 };
 
 export const renameChatTitleService = async (id: string, newTitle: string) => {
-  return await authenticatedApiClient.patch(`/chat/${id}/rename`, { title: newTitle });
+  return await authenticatedApiClient.patch(`/chat/${id}/rename`, {
+    title: newTitle,
+  });
 };
 
 export const changeMaxOutputTokensService = async (
   id: string,
   maxOutputTokens: number
 ) => {
-  return await authenticatedApiClient.patch(`/chat/${id}/change-max-output-tokens`, {
-    maxOutputTokens,
-  });
+  return await authenticatedApiClient.patch(
+    `/chat/${id}/change-max-output-tokens`,
+    {
+      maxOutputTokens,
+    }
+  );
+};
+
+export const changeIsWebSearchModeService = async (
+  id: string,
+  isWebSearchMode: boolean
+) => {
+  return await authenticatedApiClient.patch(
+    `/chat/${id}/change-web-search-mode`,
+    {
+      isWebSearchMode,
+    }
+  );
 };
 
 export const toggleChatFavService = async (id: string) => {
