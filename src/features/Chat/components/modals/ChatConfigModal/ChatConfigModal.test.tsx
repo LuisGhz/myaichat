@@ -49,7 +49,6 @@ vi.mock("./components/FeatureCheckbox", () => ({
 describe("ChatConfigModal", () => {
   const mockOnClose = vi.fn();
   const defaultProps = {
-    isOpen: true,
     onClose: mockOnClose,
     currentMaxOutputTokens: 4096,
     currentIsWebSearchMode: false,
