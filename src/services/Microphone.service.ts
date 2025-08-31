@@ -1,4 +1,4 @@
-import { apiClient } from "api";
+import { authenticatedApiClient } from "api/auth.api";
 import { TranscribedRes } from "types/microphone/TranscribedRes.type";
 
 export const transcribeAudioService = async (audioBlob: Blob) => {
@@ -8,7 +8,7 @@ export const transcribeAudioService = async (audioBlob: Blob) => {
   });
   formData.append("audio", audioFile);
 
-  const response = await apiClient.postFormData<TranscribedRes, RequestInit>(
+  const response = await authenticatedApiClient.postFormData<TranscribedRes>(
     "/audio/transcribe",
     formData
   );
