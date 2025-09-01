@@ -3,6 +3,7 @@ import { Message } from "types/chat/Message.type";
 import { useState } from "react";
 import { CheckIcon } from "assets/icons/CheckIcon";
 import { DocumentDuplicateIcon } from "assets/icons/DocumentDuplicateIcon";
+import { SpeakerWaveIcon } from "assets/icons/SpeakerWaveIcon";
 
 type Props = {
   message: Message;
@@ -29,6 +30,13 @@ export const SingleMessage = ({ message, idx, messagesEndRef, arr }: Props) => {
     }
   };
 
+  const handleSpeakerWaveClick = () => {
+    const utterance = new SpeechSynthesisUtterance(message.content);
+    utterance.rate = 1.5;
+    utterance.pitch = 1.5;
+    window.speechSynthesis.speak(utterance);
+  };
+
   return (
     <article
       className={`markdown-content text-white mb-12 w-max max-w-[20rem] md:max-w-[27rem] lg:max-w-[40rem] xl:max-w-[44rem] break-words px-3 py-1 relative group ${
@@ -47,6 +55,16 @@ export const SingleMessage = ({ message, idx, messagesEndRef, arr }: Props) => {
           Tokens: {message.completionTokens}
         </span>
       )}
+      <button
+        onClick={handleSpeakerWaveClick}
+        className={`absolute -bottom-8 ${
+          message.role === "User" ? "right-13" : "left-13"
+        } bg-transparent hover:bg-cop-5 text-cop-7 border border-cop-5 transition-colors duration-200 text-xs px-2 py-1 rounded cursor-pointer`}
+        aria-label="Copy message to clipboard"
+        title="Copy message to clipboard"
+      >
+        <SpeakerWaveIcon className="size-4" />
+      </button>
       <button
         onClick={handleCopyToClipboard}
         className={`absolute -bottom-8 ${
