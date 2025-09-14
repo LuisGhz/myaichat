@@ -1,6 +1,7 @@
 import { Layout, Grid } from "antd";
 import { useEffect, useState, useCallback } from "react";
 import { useAppStore, useAppStoreActions } from "store/app/AppStore";
+import { SideNavHeader } from "./SideNavHeader";
 
 const { Sider } = Layout;
 
@@ -42,10 +43,6 @@ export const SideNav = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isMobile]);
 
-  const toggle = () => {
-    setSideNavCollapsed(!sideNavCollapsed);
-  };
-
   return (
     <>
       <Sider
@@ -57,16 +54,7 @@ export const SideNav = () => {
         trigger={null}
         aria-hidden={sideNavCollapsed}
       >
-        <div className="flex justify-end">
-          <button
-            className="m-2 p-1 border rounded"
-            onClick={toggle}
-            aria-expanded={!sideNavCollapsed}
-            aria-label="Toggle side navigation"
-          >
-            Toggle
-          </button>
-        </div>
+        <SideNavHeader />
         <p className="dark:text-white">SideNav</p>
       </Sider>
     </>
