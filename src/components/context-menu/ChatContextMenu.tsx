@@ -34,7 +34,11 @@ export const ChatContextMenu = ({
       if (menuRef.current && menuRef.current.contains(target)) {
         return;
       }
-      if (parentRef && parentRef.current && parentRef.current.contains(target)) {
+      if (
+        parentRef &&
+        parentRef.current &&
+        parentRef.current.contains(target)
+      ) {
         return;
       }
 
@@ -72,11 +76,23 @@ export const ChatContextMenu = ({
       }}
       ref={menuRef}
     >
-      <li className="px-4 py-1.5 hover:bg-gray-300 dark:hover:bg-gray-800 transition-colors duration-200 cursor-pointer flex justify-between items-center">
+      <li
+        className="px-4 py-1.5 hover:bg-gray-300 dark:hover:bg-gray-800 transition-colors duration-200 cursor-pointer flex justify-between items-center"
+        onClick={() => {
+          alert("Delete action triggered");
+          setIsContextMenuOpen(false);
+        }}
+      >
         <span>Delete</span>
         <TrashOutlineIcon className="inline-block w-4 h-4 ms-2" />
       </li>
-      <li className="px-4 py-1.5 hover:bg-gray-300 dark:hover:bg-gray-800 transition-colors duration-200 cursor-pointer flex justify-between items-center">
+      <li
+        className="px-4 py-1.5 hover:bg-gray-300 dark:hover:bg-gray-800 transition-colors duration-200 cursor-pointer flex justify-between items-center"
+        onClick={() => {
+          alert("Rename action triggered");
+          setIsContextMenuOpen(false);
+        }}
+      >
         <span>Rename</span>
         <Pencil className="inline-block w-4 h-4 ms-2" />
       </li>
