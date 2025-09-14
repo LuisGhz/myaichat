@@ -24,10 +24,8 @@
     "paths": {
       "*": ["./src/*"]
     },
-        "types": [
-      "vitest/globals",
-      "@testing-library/jest-dom",
-    ]
+    "types": ["vitest/globals", "@testing-library/jest-dom"],
+    "typeRoots": ["./src/types"]
   },
   "include": ["src"]
 }
