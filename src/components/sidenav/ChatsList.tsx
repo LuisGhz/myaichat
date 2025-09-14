@@ -30,7 +30,7 @@ export const ChatsList = () => {
   }, [chats]);
 
   return (
-    <div className="mt-2">
+    <div className="mt-3">
       {groupedChats && (
         <ul>
           <>
