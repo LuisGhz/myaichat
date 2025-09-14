@@ -15,6 +15,6 @@ html {
   height: 100dvh;
 }
 
-body {
+body, #root {
   min-height: 100dvh;
 }
