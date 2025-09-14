@@ -2,6 +2,7 @@ import { Layout, Grid } from "antd";
 import { useEffect, useState, useCallback } from "react";
 import { useAppStore, useAppStoreActions } from "store/app/AppStore";
 import { SideNavHeader } from "./SideNavHeader";
+import { SideNavActionButtons } from "./SideNavActionButtons";
 
 const { Sider } = Layout;
 
@@ -55,6 +56,7 @@ export const SideNav = () => {
         aria-hidden={sideNavCollapsed}
       >
         <SideNavHeader />
+        <SideNavActionButtons />
         <p className="dark:text-white">SideNav</p>
       </Sider>
     </>
