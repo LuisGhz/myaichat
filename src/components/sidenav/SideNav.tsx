@@ -3,6 +3,7 @@ import { useEffect, useState, useCallback } from "react";
 import { useAppStore, useAppStoreActions } from "store/app/AppStore";
 import { SideNavHeader } from "./SideNavHeader";
 import { SideNavActionButtons } from "./SideNavActionButtons";
+import { ChatsList } from "./ChatsList";
 
 const { Sider } = Layout;
 
@@ -59,7 +60,7 @@ export const SideNav = () => {
       >
         <SideNavHeader />
         <SideNavActionButtons />
-        <p className="dark:text-white">SideNav</p>
+        <ChatsList />
       </Sider>
     </>
   );
