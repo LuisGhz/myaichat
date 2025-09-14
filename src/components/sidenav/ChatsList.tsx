@@ -1,7 +1,10 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Divider } from "antd";
 import { ChatItem } from "./ChatItem";
-import { ChatContextMenu } from "components/context-menu/ChatContextMenu";
+import {
+  ChatContextMenu,
+  ContextMetadata,
+} from "components/context-menu/ChatContextMenu";
 
 export type Chat = {
   id: string;
@@ -11,6 +14,12 @@ export type Chat = {
 
 export const ChatsList = () => {
   const [isContextMenuOpen, setIsContextMenuOpen] = useState(false);
+  const [contextMetadata, setContextMetadata] = useState<ContextMetadata>({
+    x: 0,
+    y: 0,
+  });
+  const [chatInContextMenu, setChatInContextMenu] = useState<Chat | null>(null);
+  const parentRef = useRef<HTMLLIElement | null>(null);
   const [chats] = useState<Chat[]>([
     { id: "1", title: "Chat 1", isFav: false },
     { id: "2", title: "Chat 2", isFav: true },
@@ -31,9 +40,12 @@ export const ChatsList = () => {
     setGroupedChats(res);
   }, [chats]);
 
-  const handleContextMenu = (e: React.MouseEvent) => {
+  const handleContextMenu = (chatId: string) => (e: React.MouseEvent) => {
     e.preventDefault();
-    console.log("context menu", e);
+    const chat = chats.find((c) => c.id === chatId);
+    setContextMetadata({ x: e.pageX, y: e.pageY });
+    setChatInContextMenu(chat!);
+    parentRef.current = e.currentTarget as HTMLLIElement;
     setIsContextMenuOpen(true);
   };
 
@@ -67,7 +79,13 @@ export const ChatsList = () => {
           </>
         </ul>
       )}
-      <ChatContextMenu isContextMenuOpen={isContextMenuOpen} />
+      <ChatContextMenu
+        contextMetadata={contextMetadata}
+        chat={chatInContextMenu}
+        parentRef={parentRef}
+        isContextMenuOpen={isContextMenuOpen}
+        setIsContextMenuOpen={setIsContextMenuOpen}
+      />
     </div>
   );
 };
