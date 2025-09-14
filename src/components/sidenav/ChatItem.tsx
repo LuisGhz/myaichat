@@ -4,11 +4,15 @@ import { FavoriteIcon } from "icons/FavoriteIcon";
 
 type Props = {
   chat: Chat;
+  onContextMenu?: (e: React.MouseEvent) => void;
 };
 
-export const ChatItem = ({ chat }: Props) => {
+export const ChatItem = ({ chat, onContextMenu }: Props) => {
   return (
-    <li className="hover:bg-gray-200 dark:hover:bg-gray-800 cursor-pointer flex items-center justify-between gap-2">
+    <li
+      className="hover:bg-gray-200 dark:hover:bg-gray-800 cursor-pointer flex items-center justify-between gap-2"
+      onContextMenu={onContextMenu}
+    >
       <span className="dark:text-gray-200 grow ps-2 py-1.5">{chat.title}</span>
       {chat.isFav ? (
         <button className="pe-2" aria-label="Mark as unfavorite">
