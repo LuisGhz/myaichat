@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Divider } from "antd";
 import { ChatItem } from "./ChatItem";
+import { ChatContextMenu } from "components/context-menu/ChatContextMenu";
 
 export type Chat = {
   id: string;
@@ -9,6 +10,7 @@ export type Chat = {
 };
 
 export const ChatsList = () => {
+  const [isContextMenuOpen, setIsContextMenuOpen] = useState(false);
   const [chats] = useState<Chat[]>([
     { id: "1", title: "Chat 1", isFav: false },
     { id: "2", title: "Chat 2", isFav: true },
@@ -29,6 +31,12 @@ export const ChatsList = () => {
     setGroupedChats(res);
   }, [chats]);
 
+  const handleContextMenu = (e: React.MouseEvent) => {
+    e.preventDefault();
+    console.log("context menu", e);
+    setIsContextMenuOpen(true);
+  };
+
   return (
     <div className="mt-3">
       {groupedChats && (
@@ -37,7 +45,11 @@ export const ChatsList = () => {
             {groupedChats.fav && (
               <>
                 {groupedChats.fav.map((chat) => (
-                  <ChatItem key={chat.id} chat={chat} />
+                  <ChatItem
+                    key={chat.id}
+                    chat={chat}
+                    onContextMenu={handleContextMenu}
+                  />
                 ))}
                 <Divider />
               </>
@@ -46,11 +58,16 @@ export const ChatsList = () => {
           <>
             {groupedChats.unfav &&
               groupedChats.unfav.map((chat) => (
-                <ChatItem key={chat.id} chat={chat} />
+                <ChatItem
+                  key={chat.id}
+                  chat={chat}
+                  onContextMenu={handleContextMenu}
+                />
               ))}
           </>
         </ul>
       )}
+      <ChatContextMenu isContextMenuOpen={isContextMenuOpen} />
     </div>
   );
 };
