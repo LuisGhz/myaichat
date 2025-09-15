@@ -58,9 +58,11 @@ export const SideNav = () => {
         trigger={null}
         aria-hidden={sideNavCollapsed}
       >
-        <SideNavHeader />
-        <SideNavActionButtons />
-        <ChatsList />
+        <div className="flex h-full flex-col gap-2.5 overflow-y-auto scroll-hidden">
+          <SideNavHeader />
+          <SideNavActionButtons />
+          <ChatsList />
+        </div>
       </Sider>
     </>
   );
