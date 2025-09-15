@@ -11,7 +11,7 @@ function App() {
       <SideNav />
       <Layout>
         <AppHeader />
-        <Content>
+        <Content className="!bg-gray-100 dark:!bg-gray-900">
           <Outlet />
         </Content>
       </Layout>
