@@ -31,7 +31,12 @@ export const CreateEditPrompt = () => {
         </section>
       </section>
       <section className="flex gap-8">
-        <Button className="w-30" type="primary" htmlType="button" onClick={() => navigate("/prompts")}>
+        <Button
+          className="w-30"
+          type="primary"
+          htmlType="button"
+          onClick={() => navigate("/prompts")}
+        >
           Go back
         </Button>
         <Button className="w-30" type="primary" htmlType="submit">
