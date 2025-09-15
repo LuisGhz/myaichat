@@ -6,15 +6,19 @@ type Props = {
 };
 
 const darkTheme: ThemeConfig = {
-  token: {
-    colorBgElevated: "var(--color-gray-950)",
-  },
   components: {
     Select: {
       selectorBg: "var(--color-gray-950)",
       colorText: "var(--color-gray-200)",
       optionActiveBg: "var(--color-gray-800)",
       optionSelectedBg: "var(--color-gray-700)",
+      colorBgElevated: "var(--color-gray-950)",
+      colorTextPlaceholder: "var(--color-gray-200)",
+    },
+    Input: {
+      colorText: "var(--color-gray-200)",
+      colorTextPlaceholder: "var(--color-gray-400)",
+      colorBgContainer: "var(--color-gray-950)",
     },
   },
 };
@@ -23,8 +27,8 @@ const lightTheme: ThemeConfig = {
   components: {
     Select: {
       colorText: "var(--color-gray-700)",
-    }
-  }
+    },
+  },
 };
 
 export const AntdThemeProvider = ({ children }: Props) => {
