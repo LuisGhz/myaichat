@@ -50,7 +50,7 @@ export const ChatsList = () => {
   };
 
   return (
-    <div className="mt-3">
+    <div className="grow">
       {groupedChats && (
         <ul>
           <>
