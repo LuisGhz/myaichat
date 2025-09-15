@@ -1,7 +1,8 @@
+import { useRef } from "react";
+import { Link } from "react-router";
 import { FavoriteFilledIcon } from "icons/FavoriteFilledIcon";
 import { Chat } from "./ChatsList";
 import { FavoriteIcon } from "icons/FavoriteIcon";
-import { useRef } from "react";
 
 type Props = {
   chat: Chat;
@@ -13,11 +14,17 @@ export const ChatItem = ({ chat, onContextMenu }: Props) => {
 
   return (
     <li
-      className="hover:bg-gray-200 dark:hover:bg-gray-800 cursor-pointer flex items-center justify-between gap-2"
+      className="hover:bg-gray-200 dark:hover:bg-gray-800 cursor-pointer flex items-center justify-between gap-2 text-black dark:text-gray-200"
       onContextMenu={onContextMenu(chat.id)}
       ref={parentRef}
     >
-      <span className="dark:text-gray-200 grow ps-2 py-1.5">{chat.title}</span>
+      <Link
+        to={`/chat/${chat.id}`}
+        style={{ color: "inherit" }}
+        className="grow ps-2 py-1.5 no-underline hover:underline"
+      >
+        {chat.title}
+      </Link>
       {chat.isFav ? (
         <button className="pe-2" aria-label="Mark as unfavorite">
           <FavoriteFilledIcon className="text-yellow-500 cursor-pointer w-5 h-5" />
