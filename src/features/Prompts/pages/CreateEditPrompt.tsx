@@ -19,7 +19,7 @@ export const CreateEditPrompt = () => {
           autoSize={{ minRows: 4, maxRows: 8 }}
         />
       </section>
-      <section className="w-full max-w-96">
+      <section className="w-10/12 max-w-96">
         <section className="flex justify-between items-center">
           <span className="app-text font-semibold text-lg">Messages</span>
           <button aria-label="Add Message" title="Add Message" type="button">
