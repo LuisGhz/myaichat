@@ -15,6 +15,16 @@ html {
   height: 100dvh;
 }
 
-body, #root {
+body,
+#root {
   min-height: 100dvh;
+}
+
+.scroll-hidden {
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* Internet Explorer and Edge */
+}
+
+.scroll-hidden::-webkit-scrollbar {
+  display: none; /* Safari and Chrome */
 }
