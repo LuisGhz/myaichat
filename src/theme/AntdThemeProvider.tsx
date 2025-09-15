@@ -30,7 +30,6 @@ export const AntdThemeProvider = ({ children }: Props) => {
     setColorScheme(mediaQuery.matches ? "dark" : "light");
     const handleChange = (e: MediaQueryListEvent) => {
       const newColorScheme = e.matches ? "dark" : "light";
-      console.log("System preference changed:", newColorScheme);
       setColorScheme(newColorScheme);
     };
     mediaQuery.addEventListener("change", handleChange);
