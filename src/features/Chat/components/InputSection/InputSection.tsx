@@ -13,7 +13,7 @@ export const InputSection = () => {
           placeholder="Type a message..."
           autoSize={{ minRows: 2, maxRows: 20 }}
         />
-        <button>
+        <button type="button">
           <SendAltFilledIcon className="w-6 h-6 cursor-pointer fill-gray-700 dark:fill-gray-200" />
         </button>
       </section>
