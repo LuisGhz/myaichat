@@ -19,7 +19,13 @@ const darkTheme: ThemeConfig = {
   },
 };
 
-const lightTheme: ThemeConfig = {};
+const lightTheme: ThemeConfig = {
+  components: {
+    Select: {
+      colorText: "var(--color-gray-700)",
+    }
+  }
+};
 
 export const AntdThemeProvider = ({ children }: Props) => {
   const [colorScheme, setColorScheme] = useState<"light" | "dark">("light");
