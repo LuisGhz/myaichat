@@ -1,7 +1,7 @@
 import App from "App";
 import { Login } from "features/Auth/pages/Login";
 import { Chat } from "features/Chat/pages/Chat";
-import { CreateEditPrompt } from "features/Prompts/pages/CreateEditPromtp";
+import { CreateEditPrompt } from "features/Prompts/pages/CreateEditPrompt";
 import { Prompts } from "features/Prompts/pages/Prompts";
 import { Welcome } from "features/Welcome/Welcome";
 import { BrowserRouter, Route, Routes } from "react-router";
