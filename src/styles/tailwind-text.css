@@ -1,0 +1,7 @@
+@import "tailwindcss";
+
+@layer utilities {
+  .app-text {
+    @apply text-gray-700 dark:text-gray-200;
+  }
+}
