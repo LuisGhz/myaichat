@@ -14,7 +14,7 @@ export const InputSection = () => {
           autoSize={{ minRows: 2, maxRows: 20 }}
         />
         <button>
-          <SendAltFilledIcon className="w-6 h-6 cursor-pointer fill-gray-700" />
+          <SendAltFilledIcon className="w-6 h-6 cursor-pointer fill-gray-700 dark:fill-gray-200" />
         </button>
       </section>
       <InputActionButtons />

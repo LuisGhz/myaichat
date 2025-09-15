@@ -8,18 +8,18 @@ export const InputActionButtons = () => {
     <section className="flex justify-between">
       <div className="flex gap-2">
         <span>
-          <FileTypeLightConfigIcon className="w-6 h-6 cursor-pointer fill-gray-700" />
+          <FileTypeLightConfigIcon className="w-6 h-6 cursor-pointer fill-gray-700 dark:fill-gray-200" />
         </span>
         <span>
-          <ExclamationCircleIcon className="w-6 h-6 cursor-pointer fill-gray-700" />
+          <ExclamationCircleIcon className="w-6 h-6 cursor-pointer fill-gray-700 dark:fill-gray-200" />
         </span>
       </div>
       <div className="flex gap-2">
         <span>
-          <PaperClipIcon className="w-6 h-6 cursor-pointer fill-gray-700" />
+          <PaperClipIcon className="w-6 h-6 cursor-pointer fill-gray-700 dark:fill-gray-200" />
         </span>
         <span>
-          <Microphone20SolidIcon className="w-6 h-6 cursor-pointer fill-gray-700" />
+          <Microphone20SolidIcon className="w-6 h-6 cursor-pointer fill-gray-700 dark:fill-gray-200" />
         </span>
       </div>
     </section>
