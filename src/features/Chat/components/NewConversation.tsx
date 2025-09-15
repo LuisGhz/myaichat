@@ -3,7 +3,7 @@ import { Select } from "antd";
 export const NewConversation = () => {
   return (
     <div className="flex flex-col items-center justify-center h-full">
-      <h2 className="text-2xl font-bold mb-4">
+      <h2 className="text-2xl font-bold mb-4 text-gray-700 dark:text-gray-200">
         Hello, how can I assist you today?
       </h2>
       <section className="flex flex-col gap-4">
