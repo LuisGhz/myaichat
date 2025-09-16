@@ -1,6 +1,6 @@
 import { useAuthZustandStore } from "store/AuthZustandStore";
 
-export const useAuth = () => {
+export const useAuthState = () => {
   const { isAuthenticated, user } = useAuthZustandStore((state) => ({
     isAuthenticated: state.isAuthenticated,
     user: state.user,
