@@ -1,4 +1,5 @@
 import { LoginButton } from "../components/LoginButton";
+import { LoginErrors } from "../components/LoginErrors";
 
 export const Login = () => {
   return (
@@ -6,6 +7,7 @@ export const Login = () => {
       <div>
         <h1 className="text-3xl font-bold">Login to MyAIChat</h1>
         <p>Continue with your GitHub account</p>
+        <LoginErrors />
         <div className="mt-4">
           <LoginButton />
         </div>
