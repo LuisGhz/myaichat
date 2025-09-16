@@ -2,6 +2,7 @@ import { useRef } from "react";
 import { Link } from "react-router";
 import { FavoriteFilledIcon } from "icons/FavoriteFilledIcon";
 import { FavoriteIcon } from "icons/FavoriteIcon";
+import { useSideNav } from "core/hooks/useSideNav";
 
 type Props = {
   chat: ChatSummary;
@@ -9,7 +10,12 @@ type Props = {
 };
 
 export const ChatItem = ({ chat, onContextMenu }: Props) => {
+  const { toggleFavorite } = useSideNav();
   const parentRef = useRef<HTMLLIElement | null>(null);
+
+  const handleToggleFavorite = async () => {
+    await toggleFavorite(chat.id);
+  };
 
   return (
     <li
@@ -26,11 +32,19 @@ export const ChatItem = ({ chat, onContextMenu }: Props) => {
         {chat.title}
       </Link>
       {chat.fav ? (
-        <button className="pe-2" aria-label="Mark as unfavorite">
+        <button
+          className="pe-2"
+          aria-label="Mark as unfavorite"
+          onClick={handleToggleFavorite}
+        >
           <FavoriteFilledIcon className="text-yellow-500 cursor-pointer w-5 h-5" />
         </button>
       ) : (
-        <button className="pe-2" aria-label="Mark as favorite">
+        <button
+          className="pe-2"
+          aria-label="Mark as favorite"
+          onClick={handleToggleFavorite}
+        >
           <FavoriteIcon className="dark:text-gray-200 cursor-pointer w-5 h-5" />
         </button>
       )}
