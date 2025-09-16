@@ -1,8 +1,18 @@
 export const LoginButton = () => {
+  const handleGitHubLogin = () => {
+    // Use your backend's OAuth2 authorization endpoint
+    let api = import.meta.env.VITE_API_URL as string;
+    if (api.endsWith("/myaichat/api"))
+      api = api.replace("/myaichat/api", "/myaichat");
+    else if (api.endsWith("/api")) api = api.replace("/api", "");
+    window.location.href = `${api}/oauth2/authorization/github`;
+  };
+
   return (
     <button
       type="button"
       className="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-gray-700 hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 transition-colors duration-200 cursor-pointer"
+      onClick={handleGitHubLogin}
     >
       <div className="flex items-center">
         <svg className="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 24 24">
