@@ -1,4 +1,5 @@
 import App from "App";
+import { ProtectedRoute } from "components/ProtectedRoute";
 import { Login } from "features/Auth/pages/Login";
 import { OAuth2Callback } from "features/Auth/pages/OAuth2Callback";
 import { Chat } from "features/Chat/pages/Chat";
@@ -13,7 +14,14 @@ export const AppRouter = () => {
       <Routes>
         <Route path="/auth/login" element={<Login />} />
         <Route path="/auth/callback" element={<OAuth2Callback />} />
-        <Route path="/" element={<App />}>
+        <Route
+          path="/"
+          element={
+            <ProtectedRoute>
+              <App />
+            </ProtectedRoute>
+          }
+        >
           <Route index element={<Welcome />} />
           <Route path="chat" element={<Chat />} />
           <Route path="chat/:id" element={<Chat />} />
