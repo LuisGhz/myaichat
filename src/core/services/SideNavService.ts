@@ -5,5 +5,9 @@ export const SideNavService = () => {
     return await apiClient.get<ChatSummaryRes>("/chat/all");
   };
 
-  return { getChatSummary };
+  const toggleFavorite = async (chatId: string) => {
+    return await apiClient.patch(`/chat/${chatId}/toggle-chat-fav`);
+  }
+
+  return { getChatSummary, toggleFavorite };
 }
