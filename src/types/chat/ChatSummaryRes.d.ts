@@ -1,0 +1,3 @@
+type ChatSummaryRes = {
+  chats: ChatSummary[];
+};
