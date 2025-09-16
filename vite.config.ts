@@ -6,10 +6,10 @@ import tsconfigPaths from "vite-tsconfig-paths";
 
 // https://vite.dev/config/
 export default defineConfig({
-    test: {
-    globals: true,
-    environment: "jsdom",
-    setupFiles: "./setupTests.js",
+  test: {
+  globals: true,
+  environment: "jsdom",
+  setupFiles: "./setupTests.ts",
     include: ["src/**/*.test.{ts,tsx}"],
     coverage: {
       provider: "v8",
