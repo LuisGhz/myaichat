@@ -95,6 +95,7 @@ export const createApiClient = (
   ): Promise<T | undefined> => {
     try {
       const res = await client.patch(path, data, options as AxiosRequestConfig);
+      if (!res.data) return;
       return res.data as T;
     } catch (err) {
       console.error("PATCH error", { path, err });
