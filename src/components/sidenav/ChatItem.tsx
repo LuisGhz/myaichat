@@ -1,11 +1,10 @@
 import { useRef } from "react";
 import { Link } from "react-router";
 import { FavoriteFilledIcon } from "icons/FavoriteFilledIcon";
-import { Chat } from "./ChatsList";
 import { FavoriteIcon } from "icons/FavoriteIcon";
 
 type Props = {
-  chat: Chat;
+  chat: ChatSummary;
   onContextMenu: (chatId: string) => (e: React.MouseEvent) => void;
 };
 
@@ -21,11 +20,12 @@ export const ChatItem = ({ chat, onContextMenu }: Props) => {
       <Link
         to={`/chat/${chat.id}`}
         style={{ color: "inherit" }}
-        className="grow ps-2 py-1.5 no-underline hover:underline"
+        className="grow ps-2 py-2 no-underline hover:underline"
+        title={chat.title}
       >
         {chat.title}
       </Link>
-      {chat.isFav ? (
+      {chat.fav ? (
         <button className="pe-2" aria-label="Mark as unfavorite">
           <FavoriteFilledIcon className="text-yellow-500 cursor-pointer w-5 h-5" />
         </button>
