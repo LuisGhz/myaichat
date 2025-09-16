@@ -12,6 +12,7 @@
   "dependencies": {
     "@tailwindcss/vite": "4.1.13",
     "antd": "5.27.3",
+    "axios": "1.12.2",
     "react": "19.0.0",
     "react-dom": "19.0.0",
     "react-router": "^7.9.1",
