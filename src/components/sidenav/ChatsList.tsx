@@ -5,44 +5,36 @@ import {
   ChatContextMenu,
   ContextMetadata,
 } from "components/context-menu/ChatContextMenu";
-
-export type Chat = {
-  id: string;
-  title: string;
-  isFav: boolean;
-};
+import { useSideNav } from "core/hooks/useSideNav";
 
 export const ChatsList = () => {
+  const { getChatsSummary, chatsSummary } = useSideNav();
   const [isContextMenuOpen, setIsContextMenuOpen] = useState(false);
   const [contextMetadata, setContextMetadata] = useState<ContextMetadata>({
     x: 0,
     y: 0,
   });
-  const [chatInContextMenu, setChatInContextMenu] = useState<Chat | null>(null);
+  const [chatInContextMenu, setChatInContextMenu] =
+    useState<ChatSummary | null>(null);
   const parentRef = useRef<HTMLLIElement | null>(null);
-  const [chats] = useState<Chat[]>([
-    { id: "1", title: "Chat 1", isFav: false },
-    { id: "2", title: "Chat 2", isFav: true },
-    { id: "3", title: "Chat 3", isFav: false },
-    { id: "4", title: "Chat 4", isFav: true },
-    { id: "5", title: "Chat 5", isFav: false },
-    { id: "6", title: "Chat 6", isFav: true },
-    { id: "7", title: "Chat 7", isFav: false },
-    { id: "8", title: "Chat 8", isFav: true },
-    { id: "9", title: "Chat 9", isFav: false },
-    { id: "10", title: "Chat 10", isFav: true },
-  ]);
   const [groupedChats, setGroupedChats] =
-    useState<Partial<Record<"fav" | "unfav", Chat[]>>>();
+    useState<Partial<Record<"fav" | "unfav", ChatSummary[]>>>();
 
   useEffect(() => {
-    const res = Object.groupBy(chats, (chat) => (chat.isFav ? "fav" : "unfav"));
+    getChatsSummary();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
+    const res = Object.groupBy(chatsSummary, (chat) =>
+      chat.fav ? "fav" : "unfav"
+    );
     setGroupedChats(res);
-  }, [chats]);
+  }, [chatsSummary]);
 
   const handleContextMenu = (chatId: string) => (e: React.MouseEvent) => {
     e.preventDefault();
-    const chat = chats.find((c) => c.id === chatId);
+    const chat = chatsSummary.find((c) => c.id === chatId);
     setContextMetadata({ x: e.pageX, y: e.pageY });
     setChatInContextMenu(chat!);
     parentRef.current = e.currentTarget as HTMLLIElement;
