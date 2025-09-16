@@ -4,6 +4,7 @@ import { useAppStore, useAppStoreActions } from "store/app/AppStore";
 import { SideNavHeader } from "./SideNavHeader";
 import { SideNavActionButtons } from "./SideNavActionButtons";
 import { ChatsList } from "./ChatsList";
+import { UserSummary } from "./UserSummary";
 
 const { Sider } = Layout;
 
@@ -60,6 +61,7 @@ export const SideNav = () => {
       >
         <div className="flex h-full flex-col gap-2.5 overflow-y-auto scroll-hidden">
           <SideNavHeader />
+          <UserSummary />
           <SideNavActionButtons />
           <ChatsList />
         </div>
