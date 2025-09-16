@@ -49,8 +49,17 @@ export const useAuth = () => {
     return false;
   };
 
+  const logout = () => {
+    localStorage.removeItem('auth_token');
+    setIsAuthenticated(false);
+    setUser(null);
+    // Redirect to login
+    window.location.href = '/auth/login';
+  };
+
   return {
     validateTokenWithBackend,
     validateExistingToken,
+    logout,
   };
 };
