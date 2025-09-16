@@ -6,11 +6,7 @@ export const LoginErrors = () => {
   const message = searchParams.get("message");
 
   if (error) {
-    return (
-      <div className="mt-4">
-        <p className="text-red-600">{message || "An error occurred"}</p>
-      </div>
-    );
+    return <p className="text-red-600">{message || "An error occurred"}</p>;
   }
 
   return null;
