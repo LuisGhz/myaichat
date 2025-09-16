@@ -1,5 +1,6 @@
 import App from "App";
 import { Login } from "features/Auth/pages/Login";
+import { OAuth2Callback } from "features/Auth/pages/OAuth2Callback";
 import { Chat } from "features/Chat/pages/Chat";
 import { CreateEditPrompt } from "features/Prompts/pages/CreateEditPrompt";
 import { Prompts } from "features/Prompts/pages/Prompts";
@@ -11,6 +12,7 @@ export const AppRouter = () => {
     <BrowserRouter>
       <Routes>
         <Route path="/auth/login" element={<Login />} />
+        <Route path="/auth/callback" element={<OAuth2Callback />} />
         <Route path="/" element={<App />}>
           <Route index element={<Welcome />} />
           <Route path="chat" element={<Chat />} />
