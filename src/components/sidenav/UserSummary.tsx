@@ -1,7 +1,9 @@
+import { useAuth } from "shared/hooks/useAuth";
 import { useAuthState } from "store/app/AuthStore";
 
 export const UserSummary = () => {
   const { user } = useAuthState();
+  const { logout } = useAuth();
 
   if (!user) return null;
 
@@ -19,6 +21,8 @@ export const UserSummary = () => {
           <button
             className="!bg-red-500 text-white py-0.5 px-2 rounded-sm text-xs cursor-pointer"
             type="button"
+            onClick={logout}
+            aria-label="Logout"
           >
             Logout
           </button>
