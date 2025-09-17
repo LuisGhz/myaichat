@@ -15,10 +15,12 @@ export const ChatMessages = ({ messages }: Props) => {
           key={idx}
         >
           <p className="text-[1rem]">{msg.content}</p>
-          <span className="text-xs block mt-1.5 app-text">
-            Tokens:{" "}
-            {msg.role === "User" ? msg.promptTokens : msg.completionTokens}
-          </span>
+          {((msg.completionTokens || 0) > 0 || (msg.promptTokens || 0) > 0) && (
+            <span className="text-xs block mt-1.5 app-text">
+              Tokens:{" "}
+              {msg.role === "User" ? msg.promptTokens : msg.completionTokens}
+            </span>
+          )}
           <MessageActionButtons role={msg.role} content={msg.content} />
         </div>
       ))}
