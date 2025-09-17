@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { KeyboardEvent, useEffect, useState } from "react";
 import { Input } from "antd";
 import { SendAltFilledIcon } from "icons/SendAltFilledIcon";
 import { InputActionButtons } from "./InputActionButtons";
@@ -18,11 +18,18 @@ export const InputSection = () => {
   }, [params.id]);
 
   const handleSendMessage = () => {
+    if (isSending || newMessage.trim() === "") return;
     setIsSending(true);
-    if (newMessage.trim() === "") return;
     sendNewMessage(newMessage.trim());
     setNewMessage("");
     setIsSending(false);
+  };
+
+  const handleKeyDown = (e: KeyboardEvent<HTMLTextAreaElement>) => {
+    if (e.ctrlKey && e.key === "Enter") {
+      e.preventDefault();
+      handleSendMessage();
+    }
   };
 
   return (
@@ -34,6 +41,7 @@ export const InputSection = () => {
           autoSize={{ minRows: 2, maxRows: 20 }}
           value={newMessage}
           onChange={(e) => setNewMessage(e.target.value)}
+          onKeyDown={handleKeyDown}
         />
         {newMessage.trim() !== "" && (
           <button
