@@ -13,14 +13,22 @@ export const useSideNav = () => {
   };
 
   const toggleFavorite = async (chatId: string) => {
-    await sideNavService.toggleFavorite(chatId);
-    const temp = chatsSummary.map((chat) => {
+    const currentChat = chatsSummary.find(chat => chat.id === chatId);
+    if (!currentChat) return;
+    const optimisticUpdate = chatsSummary.map((chat) => {
       if (chat.id === chatId) {
         return { ...chat, fav: !chat.fav };
       }
       return chat;
     });
-    setChatsSummary(temp);
+    setChatsSummary(optimisticUpdate);
+
+    try {
+      await sideNavService.toggleFavorite(chatId);
+    } catch (error) {
+      setChatsSummary(chatsSummary);
+      throw error;
+    }
   };
 
   return { chatsSummary, getChatsSummary, toggleFavorite };
