@@ -5,3 +5,10 @@ export const getChatMessagesService = async (id: string, page: number = 0) => {
     `/chat/${id}/messages?page=${page}`
   );
 };
+
+export const sendNewMessageService = async (newMessageReq: FormData) => {
+  return await apiClient.postFormData<NewMessageRes, FormData>(
+    "/chat/send-message",
+    newMessageReq
+  );
+};
