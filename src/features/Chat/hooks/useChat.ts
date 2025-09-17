@@ -60,6 +60,7 @@ export const useChat = () => {
           fav: false,
         };
         setChatsSummary([...chatsSummary, newChatSummary]);
+        return res.chatId;
       }
     } catch (error) {
       console.error("Error sending new message:", error);
