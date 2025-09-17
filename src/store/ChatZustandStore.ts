@@ -8,4 +8,8 @@ export const useChatZustandStore = create<ChatStore>((set) => ({
   setMaxTokens: (tokens: number) => set({ maxTokens: tokens }),
   promptId: undefined,
   setPromptId: (id: string | undefined) => set({ promptId: id }),
+  currentChatMetadata: undefined,
+  setCurrentChatMetadata: (
+    metadata: Omit<ChatMessagesRes, "historyMessages"> | undefined
+  ) => set({ currentChatMetadata: metadata }),
 }));
