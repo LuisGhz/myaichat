@@ -99,7 +99,7 @@ export const createApiClient = (
       return res.data as T;
     } catch (err) {
       console.error("PATCH error", { path, err });
-      return undefined;
+      throw err;
     }
   };
 
