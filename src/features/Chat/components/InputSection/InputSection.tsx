@@ -18,7 +18,7 @@ export const InputSection = () => {
 
   const handleSendMessage = () => {
     if (newMessage.trim() === "") return;
-    sendNewMessage(newMessage);
+    sendNewMessage(newMessage.trim());
     setNewMessage("");
   };
 
