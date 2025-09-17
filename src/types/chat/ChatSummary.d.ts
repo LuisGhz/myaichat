@@ -1,5 +1,5 @@
 type ChatSummary = {
   id: string;
-  title: string;
+  title?: string;
   fav: boolean;
 };
