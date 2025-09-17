@@ -70,7 +70,7 @@ export const createApiClient = (
       return res.data as T;
     } catch (err) {
       console.error("GET error", { path, err });
-      return undefined;
+      throw err;
     }
   };
 
@@ -84,7 +84,7 @@ export const createApiClient = (
       return res.data as T;
     } catch (err) {
       console.error("POST error", { path, err });
-      return undefined;
+      throw err;
     }
   };
 
@@ -122,7 +122,7 @@ export const createApiClient = (
       return res.data as T;
     } catch (err) {
       console.error("POST form-data error", { path, err });
-      return undefined;
+      throw err;
     }
   };
 
@@ -132,7 +132,7 @@ export const createApiClient = (
     } catch (err) {
       // For deletes, propagate so callers can act (e.g., optimistic UI rollback)
       console.error("DELETE error", { path, err });
-      throw err as unknown;
+      throw err;
     }
   };
 
