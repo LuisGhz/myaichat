@@ -16,4 +16,9 @@ type ApiClient = {
     options?: O
   ) => Promise<T | undefined>;
   del: <O>(path: string, options?: O) => Promise<void>;
+  getStream: <T>(
+    path: string,
+    onChunk: (chunk: T) => void,
+    signal?: AbortSignal
+  ) => Promise<void>;
 };

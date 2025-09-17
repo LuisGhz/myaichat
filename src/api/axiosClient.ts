@@ -136,7 +136,91 @@ export const createApiClient = (
     }
   };
 
-  return { get, post, patch, postFormData, del } as ApiClient;
+  const getStream = async <T>(
+    path: string,
+    onChunk: (chunk: T) => void,
+    signal?: AbortSignal
+  ): Promise<void> => {
+    try {
+      const token = localStorage.getItem("auth_token");
+      const headers: HeadersInit = {
+        Accept: "application/x-ndjson",
+      };
+
+      if (token) {
+        headers.Authorization = `Bearer ${token}`;
+      }
+
+      // Construct URL properly - remove leading slash from path if API_BASE_URL already ends with slash
+      let url = `${API_BASE_URL ?? "/"}`;
+      if (url.endsWith("/") && path.startsWith("/")) {
+        url = url + path.slice(1);
+      } else if (!url.endsWith("/") && !path.startsWith("/")) {
+        url = url + "/" + path;
+      } else {
+        url = url + path;
+      }
+
+      // console.log("Starting stream request to:", url);
+      // console.log("Headers:", headers);
+
+      const response = await fetch(url, {
+        headers,
+        signal,
+      });
+
+      // console.log("Response status:", response.status);
+      // console.log("Response headers:", Object.fromEntries(response.headers.entries()));
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error("HTTP error response:", errorText);
+        throw new Error(`HTTP error! status: ${response.status}, body: ${errorText}`);
+      }
+
+      const reader = response.body?.getReader();
+      if (!reader) {
+        throw new Error("Response body is not readable");
+      }
+
+      const decoder = new TextDecoder();
+      let buffer = "";
+
+      // console.log("Starting to read stream...");
+
+      while (true) {
+        const { value, done } = await reader.read();
+        if (done) {
+          // console.log("Stream ended");
+          break;
+        }
+
+        const chunk = decoder.decode(value, { stream: true });
+        // console.log("Raw chunk received:", chunk);
+        
+        buffer += chunk;
+        const lines = buffer.split("\n");
+        buffer = lines.pop() || "";
+
+        for (const line of lines) {
+          if (!line.trim()) continue;
+          // console.log("Processing line:", line);
+          try {
+            const parsedChunk = JSON.parse(line) as T;
+            // console.log("Parsed chunk:", parsedChunk);
+            onChunk(parsedChunk);
+          } catch (parseError) {
+            console.error("Failed to parse chunk:", parseError, "Line:", line);
+          }
+        }
+      }
+    } catch (err) {
+      console.error("Stream error", { path, err });
+      throw err;
+    }
+  };
+
+  return { get, post, patch, postFormData, del, getStream } as ApiClient;
 };
 
 // Default singleton instance for app-wide use
