@@ -3,6 +3,8 @@ type ChatStore = {
   setModel: (model: ModelsValues) => void;
   maxOutputTokens: number;
   setMaxOutputTokens: (tokens: number) => void;
+  isWebSearchMode: boolean;
+  setIsWebSearchMode: (isWebSearchMode: boolean) => void;
   messages: ChatMessage[];
   setMessages: (messages: ChatMessage[]) => void;
   promptId?: string | undefined;

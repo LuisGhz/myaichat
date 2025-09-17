@@ -6,10 +6,13 @@ export const useChatZustandStore = create<ChatStore>((set) => ({
   setModel: (model: ModelsValues) => set({ model }),
   maxOutputTokens: 2000,
   setMaxOutputTokens: (tokens: number) => set({ maxOutputTokens: tokens }),
-  messages: [],
-  setMessages: (messages: ChatMessage[]) => set({ messages }),
+  isWebSearchMode: false,
+  setIsWebSearchMode: (isWebSearchMode: boolean) =>
+    set({ isWebSearchMode: isWebSearchMode }),
   promptId: undefined,
   setPromptId: (id: string | undefined) => set({ promptId: id }),
+  messages: [],
+  setMessages: (messages: ChatMessage[]) => set({ messages }),
   currentChatMetadata: undefined,
   setCurrentChatMetadata: (
     metadata: Omit<ChatMessagesRes, "historyMessages"> | undefined
