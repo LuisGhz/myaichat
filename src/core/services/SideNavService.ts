@@ -1,4 +1,4 @@
-import { apiClient } from "api"
+import { apiClient } from "api";
 
 export const SideNavService = () => {
   const getChatSummary = async () => {
@@ -7,7 +7,7 @@ export const SideNavService = () => {
 
   const toggleFavorite = async (chatId: string) => {
     return await apiClient.patch(`/chat/${chatId}/toggle-chat-fav`);
-  }
+  };
 
   return { getChatSummary, toggleFavorite };
-}
+};
