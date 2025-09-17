@@ -1,0 +1,3 @@
+type GetAllPromptsRes = {
+  prompts: PromptSummary[];
+};
