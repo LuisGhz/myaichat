@@ -9,6 +9,7 @@ const { TextArea } = Input;
 
 export const InputSection = () => {
   const [newMessage, setNewMessage] = useState("");
+  const [isSending, setIsSending] = useState(false);
   const params = useChatParams();
   const { sendNewMessage } = useChat();
 
@@ -17,9 +18,11 @@ export const InputSection = () => {
   }, [params.id]);
 
   const handleSendMessage = () => {
+    setIsSending(true);
     if (newMessage.trim() === "") return;
     sendNewMessage(newMessage.trim());
     setNewMessage("");
+    setIsSending(false);
   };
 
   return (
@@ -37,6 +40,7 @@ export const InputSection = () => {
             type="button"
             onClick={handleSendMessage}
             aria-label="Send message"
+            disabled={isSending}
           >
             <SendAltFilledIcon className="w-6 h-6 cursor-pointer fill-gray-700 dark:fill-gray-200" />
           </button>
