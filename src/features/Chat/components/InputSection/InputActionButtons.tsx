@@ -1,18 +1,19 @@
-import { ExclamationCircleIcon } from "icons/ExclamationCircleIcon";
 import { FileTypeLightConfigIcon } from "icons/FileTypeLightConfigIcon";
 import { Microphone20SolidIcon } from "icons/Microphone20SolidIcon";
 import { PaperClipIcon } from "icons/PaperClipIcon";
+import { CurrentChatMetadata } from "./CurrentChatMetadata";
+import { useChatParams } from "features/Chat/hooks/useChatParams";
 
 export const InputActionButtons = () => {
+  const params = useChatParams();
+
   return (
     <section className="flex justify-between">
       <div className="flex gap-2">
         <span>
           <FileTypeLightConfigIcon className="w-6 h-6 cursor-pointer fill-gray-700 dark:fill-gray-200" />
         </span>
-        <span>
-          <ExclamationCircleIcon className="w-6 h-6 cursor-pointer fill-gray-700 dark:fill-gray-200" />
-        </span>
+        {params.id && <CurrentChatMetadata />}
       </div>
       <div className="flex gap-2">
         <span>
