@@ -4,6 +4,7 @@ import { SendAltFilledIcon } from "icons/SendAltFilledIcon";
 import { InputActionButtons } from "./InputActionButtons";
 import { useChatParams } from "features/Chat/hooks/useChatParams";
 import { useChat } from "features/Chat/hooks/useChat";
+import { useChatStore } from "store/app/ChatStore";
 
 const { TextArea } = Input;
 
@@ -12,6 +13,7 @@ export const InputSection = () => {
   const [isSending, setIsSending] = useState(false);
   const params = useChatParams();
   const { sendNewMessage } = useChat();
+  const { model, maxOutputTokens, isWebSearchMode, promptId } = useChatStore();
 
   useEffect(() => {
     setNewMessage("");
@@ -20,7 +22,17 @@ export const InputSection = () => {
   const handleSendMessage = () => {
     if (isSending || newMessage.trim() === "") return;
     setIsSending(true);
-    sendNewMessage(newMessage.trim());
+    const req: SendNewMessageReq = {
+      chatId: params.id || undefined,
+      content: newMessage.trim(),
+      model,
+      maxOutputTokens,
+      isWebSearchMode,
+      file: undefined,
+      promptId,
+    };
+
+    sendNewMessage(req);
     setNewMessage("");
     setIsSending(false);
   };
