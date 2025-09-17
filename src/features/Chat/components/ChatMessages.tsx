@@ -19,7 +19,7 @@ export const ChatMessages = ({ messages }: Props) => {
             Tokens:{" "}
             {msg.role === "User" ? msg.promptTokens : msg.completionTokens}
           </span>
-          <MessageActionButtons role={msg.role} />
+          <MessageActionButtons role={msg.role} content={msg.content} />
         </div>
       ))}
     </section>
