@@ -4,10 +4,17 @@ type Props = {
 
 export const ChatMessages = ({ messages }: Props) => {
   return (
-    <div>
+    <section className="flex flex-col gap-4 px-1 md:px-2">
       {messages.map((msg, idx) => (
-        <div key={idx}>{msg.content}</div>
+        <div
+          className={`${
+            msg.role === "User" ? "self-end" : "self-start"
+          } max-w-[70%] p-3 rounded-lg app-text bg-gray-300 dark:bg-gray-950`}
+          key={idx}
+        >
+          {msg.content}
+        </div>
       ))}
-    </div>
+    </section>
   );
 };
