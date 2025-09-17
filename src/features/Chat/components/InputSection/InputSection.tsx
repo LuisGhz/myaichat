@@ -5,6 +5,7 @@ import { InputActionButtons } from "./InputActionButtons";
 import { useChatParams } from "features/Chat/hooks/useChatParams";
 import { useChat } from "features/Chat/hooks/useChat";
 import { useChatStore } from "store/app/ChatStore";
+import { useStreamAssistantMessage } from "features/Chat/hooks/useStreamAssistantMessage";
 
 const { TextArea } = Input;
 
@@ -14,12 +15,13 @@ export const InputSection = () => {
   const params = useChatParams();
   const { sendNewMessage } = useChat();
   const { model, maxOutputTokens, isWebSearchMode, promptId } = useChatStore();
+  const { chunks, startStreaming } = useStreamAssistantMessage();
 
   useEffect(() => {
     setNewMessage("");
   }, [params.id]);
 
-  const handleSendMessage = () => {
+  const handleSendMessage = async () => {
     if (isSending || newMessage.trim() === "") return;
     setIsSending(true);
     const req: SendNewMessageReq = {
@@ -32,8 +34,12 @@ export const InputSection = () => {
       promptId,
     };
 
-    sendNewMessage(req);
     setNewMessage("");
+    const chatId = await sendNewMessage(req);
+    if (chatId) {
+      await startStreaming(chatId);
+      console.log(chunks);
+    }
     setIsSending(false);
   };
 
