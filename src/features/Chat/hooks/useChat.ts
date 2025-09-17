@@ -1,13 +1,17 @@
 import { DEFAULT_MODEL, MODELS } from "core/const/Models";
-import { useState } from "react";
 import { useChatStore, useChatStoreActions } from "store/app/ChatStore";
-import { getChatMessagesService } from "../services/ChatService";
+import {
+  getChatMessagesService,
+  sendNewMessageService,
+} from "../services/ChatService";
+import { useAppStore, useAppStoreActions } from "store/app/AppStore";
 
 export const useChat = () => {
-  const { model, promptId } = useChatStore();
-  const { setModel, setPromptId, setCurrentChatMetadata } =
+  const { model, promptId, messages } = useChatStore();
+  const { setModel, setPromptId, setCurrentChatMetadata, setMessages } =
     useChatStoreActions();
-  const [messages, setMessages] = useState<ChatMessage[]>([]);
+  const { chatsSummary } = useAppStore();
+  const { setChatsSummary } = useAppStoreActions();
 
   const resetChatData = () => {
     setModel(DEFAULT_MODEL);
@@ -30,5 +34,44 @@ export const useChat = () => {
     }
   };
 
-  return { model, promptId, resetChatData, getChatMessages, messages };
+  const sendNewMessage = async (req: SendNewMessageReq) => {
+    const formData = new FormData();
+    formData.append("content", req.content);
+    formData.append("maxOutputTokens", String(req.maxOutputTokens));
+    formData.append("isWebSearchMode", String(req.isWebSearchMode));
+    if (req?.model) formData.append("model", req.model);
+    if (req?.chatId) formData.append("chatId", req.chatId);
+    if (req?.file) formData.append("file", req.file);
+    if (req?.promptId) formData.append("promptId", req.promptId);
+    const newMessage: ChatMessage = {
+      content: req.content,
+      role: "User",
+      completionTokens: 0,
+      promptTokens: 0,
+      file: "",
+    };
+    const mergedMessages = [...messages, newMessage];
+    setMessages(mergedMessages);
+    try {
+      const res = await sendNewMessageService(formData);
+      if (res?.isNew) {
+        const newChatSummary: ChatSummary = {
+          id: res.chatId,
+          fav: false,
+        };
+        setChatsSummary([...chatsSummary, newChatSummary]);
+      }
+    } catch (error) {
+      console.error("Error sending new message:", error);
+    }
+  };
+
+  return {
+    model,
+    promptId,
+    messages,
+    resetChatData,
+    getChatMessages,
+    sendNewMessage,
+  };
 };
