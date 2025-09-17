@@ -6,6 +6,8 @@ export const useChatZustandStore = create<ChatStore>((set) => ({
   setModel: (model: ModelsValues) => set({ model }),
   maxTokens: 2000,
   setMaxTokens: (tokens: number) => set({ maxTokens: tokens }),
+  messages: [],
+  setMessages: (messages: ChatMessage[]) => set({ messages }),
   promptId: undefined,
   setPromptId: (id: string | undefined) => set({ promptId: id }),
   currentChatMetadata: undefined,

@@ -7,7 +7,8 @@ export const useChatStore = () => {
   const currentChatMetadata = useChatZustandStore(
     (state) => state.currentChatMetadata
   );
-  return { model, maxTokens, promptId, currentChatMetadata };
+  const messages = useChatZustandStore((state) => state.messages);
+  return { model, maxTokens, promptId, currentChatMetadata, messages };
 };
 
 export const useChatStoreActions = () => {
@@ -17,5 +18,12 @@ export const useChatStoreActions = () => {
   const setCurrentChatMetadata = useChatZustandStore(
     (state) => state.setCurrentChatMetadata
   );
-  return { setModel, setMaxTokens, setPromptId, setCurrentChatMetadata };
+  const setMessages = useChatZustandStore((state) => state.setMessages);
+  return {
+    setModel,
+    setMaxTokens,
+    setPromptId,
+    setCurrentChatMetadata,
+    setMessages,
+  };
 };
