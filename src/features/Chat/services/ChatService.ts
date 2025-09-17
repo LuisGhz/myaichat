@@ -12,3 +12,15 @@ export const sendNewMessageService = async (newMessageReq: FormData) => {
     newMessageReq
   );
 };
+
+export const streamAssistantMessageService = async (
+  id: string,
+  onChunk: (chunk: AssistantChunkRes) => void,
+  signal?: AbortSignal
+) => {
+  return await apiClient.getStream<AssistantChunkRes>(
+    `/chat/assistant-message/${id}`,
+    onChunk,
+    signal
+  );
+};
