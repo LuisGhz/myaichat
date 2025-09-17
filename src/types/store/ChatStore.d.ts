@@ -1,8 +1,8 @@
 type ChatStore = {
   model: ModelsValues;
   setModel: (model: ModelsValues) => void;
-  maxTokens: number;
-  setMaxTokens: (tokens: number) => void;
+  maxOutputTokens: number;
+  setMaxOutputTokens: (tokens: number) => void;
   messages: ChatMessage[];
   setMessages: (messages: ChatMessage[]) => void;
   promptId?: string | undefined;
