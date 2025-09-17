@@ -1,11 +1,12 @@
-import { DEFAULT_MODEL } from "core/const/Models";
+import { DEFAULT_MODEL, MODELS } from "core/const/Models";
 import { useState } from "react";
 import { useChatStore, useChatStoreActions } from "store/app/ChatStore";
 import { getChatMessagesService } from "../services/ChatService";
 
 export const useChat = () => {
   const { model, promptId } = useChatStore();
-  const { setModel, setPromptId } = useChatStoreActions();
+  const { setModel, setPromptId, setCurrentChatMetadata } =
+    useChatStoreActions();
   const [messages, setMessages] = useState<ChatMessage[]>([]);
 
   const resetChatData = () => {
@@ -18,6 +19,14 @@ export const useChat = () => {
     const response = await getChatMessagesService(id, page);
     if (response) {
       setMessages(response.historyMessages);
+      const modelName = MODELS.find((m) => m.value === response.model)!.name;
+      setCurrentChatMetadata({
+        totalPromptTokens: response.totalPromptTokens,
+        totalCompletionTokens: response.totalCompletionTokens,
+        maxOutputTokens: response.maxOutputTokens,
+        isWebSearchMode: response.isWebSearchMode,
+        model: modelName,
+      });
     }
   };
 
