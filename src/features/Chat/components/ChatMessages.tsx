@@ -12,7 +12,11 @@ export const ChatMessages = ({ messages }: Props) => {
           } max-w-[70%] p-3 rounded-lg app-text bg-gray-300 dark:bg-gray-950`}
           key={idx}
         >
-          {msg.content}
+          <p className="text-[1rem]">{msg.content}</p>
+          <span className="text-xs block mt-1.5 app-text">
+            Tokens:{" "}
+            {msg.role === "User" ? msg.promptTokens : msg.completionTokens}
+          </span>
         </div>
       ))}
     </section>
