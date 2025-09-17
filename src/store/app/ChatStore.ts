@@ -32,6 +32,13 @@ export const useChatStoreActions = () => {
     (state) => state.setCurrentChatMetadata
   );
   const setMessages = useChatZustandStore((state) => state.setMessages);
+  const addStreamingAssistantMessage = useChatZustandStore(
+    (state) => state.addStreamingAssistantMessage
+  );
+  const updateStreamingAssistantMessage = useChatZustandStore(
+    (state) => state.updateStreamingAssistantMessage
+  );
+  
   return {
     setModel,
     setMaxOutputTokens,
@@ -39,5 +46,7 @@ export const useChatStoreActions = () => {
     setCurrentChatMetadata,
     setMessages,
     setIsWebSearchMode,
+    addStreamingAssistantMessage,
+    updateStreamingAssistantMessage,
   };
 };
