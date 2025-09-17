@@ -7,5 +7,5 @@ export const useChatZustandStore = create<ChatStore>((set) => ({
   maxTokens: 2000,
   setMaxTokens: (tokens: number) => set({ maxTokens: tokens }),
   promptId: undefined,
-  setPromptId: (id: string) => set({ promptId: id }),
+  setPromptId: (id: string | undefined) => set({ promptId: id }),
 }));

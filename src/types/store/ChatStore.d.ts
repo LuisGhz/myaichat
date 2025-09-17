@@ -3,6 +3,6 @@ type ChatStore = {
   setModel: (model: ModelsValues) => void;
   maxTokens: number;
   setMaxTokens: (tokens: number) => void;
-  promptId?: string;
-  setPromptId: (id: string) => void;
+  promptId?: string | undefined;
+  setPromptId: (id: string | undefined) => void;
 };
