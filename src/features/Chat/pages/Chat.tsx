@@ -21,7 +21,7 @@ export const Chat = () => {
 
   return (
     <div className="h-full flex flex-col">
-      <section className="grow">
+      <section className="grow overflow-auto pb-10 scroll-hidden">
         {messages.length === 0 && <NewConversation />}
         {messages.length > 0 && <ChatMessages messages={messages} />}
       </section>
