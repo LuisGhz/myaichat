@@ -20,6 +20,10 @@ const darkTheme: ThemeConfig = {
       colorTextPlaceholder: "var(--color-gray-400)",
       colorBgContainer: "var(--color-gray-950)",
     },
+    Skeleton: {
+      gradientFromColor: "rgba(0,0,0,0.2)",
+      gradientToColor: "rgba(0,0,0,0.45)",
+    },
   },
 };
 

@@ -1,5 +1,6 @@
 import { useRef } from "react";
 import { Link } from "react-router";
+import { Skeleton } from "antd";
 import { FavoriteFilledIcon } from "icons/FavoriteFilledIcon";
 import { FavoriteIcon } from "icons/FavoriteIcon";
 import { useSideNav } from "core/hooks/useSideNav";
@@ -19,34 +20,41 @@ export const ChatItem = ({ chat, onContextMenu }: Props) => {
 
   return (
     <li
-      className="hover:bg-gray-200 dark:hover:bg-gray-800 cursor-pointer flex items-center justify-between gap-2 text-black dark:text-gray-200 transition-colors duration-200"
+      className={`hover:bg-gray-200 dark:hover:bg-gray-800 cursor-pointer flex items-center ${
+        !chat.title ? "justify-end" : "justify-between"
+      } gap-2 text-black dark:text-gray-200 transition-colors duration-200`}
       onContextMenu={onContextMenu(chat.id)}
       ref={parentRef}
     >
-      <Link
-        to={`/chat/${chat.id}`}
-        style={{ color: "inherit" }}
-        className="grow ps-2 py-2 no-underline hover:underline"
-        title={chat.title}
-      >
-        {chat.title}
-      </Link>
-      {chat.fav ? (
-        <button
-          className="pe-2"
-          aria-label="Mark as unfavorite"
-          onClick={handleToggleFavorite}
-        >
-          <FavoriteFilledIcon className="text-yellow-500 cursor-pointer w-5 h-5" />
-        </button>
-      ) : (
-        <button
-          className="pe-2"
-          aria-label="Mark as favorite"
-          onClick={handleToggleFavorite}
-        >
-          <FavoriteIcon className="dark:text-gray-200 cursor-pointer w-5 h-5" />
-        </button>
+      {!chat.title && <Skeleton.Button className="!w-11/12" active />}
+      {chat.title && (
+        <>
+          <Link
+            to={`/chat/${chat.id}`}
+            style={{ color: "inherit" }}
+            className="grow ps-2 py-2 no-underline hover:underline"
+            title={chat.title}
+          >
+            {chat.title}
+          </Link>
+          {chat.fav ? (
+            <button
+              className="pe-2"
+              aria-label="Mark as unfavorite"
+              onClick={handleToggleFavorite}
+            >
+              <FavoriteFilledIcon className="text-yellow-500 cursor-pointer w-5 h-5" />
+            </button>
+          ) : (
+            <button
+              className="pe-2"
+              aria-label="Mark as favorite"
+              onClick={handleToggleFavorite}
+            >
+              <FavoriteIcon className="dark:text-gray-200 cursor-pointer w-5 h-5" />
+            </button>
+          )}
+        </>
       )}
     </li>
   );
