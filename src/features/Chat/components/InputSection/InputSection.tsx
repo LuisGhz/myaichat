@@ -1,7 +1,7 @@
 import { KeyboardEvent, useEffect, useState } from "react";
 import { Input } from "antd";
 import { SendAltFilledIcon } from "icons/SendAltFilledIcon";
-import { InputActionButtons } from "./InputActionButtons";
+import { InputActionButtons } from "./InputActionButton/InputActionButtons";
 import { useChatParams } from "features/Chat/hooks/useChatParams";
 import { useChat } from "features/Chat/hooks/useChat";
 import { useChatStore } from "store/app/ChatStore";

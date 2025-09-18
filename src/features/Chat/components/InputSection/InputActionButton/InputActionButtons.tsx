@@ -1,7 +1,7 @@
 import { FileTypeLightConfigIcon } from "icons/FileTypeLightConfigIcon";
 import { Microphone20SolidIcon } from "icons/Microphone20SolidIcon";
 import { PaperClipIcon } from "icons/PaperClipIcon";
-import { CurrentChatMetadata } from "./CurrentChatMetadata";
+import { CurrentChatMetadata } from "../CurrentChatMetadata";
 import { useChatParams } from "features/Chat/hooks/useChatParams";
 
 export const InputActionButtons = () => {
