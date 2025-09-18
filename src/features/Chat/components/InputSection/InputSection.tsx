@@ -6,6 +6,7 @@ import { useChatParams } from "features/Chat/hooks/useChatParams";
 import { useChat } from "features/Chat/hooks/useChat";
 import { useChatStore } from "store/app/ChatStore";
 import { useStreamAssistantMessage } from "features/Chat/hooks/useStreamAssistantMessage";
+import { useAppStoreActions } from "store/app/AppStore";
 
 const { TextArea } = Input;
 
@@ -16,6 +17,7 @@ export const InputSection = () => {
   const { sendNewMessage } = useChat();
   const { model, maxOutputTokens, isWebSearchMode, promptId } = useChatStore();
   const { startStreaming } = useStreamAssistantMessage();
+  const { setIsGettingNewChat } = useAppStoreActions();
 
   useEffect(() => {
     setNewMessage("");
@@ -23,6 +25,7 @@ export const InputSection = () => {
 
   const handleSendMessage = async () => {
     if (isSending || newMessage.trim() === "") return;
+    if (!params.id) setIsGettingNewChat(true);
     setNewMessage("");
     setIsSending(true);
     const req: SendNewMessageReq = {
