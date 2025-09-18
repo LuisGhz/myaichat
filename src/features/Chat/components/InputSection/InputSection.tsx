@@ -60,6 +60,7 @@ export const InputSection = () => {
           value={newMessage}
           onChange={(e) => setNewMessage(e.target.value)}
           onKeyDown={handleKeyDown}
+          disabled={isSending}
         />
         {newMessage.trim() !== "" && (
           <button
