@@ -33,15 +33,16 @@ export const useStreamAssistantMessage = () => {
 
     if (chunk.isLastChunk) {
       setIsGettingNewChat(false);
-      setChatsSummary([
-        ...chatsSummary,
-        { id: chatId, title: chunk.chatTitle, fav: false },
-      ]);
       setCurrentChatMetadata({
         totalCompletionTokens: chunk.totalChatCompletionTokens || 0,
         totalPromptTokens: chunk.totalChatPromptTokens || 0,
       });
       if (!params.id) navigate(`/chat/${chatId}`);
+      if (chatsSummary.find((chat) => chat.id === chatId)) return;
+      setChatsSummary([
+        ...chatsSummary,
+        { id: chatId, title: chunk.chatTitle, fav: false },
+      ]);
     }
   };
 
