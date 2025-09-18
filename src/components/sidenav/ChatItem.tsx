@@ -1,6 +1,5 @@
 import { useRef } from "react";
 import { Link } from "react-router";
-import { Skeleton } from "antd";
 import { FavoriteFilledIcon } from "icons/FavoriteFilledIcon";
 import { FavoriteIcon } from "icons/FavoriteIcon";
 import { useSideNav } from "core/hooks/useSideNav";
@@ -26,7 +25,6 @@ export const ChatItem = ({ chat, onContextMenu }: Props) => {
       onContextMenu={onContextMenu(chat.id)}
       ref={parentRef}
     >
-      {!chat.title && <Skeleton.Button className="!w-11/12" active />}
       {chat.title && (
         <>
           <Link
