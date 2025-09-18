@@ -1,8 +1,8 @@
-import { FileTypeLightConfigIcon } from "icons/FileTypeLightConfigIcon";
 import { Microphone20SolidIcon } from "icons/Microphone20SolidIcon";
 import { PaperClipIcon } from "icons/PaperClipIcon";
 import { CurrentChatMetadata } from "../CurrentChatMetadata";
 import { useChatParams } from "features/Chat/hooks/useChatParams";
+import { SettingsChatButton } from "./SettingsChatButton";
 
 export const InputActionButtons = () => {
   const params = useChatParams();
@@ -10,14 +10,7 @@ export const InputActionButtons = () => {
   return (
     <section className="flex justify-between">
       <div className="flex gap-2">
-        <button
-          className="cursor-pointer rounded-full p-1.5 hover:bg-gray-300 dark:hover:bg-gray-700 transition-c-200"
-          type="button"
-          aria-label="Settings"
-          title="Settings"
-        >
-          <FileTypeLightConfigIcon className="w-6 h-6 cursor-pointer fill-gray-700 dark:fill-gray-200" />
-        </button>
+        <SettingsChatButton buttonClassName="cursor-pointer rounded-full p-1.5 hover:bg-gray-300 dark:hover:bg-gray-700 transition-c-200" />
         {params.id && (
           <span
             className="cursor-pointer rounded-full p-1.5 hover:bg-gray-300 dark:hover:bg-gray-700 transition-c-200"
