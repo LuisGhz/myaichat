@@ -27,7 +27,7 @@ export const FeatureCheckbox = ({
           {labelText}
           <Tooltip title={featureDescription} placement="top">
             <ExclamationCircleIcon
-              className="size-4"
+              className="size-3 fill-gray-700 dark:fill-gray-200 ms-0.5"
               aria-label={`Information about ${labelText}`}
               role="img"
             />

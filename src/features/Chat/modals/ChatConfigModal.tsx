@@ -52,7 +52,7 @@ export const ChatConfigModal = ({
               placement="top"
             >
               <ExclamationCircleIcon
-                className="size-4"
+                className="size-3 fill-gray-700 dark:fill-gray-200"
                 aria-label="Information about max output tokens"
                 role="img"
               />
