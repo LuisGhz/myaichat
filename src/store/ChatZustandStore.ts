@@ -27,18 +27,32 @@ export const useChatZustandStore = create<ChatStore>((set) => ({
     set((state) => {
       const messages = [...state.messages];
       const lastMessageIndex = messages.length - 1;
-      
-      if (lastMessageIndex >= 0 && messages[lastMessageIndex].role === "Assistant") {
+
+      if (
+        lastMessageIndex >= 0 &&
+        messages[lastMessageIndex].role === "Assistant"
+      ) {
         messages[lastMessageIndex] = {
           ...messages[lastMessageIndex],
           content,
         };
       }
-      
+
       return { messages };
     }),
   currentChatMetadata: undefined,
   setCurrentChatMetadata: (
-    metadata: Omit<ChatMessagesRes, "historyMessages"> | undefined
-  ) => set({ currentChatMetadata: metadata }),
+    metadata: Partial<CurrentChatMetadataStore>
+  ) =>
+    set((state) => {
+      const newMetadata = {
+        ...state.currentChatMetadata,
+        ...(metadata as CurrentChatMetadataStore),
+      };
+
+      return {
+        ...state,
+        currentChatMetadata: newMetadata,
+      };
+    }),
 }));

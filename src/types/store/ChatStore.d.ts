@@ -11,8 +11,8 @@ type ChatStore = {
   updateStreamingAssistantMessage: (content: string) => void;
   promptId?: string | undefined;
   setPromptId: (id: string | undefined) => void;
-  currentChatMetadata?: Omit<ChatMessagesRes, "historyMessages"> | undefined;
+  currentChatMetadata?: CurrentChatMetadataStore;
   setCurrentChatMetadata: (
-    metadata: Omit<ChatMessagesRes, "historyMessages"> | undefined
+    metadata: Partial<CurrentChatMetadataStore>
   ) => void;
 };
