@@ -60,6 +60,7 @@ export const ChatContextMenu = ({
   const handleDeleteChat = async () => {
     if (!chat) return;
     await deleteChat(chat.id);
+    setIsContextMenuOpen(false);
   };
 
   if (!isContextMenuOpen) return null;
