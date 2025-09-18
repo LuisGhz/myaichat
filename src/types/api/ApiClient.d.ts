@@ -1,21 +1,21 @@
 type ApiClient = {
   get: <T>(path: string, options?: object) => Promise<T | undefined>;
-  post: <T, O>(
+  post: <T, O = AxiosRequestConfig>(
     path: string,
     data?: object,
     options?: O
   ) => Promise<T | undefined>;
-  patch: <T, O>(
+  patch: <T, O = AxiosRequestConfig>(
     path: string,
     data?: object,
     options?: O
   ) => Promise<T | undefined>;
-  postFormData: <T, O>(
+  postFormData: <T, O = AxiosRequestConfig>(
     path: string,
     data: FormData,
     options?: O
   ) => Promise<T | undefined>;
-  del: <O>(path: string, options?: O) => Promise<void>;
+  del: <O = AxiosRequestConfig>(path: string, options?: O) => Promise<void>;
   getStream: <T>(
     path: string,
     onChunk: (chunk: T) => void,
