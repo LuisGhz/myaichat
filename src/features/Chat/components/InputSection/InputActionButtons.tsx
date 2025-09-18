@@ -10,17 +10,21 @@ export const InputActionButtons = () => {
   return (
     <section className="flex justify-between">
       <div className="flex gap-2">
-        <span>
+        <span className="cursor-pointer rounded-full p-1.5 hover:bg-gray-300 dark:hover:bg-gray-700 transition-c-200">
           <FileTypeLightConfigIcon className="w-6 h-6 cursor-pointer fill-gray-700 dark:fill-gray-200" />
         </span>
-        {params.id && <CurrentChatMetadata />}
+        {params.id && (
+          <span className="cursor-pointer rounded-full p-1.5 hover:bg-gray-300 dark:hover:bg-gray-700 transition-c-200">
+            <CurrentChatMetadata />
+          </span>
+        )}
       </div>
       <div className="flex gap-2">
-        <span>
-          <PaperClipIcon className="w-6 h-6 cursor-pointer fill-gray-700 dark:fill-gray-200" />
+        <span className="cursor-pointer rounded-full p-1.5 hover:bg-gray-300 dark:hover:bg-gray-700 transition-c-200">
+          <PaperClipIcon className="w-6 h-6 fill-gray-700 dark:fill-gray-200" />
         </span>
-        <span>
-          <Microphone20SolidIcon className="w-6 h-6 cursor-pointer fill-gray-700 dark:fill-gray-200" />
+        <span className="cursor-pointer rounded-full p-1.5 hover:bg-gray-300 dark:hover:bg-gray-700 transition-c-200">
+          <Microphone20SolidIcon className="w-6 h-6 fill-gray-700 dark:fill-gray-200" />
         </span>
       </div>
     </section>
