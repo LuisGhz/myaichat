@@ -28,7 +28,11 @@ export const NewConversation = () => {
     for (const m of MODELS) {
       const dev = m.developBy?.name ?? "Unknown";
       if (!groups[dev]) {
-        groups[dev] = { label: <span>{dev}</span>, title: dev, options: [] };
+        groups[dev] = {
+          label: <span className="app-text">{dev}</span>,
+          title: dev,
+          options: [],
+        };
       }
       groups[dev].options.push({
         label: <span>{m.name}</span>,
