@@ -12,12 +12,7 @@ export const InputActionButtons = () => {
       <div className="flex gap-2">
         <SettingsChatButton buttonClassName="cursor-pointer rounded-full p-1.5 hover:bg-gray-300 dark:hover:bg-gray-700 transition-c-200" />
         {params.id && (
-          <span
-            className="cursor-pointer rounded-full p-1.5 hover:bg-gray-300 dark:hover:bg-gray-700 transition-c-200"
-            title="Chat info"
-          >
-            <CurrentChatMetadata />
-          </span>
+          <CurrentChatMetadata buttonClassName="cursor-pointer rounded-full p-1.5 hover:bg-gray-300 dark:hover:bg-gray-700 transition-c-200" />
         )}
       </div>
       <div className="flex gap-2">

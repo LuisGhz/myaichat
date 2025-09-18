@@ -3,7 +3,11 @@ import { useCurrentChatMetadata } from "features/Chat/hooks/useCurrentChatMetada
 import { ExclamationCircleIcon } from "icons/ExclamationCircleIcon";
 import { useChatStore } from "store/app/ChatStore";
 
-export const CurrentChatMetadata = () => {
+type Props = {
+  buttonClassName?: string;
+}
+
+export const CurrentChatMetadata = ({ buttonClassName }: Props) => {
   const { currentChatMetadata } = useChatStore();
   const { formatCost, calculatePromptTokens, calculateCompletionTokens } =
     useCurrentChatMetadata(currentChatMetadata?.model || "");
@@ -38,7 +42,7 @@ export const CurrentChatMetadata = () => {
   );
 
   return (
-    <span>
+    <span className={`${buttonClassName}`} title="Chat info">
       <Popover content={content}>
         <ExclamationCircleIcon className="w-6 h-6 cursor-pointer fill-gray-700 dark:fill-gray-200" />
       </Popover>
