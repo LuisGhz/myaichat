@@ -5,7 +5,10 @@ export const useAppStore = () => {
     (state) => state.sideNavCollapsed
   );
   const chatsSummary = useAppZustandStore((state) => state.chatsSummary);
-  return { sideNavCollapsed, chatsSummary };
+  const isGettingNewChat = useAppZustandStore(
+    (state) => state.isGettingNewChat
+  );
+  return { sideNavCollapsed, chatsSummary, isGettingNewChat };
 };
 
 export const useAppStoreActions = () => {
@@ -13,5 +16,8 @@ export const useAppStoreActions = () => {
     (state) => state.setSideNavCollapsed
   );
   const setChatsSummary = useAppZustandStore((state) => state.setChatsSummary);
-  return { setSideNavCollapsed, setChatsSummary };
+  const setIsGettingNewChat = useAppZustandStore(
+    (state) => state.setIsGettingNewChat
+  );
+  return { setSideNavCollapsed, setChatsSummary, setIsGettingNewChat };
 };
