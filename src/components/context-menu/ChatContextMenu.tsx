@@ -1,7 +1,10 @@
+import { Dispatch, RefObject, SetStateAction, useEffect, useRef } from "react";
 import { createPortal } from "react-dom";
+import { useNavigate } from "react-router";
 import { TrashOutlineIcon } from "icons/TrashOutlineIcon";
 import { Pencil } from "icons/PencilIcon";
-import { Dispatch, RefObject, SetStateAction, useEffect, useRef } from "react";
+import { useChatContext } from "core/hooks/useChatContext";
+import { useChatParams } from "features/Chat/hooks/useChatParams";
 
 export type ContextMetadata = {
   x: number;
@@ -12,8 +15,7 @@ type Props = {
   isContextMenuOpen: boolean;
   setIsContextMenuOpen: Dispatch<SetStateAction<boolean>>;
   contextMetadata: ContextMetadata;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  chat: any;
+  chat: ChatSummary | null;
   parentRef: RefObject<HTMLLIElement | null>;
 };
 
@@ -22,8 +24,12 @@ export const ChatContextMenu = ({
   setIsContextMenuOpen,
   contextMetadata,
   parentRef,
+  chat,
 }: Props) => {
   const menuRef = useRef<HTMLUListElement | null>(null);
+  const { deleteChat } = useChatContext();
+  const params = useChatParams();
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (!isContextMenuOpen) return;
@@ -55,6 +61,14 @@ export const ChatContextMenu = ({
     };
   }, [isContextMenuOpen, parentRef, setIsContextMenuOpen]);
 
+  const handleDeleteChat = async () => {
+    if (!chat) return;
+    await deleteChat(chat.id);
+    if (params.id === chat.id) {
+      navigate("/chat");
+    }
+  };
+
   if (!isContextMenuOpen) return null;
 
   const calculatedX =
@@ -78,10 +92,7 @@ export const ChatContextMenu = ({
     >
       <li
         className="px-4 py-1.5 hover:bg-gray-300 dark:hover:bg-gray-800 transition-colors duration-200 cursor-pointer flex justify-between items-center"
-        onClick={() => {
-          alert("Delete action triggered");
-          setIsContextMenuOpen(false);
-        }}
+        onClick={handleDeleteChat}
       >
         <span>Delete</span>
         <TrashOutlineIcon className="inline-block w-4 h-4 ms-2" />
