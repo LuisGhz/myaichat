@@ -57,7 +57,7 @@ export const ChatsList = () => {
                     onContextMenu={handleContextMenu}
                   />
                 ))}
-                <Divider />
+                {chatsSummary.length > 0 && <Divider />}
               </>
             )}
           </>
