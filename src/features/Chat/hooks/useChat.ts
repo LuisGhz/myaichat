@@ -55,7 +55,8 @@ export const useChat = () => {
     setIsGettingNewChat(true);
     try {
       const res = await sendNewMessageService(formData);
-      if (res?.isNew) {
+      if (!res) return;
+      if (res.isNew) {
         const newChatSummary: ChatSummary = {
           id: res.chatId,
           fav: false,
@@ -63,6 +64,7 @@ export const useChat = () => {
         setChatsSummary([...chatsSummary, newChatSummary]);
         return res.chatId;
       }
+      return res.chatId;
     } catch (error) {
       console.error("Error sending new message:", error);
     }
