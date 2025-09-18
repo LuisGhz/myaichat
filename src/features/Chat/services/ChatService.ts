@@ -24,3 +24,7 @@ export const streamAssistantMessageService = async (
     signal
   );
 };
+
+export const deleteChatService = async (id: string) => {
+  return await apiClient.del<{ message: string }>(`/chat/${id}/delete`);
+};
