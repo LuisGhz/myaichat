@@ -61,6 +61,7 @@ export const InputSection = () => {
           onChange={(e) => setNewMessage(e.target.value)}
           onKeyDown={handleKeyDown}
           disabled={isSending}
+          aria-label="Type a message"
         />
         {newMessage.trim() !== "" && (
           <button
