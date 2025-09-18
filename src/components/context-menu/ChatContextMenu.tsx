@@ -1,10 +1,8 @@
 import { Dispatch, RefObject, SetStateAction, useEffect, useRef } from "react";
 import { createPortal } from "react-dom";
-import { useNavigate } from "react-router";
 import { TrashOutlineIcon } from "icons/TrashOutlineIcon";
 import { Pencil } from "icons/PencilIcon";
 import { useChatContext } from "core/hooks/useChatContext";
-import { useChatParams } from "features/Chat/hooks/useChatParams";
 
 export type ContextMetadata = {
   x: number;
@@ -28,8 +26,6 @@ export const ChatContextMenu = ({
 }: Props) => {
   const menuRef = useRef<HTMLUListElement | null>(null);
   const { deleteChat } = useChatContext();
-  const params = useChatParams();
-  const navigate = useNavigate();
 
   useEffect(() => {
     if (!isContextMenuOpen) return;
@@ -64,9 +60,6 @@ export const ChatContextMenu = ({
   const handleDeleteChat = async () => {
     if (!chat) return;
     await deleteChat(chat.id);
-    if (params.id === chat.id) {
-      navigate("/chat");
-    }
   };
 
   if (!isContextMenuOpen) return null;
