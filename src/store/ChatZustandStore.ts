@@ -40,10 +40,39 @@ export const useChatZustandStore = create<ChatStore>((set) => ({
 
       return { messages };
     }),
-  currentChatMetadata: undefined,
-  setCurrentChatMetadata: (
-    metadata: Partial<CurrentChatMetadataStore>
+  addStreamingAssistanteAndUserMessageTokens: (
+    promptTokens: number,
+    completionTokens: number
   ) =>
+    set((state) => {
+      const messages = [...state.messages];
+      const lastMessageIndex = messages.length - 1;
+      const lastUserMessageIndex = messages.length - 2;
+
+      if (
+        lastMessageIndex >= 0 &&
+        messages[lastMessageIndex].role === "Assistant"
+      ) {
+        messages[lastMessageIndex] = {
+          ...messages[lastMessageIndex],
+          completionTokens,
+        };
+      }
+
+      if (
+        lastUserMessageIndex >= 0 &&
+        messages[lastUserMessageIndex].role === "User"
+      ) {
+        messages[lastUserMessageIndex] = {
+          ...messages[lastUserMessageIndex],
+          promptTokens,
+        };
+      }
+
+      return { messages };
+    }),
+  currentChatMetadata: undefined,
+  setCurrentChatMetadata: (metadata: Partial<CurrentChatMetadataStore>) =>
     set((state) => {
       const newMetadata = {
         ...state.currentChatMetadata,

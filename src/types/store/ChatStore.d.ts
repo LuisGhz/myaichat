@@ -9,6 +9,7 @@ type ChatStore = {
   setMessages: (messages: ChatMessage[]) => void;
   addStreamingAssistantMessage: () => void;
   updateStreamingAssistantMessage: (content: string) => void;
+  addStreamingAssistanteAndUserMessageTokens: (promptTokens: number, completionTokens: number) => void;
   promptId?: string | undefined;
   setPromptId: (id: string | undefined) => void;
   currentChatMetadata?: CurrentChatMetadataStore;

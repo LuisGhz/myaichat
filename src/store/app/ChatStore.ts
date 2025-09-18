@@ -38,6 +38,10 @@ export const useChatStoreActions = () => {
   const updateStreamingAssistantMessage = useChatZustandStore(
     (state) => state.updateStreamingAssistantMessage
   );
+
+  const addStreamingAssistanteAndUserMessageTokens = useChatZustandStore(
+    (state) => state.addStreamingAssistanteAndUserMessageTokens
+  );
   
   return {
     setModel,
@@ -48,5 +52,6 @@ export const useChatStoreActions = () => {
     setIsWebSearchMode,
     addStreamingAssistantMessage,
     updateStreamingAssistantMessage,
+    addStreamingAssistanteAndUserMessageTokens,
   };
 };
