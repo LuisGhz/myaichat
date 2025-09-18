@@ -42,7 +42,7 @@ export const SettingsChatButton = ({ buttonClassName }: Props) => {
         title="Settings"
         onClick={openModal}
       >
-        <FileTypeLightConfigIcon className="w-6 h-6 cursor-pointer fill-gray-700 dark:fill-gray-200" />
+        <FileTypeLightConfigIcon className={`w-6 h-6 cursor-pointer fill-gray-700 dark:fill-gray-200 transition-transform duration-200 ${isChatConfigModalOpen ? "rotate-180" : ""}`} />
       </button>
       {isChatConfigModalOpen && (
         <ChatConfigModal
