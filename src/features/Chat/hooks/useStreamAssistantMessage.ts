@@ -1,8 +1,9 @@
 import { useCallback, useRef, useState } from "react";
+import { useNavigate } from "react-router";
 import { useChatStoreActions } from "store/app/ChatStore";
 import { streamAssistantMessageService } from "../services/ChatService";
 import { useAppStore, useAppStoreActions } from "store/app/AppStore";
-import { useNavigate } from "react-router";
+import { useChatParams } from "./useChatParams";
 
 export const useStreamAssistantMessage = () => {
   const [fullText, setFullText] = useState<string>("");
@@ -17,6 +18,7 @@ export const useStreamAssistantMessage = () => {
     setCurrentChatMetadata,
   } = useChatStoreActions();
   const navigate = useNavigate();
+  const params = useChatParams();
 
   const handleChunk = (chatId: string, chunk: AssistantChunkRes) => {
     // Calculate the new text first
@@ -39,7 +41,7 @@ export const useStreamAssistantMessage = () => {
         totalCompletionTokens: chunk.totalChatCompletionTokens || 0,
         totalPromptTokens: chunk.totalChatPromptTokens || 0,
       });
-      navigate(`/chat/${chatId}`);
+      if (!params.id) navigate(`/chat/${chatId}`);
     }
   };
 
