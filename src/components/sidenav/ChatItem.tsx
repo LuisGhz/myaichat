@@ -3,6 +3,7 @@ import { Link } from "react-router";
 import { FavoriteFilledIcon } from "icons/FavoriteFilledIcon";
 import { FavoriteIcon } from "icons/FavoriteIcon";
 import { useSideNav } from "core/hooks/useSideNav";
+import { useChatParams } from "features/Chat/hooks/useChatParams";
 
 type Props = {
   chat: ChatSummary;
@@ -12,6 +13,7 @@ type Props = {
 export const ChatItem = ({ chat, onContextMenu }: Props) => {
   const { toggleFavorite } = useSideNav();
   const parentRef = useRef<HTMLLIElement | null>(null);
+  const params = useChatParams();
 
   const handleToggleFavorite = async () => {
     await toggleFavorite(chat.id);
@@ -28,9 +30,9 @@ export const ChatItem = ({ chat, onContextMenu }: Props) => {
       {chat.title && (
         <>
           <Link
+            className={`grow ps-2 py-2 no-underline hover:underline ${params.id === chat.id ? "font-semibold" : ""}`}
             to={`/chat/${chat.id}`}
             style={{ color: "inherit" }}
-            className="grow ps-2 py-2 no-underline hover:underline"
             title={chat.title}
           >
             {chat.title}
