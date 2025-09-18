@@ -15,7 +15,7 @@ export const useStreamAssistantMessage = () => {
   const {
     addStreamingAssistantMessage,
     updateStreamingAssistantMessage,
-    setCurrentChatMetadata,
+    addStreamingAssistanteAndUserMessageTokens,
   } = useChatStoreActions();
   const navigate = useNavigate();
   const params = useChatParams();
@@ -33,10 +33,10 @@ export const useStreamAssistantMessage = () => {
 
     if (chunk.isLastChunk) {
       setIsGettingNewChat(false);
-      setCurrentChatMetadata({
-        totalCompletionTokens: chunk.totalChatCompletionTokens || 0,
-        totalPromptTokens: chunk.totalChatPromptTokens || 0,
-      });
+      addStreamingAssistanteAndUserMessageTokens(
+        chunk.promptTokens || 0,
+        chunk.completionTokens || 0
+      );
       if (!params.id) navigate(`/chat/${chatId}`);
       if (chatsSummary.find((chat) => chat.id === chatId)) return;
       setChatsSummary([
