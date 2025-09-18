@@ -11,7 +11,7 @@ export const useChat = () => {
   const { setModel, setPromptId, setCurrentChatMetadata, setMessages } =
     useChatStoreActions();
   const { chatsSummary } = useAppStore();
-  const { setChatsSummary } = useAppStoreActions();
+  const { setChatsSummary, setIsGettingNewChat } = useAppStoreActions();
 
   const resetChatData = () => {
     setModel(DEFAULT_MODEL);
@@ -52,6 +52,7 @@ export const useChat = () => {
     };
     const mergedMessages = [...messages, newMessage];
     setMessages(mergedMessages);
+    setIsGettingNewChat(true);
     try {
       const res = await sendNewMessageService(formData);
       if (res?.isNew) {
