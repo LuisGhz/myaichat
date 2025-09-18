@@ -71,8 +71,8 @@ export const useChat = () => {
     }
   };
 
-  const toggleIsWebSearchMode = async (id: string) => {
-    await toggleWebSearchModeService(id);
+  const toggleIsWebSearchMode = async (id: string, isWebSearchMode: boolean) => {
+    await toggleWebSearchModeService(id, isWebSearchMode);
   };
 
   const changeMaxOutputTokens = async (id: string, maxOutputTokens: number) => {
