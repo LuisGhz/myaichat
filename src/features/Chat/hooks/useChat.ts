@@ -1,14 +1,16 @@
 import { DEFAULT_MODEL, MODELS } from "core/const/Models";
 import { useChatStore, useChatStoreActions } from "store/app/ChatStore";
 import {
+  changeMaxOutputTokensService,
   getChatMessagesService,
   sendNewMessageService,
+  toggleWebSearchModeService,
 } from "../services/ChatService";
 import { useAppStore, useAppStoreActions } from "store/app/AppStore";
 
 export const useChat = () => {
   const { model, promptId, messages } = useChatStore();
-  const { setModel, setPromptId, setCurrentChatMetadata, setMessages } =
+  const { setModel, setPromptId, setCurrentChatMetadata, setMessages, setMaxOutputTokens, setIsWebSearchMode } =
     useChatStoreActions();
   const { chatsSummary } = useAppStore();
   const { setChatsSummary } = useAppStoreActions();
@@ -24,6 +26,8 @@ export const useChat = () => {
     if (response) {
       setMessages(response.historyMessages);
       const modelName = MODELS.find((m) => m.value === response.model)!.name;
+      setMaxOutputTokens(response.maxOutputTokens);
+      setIsWebSearchMode(response.isWebSearchMode);
       setCurrentChatMetadata({
         totalPromptTokens: response.totalPromptTokens,
         totalCompletionTokens: response.totalCompletionTokens,
@@ -69,6 +73,14 @@ export const useChat = () => {
     }
   };
 
+  const toggleIsWebSearchMode = async (id: string) => {
+    await toggleWebSearchModeService(id);
+  };
+
+  const changeMaxOutputTokens = async (id: string, maxOutputTokens: number) => {
+    await changeMaxOutputTokensService(id, maxOutputTokens);
+  };
+
   return {
     model,
     promptId,
@@ -76,5 +88,7 @@ export const useChat = () => {
     resetChatData,
     getChatMessages,
     sendNewMessage,
+    toggleIsWebSearchMode,
+    changeMaxOutputTokens,
   };
 };
