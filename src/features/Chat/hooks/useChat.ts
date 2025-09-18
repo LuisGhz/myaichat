@@ -31,8 +31,6 @@ export const useChat = () => {
       setCurrentChatMetadata({
         totalPromptTokens: response.totalPromptTokens,
         totalCompletionTokens: response.totalCompletionTokens,
-        maxOutputTokens: response.maxOutputTokens,
-        isWebSearchMode: response.isWebSearchMode,
         model: modelName,
       });
     }
