@@ -7,13 +7,8 @@ export const CurrentChatMetadata = () => {
 
   if (!currentChatMetadata) return null;
 
-  const {
-    totalPromptTokens,
-    totalCompletionTokens,
-    maxOutputTokens,
-    isWebSearchMode,
-    model,
-  } = currentChatMetadata;
+  const { totalPromptTokens, totalCompletionTokens, model } =
+    currentChatMetadata;
 
   const content = (
     <ul className="flex flex-col gap-1">
@@ -24,14 +19,6 @@ export const CurrentChatMetadata = () => {
       <li>
         <span className="font-semibold">Total Completion Tokens</span>:{" "}
         {totalCompletionTokens}
-      </li>
-      <li>
-        <span className="font-semibold">Max Output Tokens</span>:{" "}
-        {maxOutputTokens}
-      </li>
-      <li>
-        <span className="font-semibold">Is Web Search Mode</span>:{" "}
-        {isWebSearchMode ? "Yes" : "No"}
       </li>
       <li>
         <span className="font-semibold">Model</span>: {model}
