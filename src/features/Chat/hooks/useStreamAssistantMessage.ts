@@ -1,30 +1,41 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useRef, useState } from "react";
 import { useChatStoreActions } from "store/app/ChatStore";
 import { streamAssistantMessageService } from "../services/ChatService";
+import { useAppStore, useAppStoreActions } from "store/app/AppStore";
 
-// Hook for manually triggered streaming of assistant messages
 export const useStreamAssistantMessage = () => {
-  const [chunks, setChunks] = useState<AssistantChunkRes[]>([]);
   const [fullText, setFullText] = useState<string>("");
   const [isStreaming, setIsStreaming] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
   const controllerRef = useRef<AbortController | null>(null);
-  
-  const { addStreamingAssistantMessage, updateStreamingAssistantMessage } = useChatStoreActions();
+  const { chatsSummary } = useAppStore();
+  const { setChatsSummary, setIsGettingNewChat } = useAppStoreActions();
+  const { addStreamingAssistantMessage, updateStreamingAssistantMessage } =
+    useChatStoreActions();
 
-  // Debug effect to track chunks changes
-  useEffect(() => {
-    console.log("Chunks state updated:", chunks);
-  }, [chunks]);
+  const handleChunk = (chatId: string, chunk: AssistantChunkRes) => {
+    // Calculate the new text first
+    setFullText((prev) => {
+      const newText = prev + chunk.content;
+      // Update the assistant message in the chat store after state update
+      setTimeout(() => {
+        updateStreamingAssistantMessage(newText);
+      }, 0);
+      return newText;
+    });
 
-  // Debug effect to track fullText changes
-  useEffect(() => {
-    console.log("FullText state updated:", fullText);
-  }, [fullText]);
+    if (chunk.isLastChunk) {
+      setIsGettingNewChat(false);
+      setChatsSummary([
+        ...chatsSummary,
+        { id: chatId, title: chunk.chatTitle, fav: false },
+      ]); // Trigger reactivity
+    }
+  };
 
-  const startStreaming = useCallback(async (chatId: string) => {
+  const startStreaming = async (chatId: string) => {
     // console.log("Starting streaming for chat ID:", chatId);
-    
+
     // Abort any existing stream
     if (controllerRef.current) {
       controllerRef.current.abort();
@@ -32,36 +43,18 @@ export const useStreamAssistantMessage = () => {
 
     const controller = new AbortController();
     controllerRef.current = controller;
-    
+
     setIsStreaming(true);
     setError(null);
-    setChunks([]);
     setFullText("");
-    
+
     // Add a new empty assistant message to the chat store
     addStreamingAssistantMessage();
 
     try {
-      console.log("Calling streamAssistantMessageService...");
       await streamAssistantMessageService(
         chatId,
-        (chunk: AssistantChunkRes) => {
-          // console.log("Chunk received in hook:", chunk);
-          setChunks(prev => {
-            const newChunks = [...prev, chunk];
-            // console.log("Updated chunks state:", newChunks);
-            return newChunks;
-          });
-          setFullText(prev => {
-            const newText = prev + chunk.content;
-            // console.log("Updated fullText state:", newText);
-            
-            // Update the assistant message in the chat store with accumulated content
-            updateStreamingAssistantMessage(newText);
-            
-            return newText;
-          });
-        },
+        (chunk: AssistantChunkRes) => handleChunk(chatId, chunk),
         controller.signal
       );
       // console.log("Stream completed successfully");
@@ -74,7 +67,7 @@ export const useStreamAssistantMessage = () => {
       setIsStreaming(false);
       controllerRef.current = null;
     }
-  }, [addStreamingAssistantMessage, updateStreamingAssistantMessage]);
+  };
 
   const stopStreaming = useCallback(() => {
     if (controllerRef.current) {
@@ -85,7 +78,6 @@ export const useStreamAssistantMessage = () => {
   }, []);
 
   return {
-    chunks,
     fullText,
     isStreaming,
     error,
