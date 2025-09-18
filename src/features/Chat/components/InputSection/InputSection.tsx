@@ -15,7 +15,7 @@ export const InputSection = () => {
   const params = useChatParams();
   const { sendNewMessage } = useChat();
   const { model, maxOutputTokens, isWebSearchMode, promptId } = useChatStore();
-  const { chunks, startStreaming } = useStreamAssistantMessage();
+  const { startStreaming } = useStreamAssistantMessage();
 
   useEffect(() => {
     setNewMessage("");
@@ -23,6 +23,7 @@ export const InputSection = () => {
 
   const handleSendMessage = async () => {
     if (isSending || newMessage.trim() === "") return;
+    setNewMessage("");
     setIsSending(true);
     const req: SendNewMessageReq = {
       chatId: params.id || undefined,
@@ -34,12 +35,8 @@ export const InputSection = () => {
       promptId,
     };
 
-    setNewMessage("");
     const chatId = await sendNewMessage(req);
-    if (chatId) {
-      await startStreaming(chatId);
-      console.log(chunks);
-    }
+    if (chatId) await startStreaming(chatId);
     setIsSending(false);
   };
 
