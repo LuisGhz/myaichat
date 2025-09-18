@@ -69,7 +69,16 @@ export const useChatZustandStore = create<ChatStore>((set) => ({
         };
       }
 
-      return { messages };
+      const { currentChatMetadata } = state;
+      const newMetadata = {
+        ...currentChatMetadata,
+        totalPromptTokens:
+          (currentChatMetadata?.totalPromptTokens || 0) + promptTokens,
+        totalCompletionTokens:
+          (currentChatMetadata?.totalCompletionTokens || 0) + completionTokens,
+      };
+
+      return { messages, currentChatMetadata: (newMetadata as Omit<ChatMessagesRes, "historyMessages">) };
     }),
   currentChatMetadata: undefined,
   setCurrentChatMetadata: (metadata: Partial<CurrentChatMetadataStore>) =>
