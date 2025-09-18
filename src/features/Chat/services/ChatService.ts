@@ -25,6 +25,22 @@ export const streamAssistantMessageService = async (
   );
 };
 
+export const toggleWebSearchModeService = async (id: string) => {
+  return await apiClient.patch(`/chat/${id}/toggle-web-search-mode`);
+};
+
+export const changeMaxOutputTokensService = async (
+  id: string,
+  maxOutputTokens: number
+) => {
+  return await apiClient.patch<{ maxOutputTokens: number }>(
+    `/chat/${id}/change-max-output-tokens`,
+    {
+      maxOutputTokens,
+    }
+  );
+};
+
 export const deleteChatService = async (id: string) => {
   return await apiClient.del<{ message: string }>(`/chat/${id}/delete`);
 };
