@@ -28,7 +28,8 @@ export const SettingsChatButton = ({ buttonClassName }: Props) => {
     }
     if (isWebSearchMode !== newConfig.isWebSearchMode) {
       setIsWebSearchMode(newConfig.isWebSearchMode);
-      if (params.id) toggleIsWebSearchMode(params.id);
+      if (params.id)
+        toggleIsWebSearchMode(params.id, newConfig.isWebSearchMode);
     }
   };
 
