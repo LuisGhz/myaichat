@@ -2,6 +2,7 @@ import { useCallback, useRef, useState } from "react";
 import { useChatStoreActions } from "store/app/ChatStore";
 import { streamAssistantMessageService } from "../services/ChatService";
 import { useAppStore, useAppStoreActions } from "store/app/AppStore";
+import { useNavigate } from "react-router";
 
 export const useStreamAssistantMessage = () => {
   const [fullText, setFullText] = useState<string>("");
@@ -12,6 +13,7 @@ export const useStreamAssistantMessage = () => {
   const { setChatsSummary, setIsGettingNewChat } = useAppStoreActions();
   const { addStreamingAssistantMessage, updateStreamingAssistantMessage } =
     useChatStoreActions();
+  const navigate = useNavigate();
 
   const handleChunk = (chatId: string, chunk: AssistantChunkRes) => {
     // Calculate the new text first
@@ -30,6 +32,7 @@ export const useStreamAssistantMessage = () => {
         ...chatsSummary,
         { id: chatId, title: chunk.chatTitle, fav: false },
       ]); // Trigger reactivity
+      navigate(`/chat/${chatId}`);
     }
   };
 
