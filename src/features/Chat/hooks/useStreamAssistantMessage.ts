@@ -11,8 +11,11 @@ export const useStreamAssistantMessage = () => {
   const controllerRef = useRef<AbortController | null>(null);
   const { chatsSummary } = useAppStore();
   const { setChatsSummary, setIsGettingNewChat } = useAppStoreActions();
-  const { addStreamingAssistantMessage, updateStreamingAssistantMessage } =
-    useChatStoreActions();
+  const {
+    addStreamingAssistantMessage,
+    updateStreamingAssistantMessage,
+    setCurrentChatMetadata,
+  } = useChatStoreActions();
   const navigate = useNavigate();
 
   const handleChunk = (chatId: string, chunk: AssistantChunkRes) => {
@@ -31,7 +34,11 @@ export const useStreamAssistantMessage = () => {
       setChatsSummary([
         ...chatsSummary,
         { id: chatId, title: chunk.chatTitle, fav: false },
-      ]); // Trigger reactivity
+      ]);
+      setCurrentChatMetadata({
+        totalCompletionTokens: chunk.totalChatCompletionTokens || 0,
+        totalPromptTokens: chunk.totalChatPromptTokens || 0,
+      });
       navigate(`/chat/${chatId}`);
     }
   };
