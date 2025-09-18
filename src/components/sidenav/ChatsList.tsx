@@ -1,11 +1,12 @@
 import { useEffect, useRef, useState } from "react";
-import { Divider } from "antd";
+import { Divider, Skeleton } from "antd";
 import { ChatItem } from "./ChatItem";
 import {
   ChatContextMenu,
   ContextMetadata,
 } from "components/context-menu/ChatContextMenu";
 import { useSideNav } from "core/hooks/useSideNav";
+import { useAppStore } from "store/app/AppStore";
 
 export const ChatsList = () => {
   const { getChatsSummary, chatsSummary } = useSideNav();
@@ -19,6 +20,7 @@ export const ChatsList = () => {
   const parentRef = useRef<HTMLLIElement | null>(null);
   const [groupedChats, setGroupedChats] =
     useState<Partial<Record<"fav" | "unfav", ChatSummary[]>>>();
+  const { isGettingNewChat } = useAppStore();
 
   useEffect(() => {
     getChatsSummary();
@@ -69,6 +71,7 @@ export const ChatsList = () => {
                 />
               ))}
           </>
+          {isGettingNewChat && <Skeleton.Button className="!w-11/12" active />}
         </ul>
       )}
       <ChatContextMenu
