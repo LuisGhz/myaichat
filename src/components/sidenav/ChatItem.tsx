@@ -30,7 +30,9 @@ export const ChatItem = ({ chat, onContextMenu }: Props) => {
       {chat.title && (
         <>
           <Link
-            className={`grow ps-2 py-2 no-underline hover:underline ${params.id === chat.id ? "font-semibold" : ""}`}
+            className={`grow ps-2 py-2 no-underline hover:underline ${
+              params.id === chat.id ? "font-semibold" : ""
+            }`}
             to={`/chat/${chat.id}`}
             style={{ color: "inherit" }}
             title={chat.title}
