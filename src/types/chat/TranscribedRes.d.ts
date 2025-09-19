@@ -1,0 +1,3 @@
+type TranscribedRes = {
+  content: string;
+};
