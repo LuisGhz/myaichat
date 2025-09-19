@@ -10,7 +10,9 @@ export const AttachFileButton = ({ buttonClassName }: Props) => {
 
   return (
     <button
-      className={`${buttonClassName} ${isRecordingAudio || isSendingAudio ? "hidden" : ""}`}
+      className={`${buttonClassName} ${
+        isRecordingAudio || isSendingAudio ? "hidden" : ""
+      }`}
       type="button"
       aria-label="Attach file"
       title="Attach file"
