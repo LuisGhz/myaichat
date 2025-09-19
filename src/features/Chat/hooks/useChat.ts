@@ -48,7 +48,8 @@ export const useChat = () => {
       setMessages([...response.historyMessages, ...messages]);
       return response.historyMessages.length;
     }
-    return 0;
+    // Return -1 to indicate empty page
+    return response ? -1 : 0;
   };
 
   const sendNewMessage = async (req: SendNewMessageReq) => {

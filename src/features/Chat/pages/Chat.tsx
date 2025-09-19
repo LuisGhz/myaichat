@@ -12,6 +12,7 @@ export const Chat = () => {
   const [isLoadingPreviousMessages, setIsLoadingPreviousMessages] = useState(false);
   const [currentPage, setCurrentPage] = useState(0);
   const [hasMoreMessages, setHasMoreMessages] = useState(true);
+  const [emptyPage, setEmptyPage] = useState(false);
   const previousMessageCountRef = useRef(0);
   const lastScrollHeightRef = useRef(0);
 
@@ -24,6 +25,7 @@ export const Chat = () => {
     // Reset pagination state when chat changes
     setCurrentPage(0);
     setHasMoreMessages(true);
+    setEmptyPage(false);
     getChatMessages(params.id);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [params.id]);
@@ -74,7 +76,8 @@ export const Chat = () => {
     const threshold = 100; // pixels from top
 
     // If user scrolled near the top and we're not already loading and have more messages
-    if (scrollTop < threshold && !isLoadingPreviousMessages && hasMoreMessages) {
+    // Also check if the last requested page was empty to prevent unnecessary requests
+    if (scrollTop < threshold && !isLoadingPreviousMessages && hasMoreMessages && !emptyPage) {
       setIsLoadingPreviousMessages(true);
       
       try {
@@ -83,8 +86,14 @@ export const Chat = () => {
         
         if (loadedMessagesCount > 0) {
           setCurrentPage(nextPage);
+          setEmptyPage(false); // Reset emptyPage since we got content
+        } else if (loadedMessagesCount === -1) {
+          // Empty page returned - mark as empty and decrease the page counter
+          setEmptyPage(true);
+          setHasMoreMessages(false);
+          setIsLoadingPreviousMessages(false);
         } else {
-          // No more messages to load
+          // Error occurred or no response
           setHasMoreMessages(false);
           setIsLoadingPreviousMessages(false);
         }
