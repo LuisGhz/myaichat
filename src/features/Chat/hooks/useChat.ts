@@ -24,22 +24,27 @@ export const useChat = () => {
   const getChatMessages = async (id: string, page: number = 0) => {
     const response = await getChatMessagesService(id, page);
     if (response) {
+      // Only update messages for pagination (page > 0), update all metadata for initial load (page 0)
       setMessages(response.historyMessages);
-      const modelName = MODELS.find((m) => m.value === response.model)!.name;
-      setMaxOutputTokens(response.maxOutputTokens);
-      setIsWebSearchMode(response.isWebSearchMode);
-      setCurrentChatMetadata({
-        totalPromptTokens: response.totalPromptTokens,
-        totalCompletionTokens: response.totalCompletionTokens,
-        model: modelName,
-      });
+      
+      // Only update chat metadata on the first page (most recent state)
+      if (page === 0) {
+        const modelName = MODELS.find((m) => m.value === response.model)!.name;
+        setMaxOutputTokens(response.maxOutputTokens);
+        setIsWebSearchMode(response.isWebSearchMode);
+        setCurrentChatMetadata({
+          totalPromptTokens: response.totalPromptTokens,
+          totalCompletionTokens: response.totalCompletionTokens,
+          model: modelName,
+        });
+      }
     }
   };
 
   const loadPreviousMessages = async (id: string, page: number) => {
     const response = await getChatMessagesService(id, page);
     if (response && response.historyMessages.length > 0) {
-      // Prepend new messages to existing ones
+      // Prepend new messages to existing ones (only update messages, not metadata)
       setMessages([...response.historyMessages, ...messages]);
       return response.historyMessages.length;
     }
