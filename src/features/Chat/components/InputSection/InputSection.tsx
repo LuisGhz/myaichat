@@ -50,6 +50,10 @@ export const InputSection = () => {
     }
   };
 
+  const onTranscription = (transcription: string) => {
+    setNewMessage((prev) => (prev ? `${prev} ${transcription}` : transcription));
+  };
+
   return (
     <section className="w-full md:w-11/12 xl:10/12 max-w-5xl mx-auto border-[1px] border-b-0 border-gray-300 rounded-t-lg p-2 pb-4">
       <section className="flex gap-2 items-end mb-2 px-1">
@@ -74,7 +78,7 @@ export const InputSection = () => {
           </button>
         )}
       </section>
-      <InputActionButtons />
+      <InputActionButtons onTranscription={onTranscription} />
     </section>
   );
 };

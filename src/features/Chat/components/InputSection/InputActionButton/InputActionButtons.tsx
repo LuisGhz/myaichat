@@ -4,7 +4,11 @@ import { SettingsChatButton } from "./SettingsChatButton";
 import { AttachFileButton } from "./AttachFileButton";
 import { MicrophoneButton } from "./MicrophoneButton";
 
-export const InputActionButtons = () => {
+type Props = {
+  onTranscription: (transcription: string) => void;
+}
+
+export const InputActionButtons = ({ onTranscription }: Props) => {
   const params = useChatParams();
   const buttonsStyles =
     "cursor-pointer rounded-full p-1.5 hover:bg-gray-300 dark:hover:bg-gray-700 transition-c-200";
@@ -17,7 +21,7 @@ export const InputActionButtons = () => {
       </div>
       <div className="flex gap-2">
         <AttachFileButton buttonClassName={buttonsStyles} />
-        <MicrophoneButton buttonClassName={buttonsStyles} />
+        <MicrophoneButton buttonClassName={buttonsStyles} onTranscription={onTranscription} />
       </div>
     </section>
   );
