@@ -15,6 +15,9 @@ export const Chat = () => {
   const [emptyPage, setEmptyPage] = useState(false);
   const previousMessageCountRef = useRef(0);
   const lastScrollHeightRef = useRef(0);
+  const hasUserScrolledRef = useRef(false);
+  const initialScrollPositionRef = useRef<number | null>(null);
+  const isProgrammaticScrollRef = useRef(false);
 
   useEffect(() => {
     if (!params.id) {
@@ -26,6 +29,9 @@ export const Chat = () => {
     setCurrentPage(0);
     setHasMoreMessages(true);
     setEmptyPage(false);
+    hasUserScrolledRef.current = false; // Reset scroll tracking
+    initialScrollPositionRef.current = null; // Reset initial position tracking
+    isProgrammaticScrollRef.current = false; // Reset programmatic scroll tracking
     getChatMessages(params.id);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [params.id]);
@@ -50,16 +56,26 @@ export const Chat = () => {
         !messagesAddedAtTop && 
         !isLoadingPreviousMessages
       ) {
+        isProgrammaticScrollRef.current = true;
         scrollContainerRef.current.scrollTo({
           top: scrollContainerRef.current.scrollHeight,
           behavior: "smooth"
         });
+        // Reset the flag after a short delay to allow the scroll to complete
+        setTimeout(() => {
+          isProgrammaticScrollRef.current = false;
+        }, 500);
       } else if (messagesAddedAtTop && isLoadingPreviousMessages) {
         // Maintain scroll position when loading previous messages
+        isProgrammaticScrollRef.current = true;
         const currentScrollHeight = scrollContainerRef.current.scrollHeight;
         const heightDifference = currentScrollHeight - lastScrollHeightRef.current;
         scrollContainerRef.current.scrollTop += heightDifference;
         setIsLoadingPreviousMessages(false);
+        // Reset the flag after scroll position adjustment
+        setTimeout(() => {
+          isProgrammaticScrollRef.current = false;
+        }, 100);
       }
 
       // Update refs
@@ -72,12 +88,44 @@ export const Chat = () => {
   const handleScroll = async () => {
     if (!scrollContainerRef.current || !params.id) return;
 
-    const { scrollTop } = scrollContainerRef.current;
+    // Ignore scroll events during programmatic scrolling
+    if (isProgrammaticScrollRef.current) return;
+
+    const { scrollTop, scrollHeight, clientHeight } = scrollContainerRef.current;
+    
+    // Capture the initial scroll position when content is first loaded
+    if (initialScrollPositionRef.current === null && scrollHeight > clientHeight) {
+      initialScrollPositionRef.current = scrollTop;
+      return; // Exit early on first measurement
+    }
+
+    // Only mark as user scrolled if the scroll position has changed from initial position
+    // and we have an initial position recorded
+    if (
+      initialScrollPositionRef.current !== null && 
+      Math.abs(scrollTop - initialScrollPositionRef.current) > 10 && // 10px tolerance
+      !hasUserScrolledRef.current
+    ) {
+      hasUserScrolledRef.current = true;
+    }
+
     const threshold = 100; // pixels from top
 
-    // If user scrolled near the top and we're not already loading and have more messages
-    // Also check if the last requested page was empty to prevent unnecessary requests
-    if (scrollTop < threshold && !isLoadingPreviousMessages && hasMoreMessages && !emptyPage) {
+    // Only trigger pagination if:
+    // 1. User scrolled near the top
+    // 2. Not already loading
+    // 3. Has more messages to load
+    // 4. Last page wasn't empty
+    // 5. User has actually scrolled (not initial state)
+    // 6. There are existing messages
+    if (
+      scrollTop < threshold && 
+      !isLoadingPreviousMessages && 
+      hasMoreMessages && 
+      !emptyPage &&
+      hasUserScrolledRef.current &&
+      messages.length > 0
+    ) {
       setIsLoadingPreviousMessages(true);
       
       try {
