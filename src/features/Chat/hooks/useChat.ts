@@ -36,6 +36,16 @@ export const useChat = () => {
     }
   };
 
+  const loadPreviousMessages = async (id: string, page: number) => {
+    const response = await getChatMessagesService(id, page);
+    if (response && response.historyMessages.length > 0) {
+      // Prepend new messages to existing ones
+      setMessages([...response.historyMessages, ...messages]);
+      return response.historyMessages.length;
+    }
+    return 0;
+  };
+
   const sendNewMessage = async (req: SendNewMessageReq) => {
     const formData = new FormData();
     formData.append("content", req.content);
@@ -85,6 +95,7 @@ export const useChat = () => {
     messages,
     resetChatData,
     getChatMessages,
+    loadPreviousMessages,
     sendNewMessage,
     toggleIsWebSearchMode,
     changeMaxOutputTokens,

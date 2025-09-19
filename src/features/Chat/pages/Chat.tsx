@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useRef, useState } from "react";
 import { NewConversation } from "../components/NewConversation";
 import { InputSection } from "../components/InputSection/InputSection";
 import { useChatParams } from "../hooks/useChatParams";
@@ -7,7 +7,13 @@ import { ChatMessages } from "../components/ChatMessages";
 
 export const Chat = () => {
   const params = useChatParams();
-  const { resetChatData, getChatMessages, messages } = useChat();
+  const { resetChatData, getChatMessages, loadPreviousMessages, messages } = useChat();
+  const scrollContainerRef = useRef<HTMLElement>(null);
+  const [isLoadingPreviousMessages, setIsLoadingPreviousMessages] = useState(false);
+  const [currentPage, setCurrentPage] = useState(0);
+  const [hasMoreMessages, setHasMoreMessages] = useState(true);
+  const previousMessageCountRef = useRef(0);
+  const lastScrollHeightRef = useRef(0);
 
   useEffect(() => {
     if (!params.id) {
@@ -15,13 +21,94 @@ export const Chat = () => {
       return;
     }
 
+    // Reset pagination state when chat changes
+    setCurrentPage(0);
+    setHasMoreMessages(true);
     getChatMessages(params.id);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [params.id]);
 
+  // Auto-scroll when messages update (during streaming)
+  useEffect(() => {
+    if (scrollContainerRef.current && messages.length > 0) {
+      const lastMessage = messages[messages.length - 1];
+      const currentMessageCount = messages.length;
+      const previousMessageCount = previousMessageCountRef.current;
+
+      // Check if messages were added at the beginning (pagination)
+      const messagesAddedAtTop = currentMessageCount > previousMessageCount && 
+                                currentMessageCount - previousMessageCount > 1;
+
+      // Only auto-scroll if:
+      // 1. The last message is from assistant (streaming)
+      // 2. Messages weren't loaded at the top (pagination)
+      // 3. Not currently loading previous messages
+      if (
+        lastMessage.role === "Assistant" && 
+        !messagesAddedAtTop && 
+        !isLoadingPreviousMessages
+      ) {
+        scrollContainerRef.current.scrollTo({
+          top: scrollContainerRef.current.scrollHeight,
+          behavior: "smooth"
+        });
+      } else if (messagesAddedAtTop && isLoadingPreviousMessages) {
+        // Maintain scroll position when loading previous messages
+        const currentScrollHeight = scrollContainerRef.current.scrollHeight;
+        const heightDifference = currentScrollHeight - lastScrollHeightRef.current;
+        scrollContainerRef.current.scrollTop += heightDifference;
+        setIsLoadingPreviousMessages(false);
+      }
+
+      // Update refs
+      previousMessageCountRef.current = currentMessageCount;
+      lastScrollHeightRef.current = scrollContainerRef.current.scrollHeight;
+    }
+  }, [messages, isLoadingPreviousMessages]);
+
+  // Handle scroll to detect when user reaches the top for pagination
+  const handleScroll = async () => {
+    if (!scrollContainerRef.current || !params.id) return;
+
+    const { scrollTop } = scrollContainerRef.current;
+    const threshold = 100; // pixels from top
+
+    // If user scrolled near the top and we're not already loading and have more messages
+    if (scrollTop < threshold && !isLoadingPreviousMessages && hasMoreMessages) {
+      setIsLoadingPreviousMessages(true);
+      
+      try {
+        const nextPage = currentPage + 1;
+        const loadedMessagesCount = await loadPreviousMessages(params.id, nextPage);
+        
+        if (loadedMessagesCount > 0) {
+          setCurrentPage(nextPage);
+        } else {
+          // No more messages to load
+          setHasMoreMessages(false);
+          setIsLoadingPreviousMessages(false);
+        }
+      } catch (error) {
+        console.error("Error loading previous messages:", error);
+        setIsLoadingPreviousMessages(false);
+      }
+    }
+  };
+
   return (
     <div className="h-full flex flex-col">
-      <section className="grow overflow-auto pb-10 scroll-hidden">
+      <section 
+        ref={scrollContainerRef}
+        className="grow overflow-auto pb-10 scroll-hidden"
+        role="main"
+        aria-label="Chat conversation"
+        onScroll={handleScroll}
+      >
+        {isLoadingPreviousMessages && (
+          <div className="flex justify-center p-4" role="status" aria-live="polite">
+            <span className="text-sm text-gray-500">Loading previous messages...</span>
+          </div>
+        )}
         {messages.length === 0 && <NewConversation />}
         {messages.length > 0 && <ChatMessages messages={messages} />}
       </section>
