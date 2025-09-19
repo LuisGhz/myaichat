@@ -78,7 +78,10 @@ export const useChatZustandStore = create<ChatStore>((set) => ({
           (currentChatMetadata?.totalCompletionTokens || 0) + completionTokens,
       };
 
-      return { messages, currentChatMetadata: (newMetadata as CurrentChatMetadataStore) };
+      return {
+        messages,
+        currentChatMetadata: newMetadata as CurrentChatMetadataStore,
+      };
     }),
   currentChatMetadata: undefined,
   setCurrentChatMetadata: (metadata: Partial<CurrentChatMetadataStore>) =>
@@ -93,4 +96,9 @@ export const useChatZustandStore = create<ChatStore>((set) => ({
         currentChatMetadata: newMetadata,
       };
     }),
+  isRecordingAudio: false,
+  setIsRecordingAudio: (isRecording: boolean) =>
+    set({ isRecordingAudio: isRecording }),
+  isSendingAudio: false,
+  setIsSendingAudio: (isSending: boolean) => set({ isSendingAudio: isSending }),
 }));

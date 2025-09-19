@@ -16,4 +16,8 @@ type ChatStore = {
   setCurrentChatMetadata: (
     metadata: Partial<CurrentChatMetadataStore>
   ) => void;
+  isRecordingAudio: boolean;
+  setIsRecordingAudio: (isRecording: boolean) => void;
+  isSendingAudio: boolean;
+  setIsSendingAudio: (isSending: boolean) => void;
 };

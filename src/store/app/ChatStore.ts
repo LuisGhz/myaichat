@@ -9,6 +9,10 @@ export const useChatStore = () => {
     (state) => state.currentChatMetadata
   );
   const messages = useChatZustandStore((state) => state.messages);
+  const isRecordingAudio = useChatZustandStore(
+    (state) => state.isRecordingAudio
+  );
+  const isSendingAudio = useChatZustandStore((state) => state.isSendingAudio);
   return {
     model,
     maxOutputTokens,
@@ -16,6 +20,8 @@ export const useChatStore = () => {
     promptId,
     currentChatMetadata,
     messages,
+    isRecordingAudio,
+    isSendingAudio,
   };
 };
 
@@ -38,11 +44,16 @@ export const useChatStoreActions = () => {
   const updateStreamingAssistantMessage = useChatZustandStore(
     (state) => state.updateStreamingAssistantMessage
   );
-
   const addStreamingAssistanteAndUserMessageTokens = useChatZustandStore(
     (state) => state.addStreamingAssistanteAndUserMessageTokens
   );
-  
+  const setIsRecordingAudio = useChatZustandStore(
+    (state) => state.setIsRecordingAudio
+  );
+  const setIsSendingAudio = useChatZustandStore(
+    (state) => state.setIsSendingAudio
+  );
+
   return {
     setModel,
     setMaxOutputTokens,
@@ -53,5 +64,7 @@ export const useChatStoreActions = () => {
     addStreamingAssistantMessage,
     updateStreamingAssistantMessage,
     addStreamingAssistanteAndUserMessageTokens,
+    setIsRecordingAudio,
+    setIsSendingAudio,
   };
 };
