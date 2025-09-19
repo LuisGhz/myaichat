@@ -156,7 +156,7 @@ export const Chat = () => {
     <div className="h-full flex flex-col">
       <section 
         ref={scrollContainerRef}
-        className="grow overflow-auto pb-10 scroll-hidden"
+        className="grow overflow-auto pb-10 scroll-hidden mx-auto w-full md:w-11/12 xl:10/12 max-w-4xl"
         role="main"
         aria-label="Chat conversation"
         onScroll={handleScroll}
