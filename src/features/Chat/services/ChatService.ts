@@ -25,7 +25,10 @@ export const streamAssistantMessageService = async (
   );
 };
 
-export const toggleWebSearchModeService = async (id: string, isWebSearchMode: boolean) => {
+export const toggleWebSearchModeService = async (
+  id: string,
+  isWebSearchMode: boolean
+) => {
   return await apiClient.patch(`/chat/${id}/toggle-web-search-mode`, {
     isWebSearchMode,
   });
@@ -45,4 +48,18 @@ export const changeMaxOutputTokensService = async (
 
 export const deleteChatService = async (id: string) => {
   return await apiClient.del<{ message: string }>(`/chat/${id}/delete`);
+};
+
+export const transcribeAudioService = async (audioBlob: Blob) => {
+  const formData = new FormData();
+  const audioFile = new File([audioBlob], "audio.wav", {
+    type: audioBlob.type,
+  });
+  formData.append("audio", audioFile);
+
+  const response = await apiClient.postFormData<TranscribedRes>(
+    "/audio/transcribe",
+    formData
+  );
+  return response;
 };
