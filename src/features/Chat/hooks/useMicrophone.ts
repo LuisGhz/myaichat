@@ -6,7 +6,6 @@ export const useMicrophone = () => {
 
   const transcribeAudio = async (audioBlob: Blob) => {
     try {
-      setIsSendingAudio(true);
       const result = await transcribeAudioService(audioBlob);
       return result;
     } catch (error) {
