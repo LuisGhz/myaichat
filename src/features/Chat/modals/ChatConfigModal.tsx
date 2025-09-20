@@ -26,6 +26,12 @@ export const ChatConfigModal = ({
   const minTokens = 1000;
   const maxTokensLimit = 8000;
 
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === "." || e.key === ",") {
+      e.preventDefault();
+    }
+  };
+
   return (
     <Modal
       className="chat-configuration-modal"
@@ -66,6 +72,7 @@ export const ChatConfigModal = ({
             max={maxTokensLimit}
             value={maxOutputTokens}
             onChange={(e) => setMaxOutputTokens(Number(e.target.value))}
+            onKeyDown={handleKeyDown}
             aria-describedby="max-tokens-help"
           />
           <div id="max-tokens-help" className="sr-only">
