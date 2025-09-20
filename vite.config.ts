@@ -31,6 +31,7 @@ export default defineConfig({
         "src/features/Auth/pages/Login.tsx",
         "src/features/Chat/components/InputSection/AudioSendingLoader.tsx",
         "src/features/Chat/components/AssistantTyping.tsx",
+        "src/features/Chat/hooks/useChatParams.ts",
         "src/theme/AntdThemeProvider.tsx",
       ],
     },
