@@ -1,19 +1,20 @@
-import { SideNavService } from "core/services/SideNavService";
+import {
+  getChatSummaryService,
+  toggleFavoriteService,
+} from "../services/SideNavService";
 import { useAppStore, useAppStoreActions } from "store/app/AppStore";
-
-const sideNavService = SideNavService();
 
 export const useSideNav = () => {
   const { chatsSummary } = useAppStore();
   const { setChatsSummary } = useAppStoreActions();
 
   const getChatsSummary = async () => {
-    const res = await sideNavService.getChatSummary();
+    const res = await getChatSummaryService();
     setChatsSummary(res?.chats || []);
   };
 
   const toggleFavorite = async (chatId: string) => {
-    const currentChat = chatsSummary.find(chat => chat.id === chatId);
+    const currentChat = chatsSummary.find((chat) => chat.id === chatId);
     if (!currentChat) return;
     const optimisticUpdate = chatsSummary.map((chat) => {
       if (chat.id === chatId) {
@@ -24,7 +25,7 @@ export const useSideNav = () => {
     setChatsSummary(optimisticUpdate);
 
     try {
-      await sideNavService.toggleFavorite(chatId);
+      await toggleFavoriteService(chatId);
     } catch (error) {
       setChatsSummary(chatsSummary);
       throw error;
