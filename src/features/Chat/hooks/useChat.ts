@@ -29,7 +29,7 @@ export const useChat = () => {
       
       // Only update chat metadata on the first page (most recent state)
       if (page === 0) {
-        const modelName = MODELS.find((m) => m.value === response.model)!.name;
+        const modelName = MODELS.find((m) => m.value === response.model)?.name;
         setMaxOutputTokens(response.maxOutputTokens);
         setIsWebSearchMode(response.isWebSearchMode);
         setCurrentChatMetadata({
@@ -88,11 +88,19 @@ export const useChat = () => {
   };
 
   const toggleIsWebSearchMode = async (id: string, isWebSearchMode: boolean) => {
-    await toggleWebSearchModeService(id, isWebSearchMode);
+    try {
+      await toggleWebSearchModeService(id, isWebSearchMode);
+    } catch (error) {
+      console.error("Error toggling web search mode:", error);
+    }
   };
 
   const changeMaxOutputTokens = async (id: string, maxOutputTokens: number) => {
-    await changeMaxOutputTokensService(id, maxOutputTokens);
+    try {
+      await changeMaxOutputTokensService(id, maxOutputTokens);
+    } catch (error) {
+      console.error("Error changing max output tokens:", error);
+    }
   };
 
   return {
