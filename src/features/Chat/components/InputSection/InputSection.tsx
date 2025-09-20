@@ -7,6 +7,7 @@ import { useChat } from "features/Chat/hooks/useChat";
 import { useChatStore } from "store/app/ChatStore";
 import { useStreamAssistantMessage } from "features/Chat/hooks/useStreamAssistantMessage";
 import { useAppStoreActions } from "store/app/AppStore";
+import { AudioSendingLoader } from "./AudioSendingLoader";
 
 const { TextArea } = Input;
 
@@ -91,6 +92,7 @@ export const InputSection = () => {
           </button>
         )}
       </section>
+      {isSendingAudio && <AudioSendingLoader />}
       <InputActionButtons onTranscription={onTranscription} />
     </section>
   );
