@@ -23,12 +23,16 @@ export const FeatureCheckbox = ({
           isActive ? "bg-gray-200 dark:bg-gray-950" : ""
         }`}
       >
-        <label htmlFor={id} className="cursor-pointer flex items-center gap-1">
+        <label
+          htmlFor={id}
+          className="cursor-pointer flex items-center gap-1"
+          aria-label={`Information about ${labelText}`}
+        >
           {labelText}
           <Tooltip title={featureDescription} placement="top">
             <ExclamationCircleIcon
               className="size-3 fill-gray-700 dark:fill-gray-200 ms-0.5"
-              aria-label={`Information about ${labelText}`}
+              aria-label={`Information about ${labelText} icon`}
               role="img"
             />
           </Tooltip>
