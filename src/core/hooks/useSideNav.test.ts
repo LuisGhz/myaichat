@@ -3,13 +3,13 @@ import { renderHook, act } from '@testing-library/react';
 import { useSideNav } from './useSideNav';
 
 // Mock the AppStore hooks
-const fakeSetChatsSummary = vi.fn();
+const setChatsSummaryMock = vi.fn();
 type ChatSummary = { id: string; fav: boolean };
 let fakeChatsSummary: ChatSummary[] = [];
 
 vi.mock('store/app/AppStore', () => ({
   useAppStore: () => ({ chatsSummary: fakeChatsSummary }),
-  useAppStoreActions: () => ({ setChatsSummary: fakeSetChatsSummary }),
+  useAppStoreActions: () => ({ setChatsSummary: setChatsSummaryMock }),
 }));
 
 // Mock the SideNavService functions
@@ -38,7 +38,7 @@ describe('useSideNav hook', () => {
       await result.current.getChatsSummary();
     });
 
-    expect(fakeSetChatsSummary).toHaveBeenCalledWith(fakeChats);
+    expect(setChatsSummaryMock).toHaveBeenCalledWith(fakeChats);
   });
 
   it('should toggle favorite optimistically and call service successfully', async () => {
@@ -52,13 +52,11 @@ describe('useSideNav hook', () => {
       await result.current.toggleFavorite('1');
     });
 
-    // Optimistic update should toggle fav to true
-    expect(fakeSetChatsSummary).toHaveBeenCalledWith([{ id: '1', fav: true }]);
+    expect(setChatsSummaryMock).toHaveBeenCalledWith([{ id: '1', fav: true }]);
     expect(toggleFavoriteServiceMock).toHaveBeenCalledWith('1');
   });
 
   it('should revert favorite toggle on service error', async () => {
-    // Initial state
     fakeChatsSummary = [{ id: '1', fav: false }];
 
     toggleFavoriteServiceMock.mockRejectedValue(new Error('Service Error'));
@@ -73,10 +71,8 @@ describe('useSideNav hook', () => {
       }
     });
 
-    // First call: optimistic update toggles fav to true
-    expect(fakeSetChatsSummary.mock.calls[0][0]).toEqual([{ id: '1', fav: true }]);
-    // Second call: revert to original state
-    expect(fakeSetChatsSummary.mock.calls[1][0]).toEqual([{ id: '1', fav: false }]);
+    expect(setChatsSummaryMock.mock.calls[0][0]).toEqual([{ id: '1', fav: true }]);
+    expect(setChatsSummaryMock.mock.calls[1][0]).toEqual([{ id: '1', fav: false }]);
     expect(caughtError).toBeDefined();
   });
 
@@ -88,8 +84,7 @@ describe('useSideNav hook', () => {
       await result.current.toggleFavorite('99');
     });
 
-    // setChatsSummary should not be called if chat is not found
-    expect(fakeSetChatsSummary).not.toHaveBeenCalled();
+    expect(setChatsSummaryMock).not.toHaveBeenCalled();
     expect(toggleFavoriteServiceMock).not.toHaveBeenCalled();
   });
 });
