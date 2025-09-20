@@ -23,7 +23,8 @@ export default defineConfig({
         "src/assets/**",
         "src/store/**",
         "src/icons/**",
-        "src/core/const/**"
+        "src/core/const/**",
+        "src/shared/models/**",
       ],
     },
   },
