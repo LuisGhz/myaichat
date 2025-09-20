@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router";
 import { PencilSquareIcon } from "icons/PencilSquareIcon";
-import { Prompt16FilledIcon } from "./Prompt16FilledIcon";
+import { Prompt16FilledIcon } from "icons/Prompt16FilledIcon";
 
 export const SideNavActionButtons = () => {
   const navigate = useNavigate();
