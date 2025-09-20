@@ -1,13 +1,9 @@
 import { apiClient } from "api";
 
-export const SideNavService = () => {
-  const getChatSummary = async () => {
-    return await apiClient.get<ChatSummaryRes>("/chat/all");
-  };
+export const getChatSummaryService = async () => {
+  return await apiClient.get<ChatSummaryRes>("/chat/all");
+};
 
-  const toggleFavorite = async (chatId: string) => {
-    return await apiClient.patch(`/chat/${chatId}/toggle-chat-fav`);
-  };
-
-  return { getChatSummary, toggleFavorite };
+export const toggleFavoriteService = async (chatId: string) => {
+  return await apiClient.patch(`/chat/${chatId}/toggle-chat-fav`);
 };
