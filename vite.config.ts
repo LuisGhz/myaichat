@@ -21,9 +21,9 @@ export default defineConfig({
         "src/vite-env.d.ts",
         "src/types/**",
         "src/assets/**",
-        "src/consts/**",
         "src/store/**",
-        "src/icons/**"
+        "src/icons/**",
+        "src/core/const/**"
       ],
     },
   },
