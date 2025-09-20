@@ -25,7 +25,10 @@
       "*": ["./src/*"]
     },
     "types": ["vitest/globals", "@testing-library/jest-dom"],
-    "typeRoots": ["./src/types"]
+  // Keep custom `typeRoots` but include node_modules so packages that ship their
+  // own types (for example `@testing-library/jest-dom`) are discoverable by
+  // the compiler. Removing `typeRoots` entirely breaks project local types.
+  "typeRoots": ["./src/types", "./node_modules/@types", "./node_modules"]
   },
   "include": ["src"]
 }
