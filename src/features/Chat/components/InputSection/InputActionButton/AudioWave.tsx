@@ -6,7 +6,7 @@ type Props = {
 
 // A lightweight equalizer-style wave. Heights react to the `level` with subtle
 // per-bar variance for a lively look. Decorative only.
-export const AudioWave = ({ level, className, bars = 7 }: Props) => {
+export const AudioWave = ({ level, className, bars = 18 }: Props) => {
   const clamped = Math.max(0, Math.min(1, level));
   const min = 0.15; // minimum visible height (as a fraction of full height)
   const max = 1; // maximum height
