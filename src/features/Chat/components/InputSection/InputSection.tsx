@@ -59,9 +59,9 @@ export const InputSection = () => {
   };
 
   const onTranscription = (transcription: string) => {
-    setNewMessage((prev) =>
-      prev ? `${prev} ${transcription}` : transcription
-    );
+  const cleaned = transcription.replace(/\n+$/g, '').trim();
+  if (cleaned === '') return;
+  setNewMessage((prev) => (prev ? `${prev} ${cleaned}` : cleaned));
   };
 
   return (
