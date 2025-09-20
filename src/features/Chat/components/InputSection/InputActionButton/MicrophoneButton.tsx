@@ -21,7 +21,7 @@ export const MicrophoneButton = ({
   const streamRef = useRef<MediaStream | null>(null);
   const buttonRef = useRef<HTMLButtonElement | null>(null);
   const { isRecordingAudio, isSendingAudio } = useChatStore();
-  const { setIsRecordingAudio } = useChatStoreActions();
+  const { setIsRecordingAudio, setIsSendingAudio } = useChatStoreActions();
   const { transcribeAudio } = useMicrophone();
   // Live audio level for the wave visualization
   const audioLevel = useAudioLevel(streamRef.current, isRecordingAudio);
@@ -69,6 +69,7 @@ export const MicrophoneButton = ({
         cleanMediaRecorderRef();
         return;
       }
+      setIsSendingAudio(true);
       const audioBlob = new Blob(audioChunks, { type: "audio/wav" });
       const res = await transcribeAudio(audioBlob);
       if (res) onTranscription(res.content);
@@ -95,7 +96,9 @@ export const MicrophoneButton = ({
   const stopRecording = () => {
     if (mediaRecorderRef.current) {
       mediaRecorderRef.current.stop();
-      setIsRecordingAudio(false);
+      setTimeout(() => {
+        setIsRecordingAudio(false);
+      }, 100);
     }
   };
 
@@ -126,9 +129,9 @@ export const MicrophoneButton = ({
         ref={buttonRef}
         onClick={handleRecording}
       >
-        {isRecordingAudio || isSendingAudio ? (
+        {isRecordingAudio ? (
           <SendAltFilledIcon className="w-6 h-6 cursor-pointer fill-gray-700 dark:fill-gray-200" />
-        ) : (
+        ) : isSendingAudio ? null : (
           <Microphone20SolidIcon className="w-6 h-6 fill-gray-700 dark:fill-gray-200" />
         )}
       </button>
