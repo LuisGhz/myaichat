@@ -43,9 +43,34 @@ vi.mock("./ChatItem", () => ({
 
 // Mock ChatContextMenu to reveal when open and which chat is provided
 vi.mock("components/context-menu/ChatContextMenu", () => ({
-  ChatContextMenu: ({ isContextMenuOpen, chat }: Record<string, any>) => (
+  ChatContextMenu: ({
+    isContextMenuOpen,
+    chat,
+    onRename,
+  }: Record<string, any>) => (
     <div data-testid="context-menu">
-      {isContextMenuOpen ? chat?.title ?? "no-chat" : "closed"}
+      {isContextMenuOpen ? (
+        <>
+          <span>{chat?.title ?? "no-chat"}</span>
+          <button
+            data-testid="rename-button"
+            onClick={() => (onRename as any)?.(chat?.id)}
+          >
+            Rename
+          </button>
+        </>
+      ) : (
+        "closed"
+      )}
+    </div>
+  ),
+}));
+
+// Mock RenameChatModal to expose props so we can assert it opens with correct values
+vi.mock("core/modals/RenameChatModal", () => ({
+  RenameChatModal: ({ isOpen, chatId, currentChatName }: Record<string, any>) => (
+    <div data-testid="rename-modal">
+      {isOpen ? `${chatId ?? 'no-id'}:${currentChatName ?? 'no-name'}` : 'closed'}
     </div>
   ),
 }));
@@ -95,6 +120,21 @@ describe("ChatsList", () => {
 
     // our mocked ChatContextMenu shows the chat title when open
     expect(screen.getByTestId("context-menu")).toHaveTextContent("FavOne");
+  });
+
+  it("opens rename modal when rename is clicked from context menu", () => {
+    render(<ChatsList />);
+
+    const favItem = screen.getByTestId("chat-1");
+    // open context menu
+    fireEvent.contextMenu(favItem, { pageX: 10, pageY: 20 });
+
+    // click rename button inside our mocked ChatContextMenu
+    const renameBtn = screen.getByTestId("rename-button");
+    fireEvent.click(renameBtn);
+
+    // our mocked RenameChatModal displays "chatId:currentChatName" when open
+    expect(screen.getByTestId("rename-modal")).toHaveTextContent("1:FavOne");
   });
 
   it("renders skeleton when isGettingNewChat is true", () => {
