@@ -12,6 +12,7 @@ export type ContextMetadata = {
 type Props = {
   isContextMenuOpen: boolean;
   setIsContextMenuOpen: Dispatch<SetStateAction<boolean>>;
+  onRename: (id: string) => void;
   contextMetadata: ContextMetadata;
   chat: ChatSummary | null;
   parentRef: RefObject<HTMLLIElement | null>;
@@ -23,6 +24,7 @@ export const ChatContextMenu = ({
   contextMetadata,
   parentRef,
   chat,
+  onRename,
 }: Props) => {
   const menuRef = useRef<HTMLUListElement | null>(null);
   const { deleteChat } = useChatContext();
@@ -94,7 +96,7 @@ export const ChatContextMenu = ({
       <li
         className="px-4 py-1.5 hover:bg-gray-300 dark:hover:bg-gray-800 transition-colors duration-200 cursor-pointer flex justify-between items-center"
         onClick={() => {
-          alert("Rename action triggered");
+          onRename(chat!.id);
           setIsContextMenuOpen(false);
         }}
       >
