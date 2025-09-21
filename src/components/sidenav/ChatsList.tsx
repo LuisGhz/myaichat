@@ -7,10 +7,12 @@ import {
 } from "components/context-menu/ChatContextMenu";
 import { useSideNav } from "core/hooks/useSideNav";
 import { useAppStore } from "store/app/AppStore";
+import { RenameChatModal } from "core/modals/RenameChatModal";
 
 export const ChatsList = () => {
   const { getChatsSummary, chatsSummary } = useSideNav();
   const [isContextMenuOpen, setIsContextMenuOpen] = useState(false);
+  const [isRenameModalOpen, setIsRenameModalOpen] = useState(false);
   const [contextMetadata, setContextMetadata] = useState<ContextMetadata>({
     x: 0,
     y: 0,
@@ -41,6 +43,12 @@ export const ChatsList = () => {
     setChatInContextMenu(chat!);
     parentRef.current = e.currentTarget as HTMLLIElement;
     setIsContextMenuOpen(true);
+  };
+
+  const handleRename = (id: string) => {
+    const chat = chatsSummary.find((c) => c.id === id);
+    setChatInContextMenu(chat!);
+    setIsRenameModalOpen(true);
   };
 
   return (
@@ -80,6 +88,13 @@ export const ChatsList = () => {
         parentRef={parentRef}
         isContextMenuOpen={isContextMenuOpen}
         setIsContextMenuOpen={setIsContextMenuOpen}
+        onRename={handleRename}
+      />
+      <RenameChatModal
+        chatId={chatInContextMenu?.id}
+        currentChatName={chatInContextMenu?.title}
+        isOpen={isRenameModalOpen}
+        setIsOpen={setIsRenameModalOpen}
       />
     </div>
   );
