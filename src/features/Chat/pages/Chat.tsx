@@ -163,7 +163,7 @@ export const Chat = () => {
       >
         {isLoadingPreviousMessages && (
           <div className="flex justify-center p-4" role="status" aria-live="polite">
-            <span className="text-sm text-gray-500">Loading previous messages...</span>
+            <span className="text-sm app-text">Loading previous messages...</span>
           </div>
         )}
         {messages.length === 0 && <NewConversation />}
