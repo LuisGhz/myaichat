@@ -1,6 +1,9 @@
 import { useNavigate } from "react-router";
 import { useChatParams } from "features/Chat/hooks/useChatParams";
-import { deleteChatService } from "features/Chat/services/ChatService";
+import {
+  deleteChatService,
+  renameChatService,
+} from "features/Chat/services/ChatService";
 import { useAppStore, useAppStoreActions } from "store/app/AppStore";
 
 export const useChatContext = () => {
@@ -22,7 +25,21 @@ export const useChatContext = () => {
     }
   };
 
+  const renameChat = async (id: string, newName: string) => {
+    const updatedChats = chatsSummary.map((chat) =>
+      chat.id === id ? { ...chat, title: newName } : chat
+    );
+    setChatsSummary(updatedChats);
+    try {
+      await renameChatService(id, newName);
+    } catch (error) {
+      setChatsSummary(chatsSummary);
+      console.error("Error renaming chat:", error);
+    }
+  };
+
   return {
     deleteChat,
+    renameChat,
   };
 };
