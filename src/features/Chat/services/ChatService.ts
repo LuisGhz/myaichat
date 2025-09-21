@@ -50,6 +50,12 @@ export const deleteChatService = async (id: string) => {
   return await apiClient.del<{ message: string }>(`/chat/${id}/delete`);
 };
 
+export const renameChatService = async (id: string, newName: string) => {
+  return await apiClient.patch<RenameChatReq>(`/chat/${id}/rename`, {
+    name: newName,
+  });
+};
+
 export const transcribeAudioService = async (audioBlob: Blob) => {
   const formData = new FormData();
   const audioFile = new File([audioBlob], "audio.wav", {
