@@ -29,6 +29,7 @@ export const Prompts = () => {
           type="primary"
           onClick={() => navigate("/prompts/form")}
           aria-label="Create New Prompt"
+          role="link"
         >
           Create New Prompt
         </Button>
