@@ -10,8 +10,14 @@ import { useAppStore, useAppStoreActions } from "store/app/AppStore";
 
 export const useChat = () => {
   const { model, promptId, messages } = useChatStore();
-  const { setModel, setPromptId, setCurrentChatMetadata, setMessages, setMaxOutputTokens, setIsWebSearchMode } =
-    useChatStoreActions();
+  const {
+    setModel,
+    setPromptId,
+    setCurrentChatMetadata,
+    setMessages,
+    setMaxOutputTokens,
+    setIsWebSearchMode,
+  } = useChatStoreActions();
   const { chatsSummary } = useAppStore();
   const { setChatsSummary } = useAppStoreActions();
 
@@ -26,7 +32,6 @@ export const useChat = () => {
     if (response) {
       // Only update messages for pagination (page > 0), update all metadata for initial load (page 0)
       setMessages(response.historyMessages);
-      
       // Only update chat metadata on the first page (most recent state)
       if (page === 0) {
         const modelName = MODELS.find((m) => m.value === response.model)?.name;
@@ -87,7 +92,10 @@ export const useChat = () => {
     }
   };
 
-  const toggleIsWebSearchMode = async (id: string, isWebSearchMode: boolean) => {
+  const toggleIsWebSearchMode = async (
+    id: string,
+    isWebSearchMode: boolean
+  ) => {
     try {
       await toggleWebSearchModeService(id, isWebSearchMode);
     } catch (error) {
