@@ -24,6 +24,13 @@ const darkTheme: ThemeConfig = {
       gradientFromColor: "rgba(0,0,0,0.2)",
       gradientToColor: "rgba(0,0,0,0.45)",
     },
+    Button: {
+      colorText: "var(--color-gray-200)",
+      colorBgContainer: "var(--color-gray-950)",
+      colorBorder: "var(--color-gray-600)",
+      defaultHoverColor: "var(--color-gray-100)",
+      defaultHoverBorderColor: "var(--color-gray-400)",
+    },
   },
 };
 
