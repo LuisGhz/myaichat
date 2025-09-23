@@ -38,12 +38,42 @@ vi.mock("icons/SendAltFilledIcon", () => ({
   SendAltFilledIcon: () => <svg data-testid="send-icon" />,
 }));
 vi.mock("./InputActionButton/InputActionButtons", () => ({
-  // The real component receives an onTranscription prop. Expose it via a button in the mock
-  InputActionButtons: ({ onTranscription }: { onTranscription: (t: string) => void }) => (
+  // The real component receives onTranscription and onSelectFile props. Expose them via buttons in the mock
+  InputActionButtons: ({
+    onTranscription,
+    onSelectFile,
+  }: {
+    onTranscription: (t: string) => void;
+    onSelectFile: (f: File) => void;
+  }) => (
     <div>
-      <button data-testid="input-actions" onClick={() => onTranscription("transcribed text")}>
+      <button
+        data-testid="input-actions"
+        onClick={() => onTranscription("transcribed text")}
+      >
         trigger-transcription
       </button>
+      <button
+        data-testid="select-file"
+        onClick={() => onSelectFile(new File(["content"], "test.txt"))}
+      >
+        select-file
+      </button>
+    </div>
+  ),
+}));
+// Mock the lazily imported SelectedFilePreview so Suspense resolves in tests
+vi.mock("./SelectedFilePreview", () => ({
+  SelectedFilePreview: ({
+    selectedFile,
+    removeSelectedFile,
+  }: {
+    selectedFile: File;
+    removeSelectedFile: () => void;
+  }) => (
+    <div data-testid="selected-file">
+      {selectedFile.name}
+      <button onClick={removeSelectedFile}>remove</button>
     </div>
   ),
 }));
@@ -100,7 +130,9 @@ describe("InputSection", () => {
     sendNewMessageMock.mockResolvedValue("chat-1");
     renderComponent();
 
-    const textarea = screen.getByLabelText(/Type a message/i) as HTMLTextAreaElement;
+    const textarea = screen.getByLabelText(
+      /Type a message/i
+    ) as HTMLTextAreaElement;
     // Start empty
     expect(textarea.value).toBe("");
 
