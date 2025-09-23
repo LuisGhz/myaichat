@@ -68,20 +68,17 @@ describe("AttachFileButton", () => {
     const md = opts?.md ?? false;
 
     // Spy on the chat store hook to control audio states
-    vi.spyOn(ChatStore, "useChatStore").mockReturnValue({
-      isRecordingAudio: isRecording,
-      isSendingAudio: isSending,
-    } as unknown as ReturnType<typeof ChatStore.useChatStore>);
+      vi.spyOn(ChatStore, "useChatStore").mockReturnValue({
+        isRecordingAudio: isRecording,
+        isSendingAudio: isSending,
+      } as unknown as ReturnType<typeof ChatStore.useChatStore>);
     // Spy on antd Grid.useBreakpoint to control isMobile logic
     vi.spyOn(Antd.Grid, "useBreakpoint").mockReturnValue({
       md,
     } as unknown as Record<string, boolean>);
-    const onSelectFileMock = vi.fn();
-    render(
-      <AttachFileButton onSelectFile={onSelectFileMock} buttonClassName="btn" />
-    );
-    // Return helpers
-    return { onSelectFileMock };
+    // AttachFileButton no longer accepts onSelectFile prop; it uses store actions.
+    render(<AttachFileButton buttonClassName="btn" />);
+    return {};
   };
 
   beforeEach(() => {
@@ -129,11 +126,11 @@ describe("AttachFileButton", () => {
   });
 
   it("calls onSelectFile when UploadFromSelection triggers a file select", async () => {
-    const { onSelectFileMock } = await renderComponent({
-      isRecording: false,
-      isSending: false,
-      md: true,
-    });
+    // we want to assert that the store action setSelectedFile was called when child triggers selection
+    const setSelectedFileMock = vi.fn();
+    vi.spyOn(ChatStore, 'useChatStoreActions').mockReturnValue({ setSelectedFile: setSelectedFileMock } as unknown as ReturnType<typeof ChatStore.useChatStoreActions>);
+
+    await renderComponent({ isRecording: false, isSending: false, md: true });
 
     const button = screen.getByLabelText("Attach file");
     await userEvent.click(button);
@@ -142,9 +139,8 @@ describe("AttachFileButton", () => {
     const uploadBtn = screen.getByText("upload");
     await userEvent.click(uploadBtn);
 
-    // our child calls the prop passed from AttachFileButton which should call the supplied onSelectFile
-    expect(onSelectFileMock).toHaveBeenCalled();
-    const calledWith = onSelectFileMock.mock.calls[0][0];
+    expect(setSelectedFileMock).toHaveBeenCalled();
+    const calledWith = setSelectedFileMock.mock.calls[0][0];
     expect(calledWith).toBeInstanceOf(File);
     expect((calledWith as File).name).toBe("a.png");
   });

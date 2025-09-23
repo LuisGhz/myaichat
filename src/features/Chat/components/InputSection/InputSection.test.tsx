@@ -15,6 +15,8 @@ vi.mock("features/Chat/hooks/useChat", () => ({
   useChat: () => ({ sendNewMessage: sendNewMessageMock }),
 }));
 
+// shared mock for store actions so component and mocked children can assert calls
+const setSelectedFileMock = vi.fn();
 vi.mock("store/app/ChatStore", () => ({
   useChatStore: () => ({
     model: "gpt-test",
@@ -23,7 +25,9 @@ vi.mock("store/app/ChatStore", () => ({
     promptId: undefined,
     isRecordingAudio: false,
     isSendingAudio: false,
+    selectedFile: null,
   }),
+  useChatStoreActions: () => ({ setSelectedFile: setSelectedFileMock }),
 }));
 
 vi.mock("features/Chat/hooks/useStreamAssistantMessage", () => ({
@@ -38,44 +42,29 @@ vi.mock("icons/SendAltFilledIcon", () => ({
   SendAltFilledIcon: () => <svg data-testid="send-icon" />,
 }));
 vi.mock("./InputActionButton/InputActionButtons", () => ({
-  // The real component receives onTranscription and onSelectFile props. Expose them via buttons in the mock
-  InputActionButtons: ({
-    onTranscription,
-    onSelectFile,
-  }: {
-    onTranscription: (t: string) => void;
-    onSelectFile: (f: File) => void;
-  }) => (
-    <div>
-      <button
-        data-testid="input-actions"
-        onClick={() => onTranscription("transcribed text")}
-      >
-        trigger-transcription
-      </button>
-      <button
-        data-testid="select-file"
-        onClick={() => onSelectFile(new File(["content"], "test.txt"))}
-      >
-        select-file
-      </button>
-    </div>
-  ),
+  // The real component receives onTranscription. For file selection the child now calls the store action directly.
+  InputActionButtons: ({ onTranscription }: { onTranscription: (t: string) => void }) => {
+    return (
+      <div>
+        <button
+          data-testid="input-actions"
+          onClick={() => onTranscription("transcribed text")}
+        >
+          trigger-transcription
+        </button>
+        <button
+          data-testid="select-file"
+          onClick={() => setSelectedFileMock(new File(["content"], "test.txt"))}
+        >
+          select-file
+        </button>
+      </div>
+    );
+  },
 }));
 // Mock the lazily imported SelectedFilePreview so Suspense resolves in tests
 vi.mock("./SelectedFilePreview", () => ({
-  SelectedFilePreview: ({
-    selectedFile,
-    removeSelectedFile,
-  }: {
-    selectedFile: File;
-    removeSelectedFile: () => void;
-  }) => (
-    <div data-testid="selected-file">
-      {selectedFile.name}
-      <button onClick={removeSelectedFile}>remove</button>
-    </div>
-  ),
+  SelectedFilePreview: () => <div data-testid="selected-file">selected</div>,
 }));
 vi.mock("./AudioSendingLoader", () => ({
   AudioSendingLoader: () => <div data-testid="audio-loader" />,
