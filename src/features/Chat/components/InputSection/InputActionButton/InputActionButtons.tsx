@@ -7,9 +7,13 @@ import { useChatStore } from "store/app/ChatStore";
 
 type Props = {
   onTranscription: (transcription: string) => void;
+  onSelectFile: (file: File) => void;
 };
 
-export const InputActionButtons = ({ onTranscription }: Props) => {
+export const InputActionButtons = ({
+  onTranscription,
+  onSelectFile,
+}: Props) => {
   const { isRecordingAudio, isSendingAudio } = useChatStore();
   const params = useChatParams();
   const buttonsStyles =
@@ -26,7 +30,10 @@ export const InputActionButtons = ({ onTranscription }: Props) => {
         {params.id && <CurrentChatMetadata buttonClassName={buttonsStyles} />}
       </div>
       <div className={`flex gap-2 ${isRecordingAudio ? "mx-auto" : ""}`}>
-        <AttachFileButton buttonClassName={buttonsStyles} />
+        <AttachFileButton
+          buttonClassName={buttonsStyles}
+          onSelectFile={onSelectFile}
+        />
         <MicrophoneButton
           buttonClassName={buttonsStyles}
           onTranscription={onTranscription}
