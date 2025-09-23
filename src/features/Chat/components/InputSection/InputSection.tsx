@@ -11,6 +11,13 @@ import { AudioSendingLoader } from "./AudioSendingLoader";
 
 const { TextArea } = Input;
 
+// Move lazy import outside component to prevent re-creation on each render
+const LazySelectedFilePreview = lazy(() =>
+  import("./SelectedFilePreview").then((module) => ({
+    default: module.SelectedFilePreview,
+  }))
+);
+
 export const InputSection = () => {
   const [newMessage, setNewMessage] = useState("");
   const [isSending, setIsSending] = useState(false);
@@ -27,14 +34,6 @@ export const InputSection = () => {
   } = useChatStore();
   const { startStreaming } = useStreamAssistantMessage();
   const { setIsGettingNewChat } = useAppStoreActions();
-
-  const LazySelectedImage = selectedFile
-    ? lazy(() =>
-        import("./SelectedFilePreview").then((module) => ({
-          default: module.SelectedFilePreview,
-        }))
-      )
-    : null;
 
   useEffect(() => {
     setNewMessage("");
@@ -86,12 +85,10 @@ export const InputSection = () => {
       {selectedFile && (
         <section>
           <Suspense fallback={null}>
-            {LazySelectedImage && (
-              <LazySelectedImage
-                selectedFile={selectedFile!}
-                removeSelectedFile={removeSelectedFile}
-              />
-            )}
+            <LazySelectedFilePreview
+              selectedFile={selectedFile}
+              removeSelectedFile={removeSelectedFile}
+            />
           </Suspense>
         </section>
       )}
