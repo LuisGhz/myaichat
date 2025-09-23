@@ -5,12 +5,17 @@ import userEvent from "@testing-library/user-event";
 
 import { PasteFromClipboard } from "./PasteFromClipboard";
 
-// Helper to render component with minimal required props
-const renderComponent = (
-  props?: Partial<React.ComponentProps<typeof PasteFromClipboard>>
-) => {
-  const defaultProps: Partial<React.ComponentProps<typeof PasteFromClipboard>> =
-    {
+describe("PasteFromClipboard", () => {
+  const originalClipboard = (navigator as unknown as { clipboard?: unknown })
+    .clipboard;
+
+  // Helper to render component with minimal required props
+  const renderComponent = (
+    props?: Partial<React.ComponentProps<typeof PasteFromClipboard>>
+  ) => {
+    const defaultProps: Partial<
+      React.ComponentProps<typeof PasteFromClipboard>
+    > = {
       optionsRef: {
         current: document.createElement("div"),
       } as unknown as React.RefObject<HTMLElement | null>,
@@ -18,17 +23,13 @@ const renderComponent = (
       onSelectFile: vi.fn() as unknown as (file: File) => void,
     };
 
-  const finalProps = {
-    ...(defaultProps as unknown as Record<string, unknown>),
-    ...(props as unknown as Record<string, unknown>),
-  } as React.ComponentProps<typeof PasteFromClipboard>;
+    const finalProps = {
+      ...(defaultProps as unknown as Record<string, unknown>),
+      ...(props as unknown as Record<string, unknown>),
+    } as React.ComponentProps<typeof PasteFromClipboard>;
 
-  return render(<PasteFromClipboard {...finalProps} />);
-};
-
-describe("PasteFromClipboard", () => {
-  const originalClipboard = (navigator as unknown as { clipboard?: unknown })
-    .clipboard;
+    return render(<PasteFromClipboard {...finalProps} />);
+  };
 
   beforeEach(() => {
     // ensure clipboard is defined
@@ -44,10 +45,10 @@ describe("PasteFromClipboard", () => {
       originalClipboard;
   });
 
-  const setClipboardAndFile = (type: string, size: number) => {
-    const bigSize = size * 1024 * 1024;
-    const bigArr = new Uint8Array(bigSize);
-    const blob = new Blob([bigArr], { type });
+  const setClipboardAndFile = (type: string, sizeInMB: number) => {
+    const byteSize = sizeInMB * 1024 * 1024;
+    const arr = new Uint8Array(byteSize);
+    const blob = new Blob([arr], { type });
     const clipboardItemMock = {
       types: [type],
       getType: vi.fn().mockResolvedValue(blob),
@@ -66,9 +67,9 @@ describe("PasteFromClipboard", () => {
     const onSelectFileMock = vi.fn();
     const setInfoDialogOpenMock = vi.fn();
 
+    // 1 MB image (below 2MB limit)
     setClipboardAndFile("image/png", 1);
 
-    // render component with real validateFiles via hook (hook allows 2MB max so 1KB is valid)
     renderComponent({
       onSelectFile: onSelectFileMock,
       setInfoDialogOpen: setInfoDialogOpenMock,
@@ -83,11 +84,12 @@ describe("PasteFromClipboard", () => {
     expect(setInfoDialogOpenMock).not.toHaveBeenCalled();
   });
 
-  it("opens info dialog when pasted file is invalid", async () => {
+  it("opens info dialog when pasted file is invalid (too large)", async () => {
     const onSelectFileMock = vi.fn();
     const setInfoDialogOpenMock = vi.fn();
 
-    setClipboardAndFile("image/png", 3); // 3MB exceeds 2MB limit in validator
+    // 3 MB image (exceeds 2MB limit in validator)
+    setClipboardAndFile("image/png", 3);
 
     renderComponent({
       onSelectFile: onSelectFileMock,
