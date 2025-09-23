@@ -15,7 +15,9 @@ vi.mock('./CurrentChatMetadata', () => ({
 }));
 
 vi.mock('./AttachFileButton', () => ({
-  AttachFileButton: ({ buttonClassName }: { buttonClassName?: string }) => <button data-testid="attach" className={buttonClassName} />,
+  AttachFileButton: ({ buttonClassName, onSelectFile }: { buttonClassName?: string; onSelectFile?: (f: File) => void }) => (
+    <button data-testid="attach" className={buttonClassName} onClick={() => onSelectFile?.(new File([''], 'test.txt'))} />
+  ),
 }));
 
 vi.mock('./MicrophoneButton', () => ({
@@ -30,7 +32,19 @@ vi.mock('store/app/ChatStore', () => ({
 
 import { InputActionButtons } from './InputActionButtons';
 
-const renderComponent = (props = { onTranscription: () => {} }) => render(<InputActionButtons {...props} />);
+type TestProps = {
+  onTranscription: (transcription: string) => void;
+  onSelectFile: (file: File) => void;
+};
+
+const renderComponent = (props: Partial<TestProps> = {}) => {
+  const defaultProps: TestProps = {
+    onTranscription: () => {},
+    onSelectFile: () => {},
+  };
+
+  return render(<InputActionButtons {...defaultProps} {...props} />);
+};
 
 describe('InputActionButtons', () => {
   it('renders settings, current metadata, attach and mic buttons when not recording', () => {
@@ -40,5 +54,19 @@ describe('InputActionButtons', () => {
     expect(screen.getByTestId('current-meta')).toBeInTheDocument();
     expect(screen.getByTestId('attach')).toBeInTheDocument();
     expect(screen.getByTestId('mic')).toBeInTheDocument();
+  });
+
+  it('forwards onSelectFile to AttachFileButton and calls it when attach clicked', async () => {
+    const onSelectFileMock = vi.fn<(file: File) => void>();
+
+    renderComponent({ onSelectFile: onSelectFileMock });
+
+    const attach = screen.getByTestId('attach');
+    attach.click();
+
+    expect(onSelectFileMock).toHaveBeenCalledTimes(1);
+    const calledWith = onSelectFileMock.mock.calls[0][0] as File;
+    expect(calledWith).toBeInstanceOf(File);
+    expect(calledWith.name).toBe('test.txt');
   });
 });
