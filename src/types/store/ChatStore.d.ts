@@ -7,6 +7,8 @@ type ChatStore = {
   setIsWebSearchMode: (isWebSearchMode: boolean) => void;
   messages: ChatMessage[];
   setMessages: (messages: ChatMessage[]) => void;
+  selectedFile: File | null;
+  setSelectedFile: (file: File | null) => void;
   addStreamingAssistantMessage: () => void;
   updateStreamingAssistantMessage: (content: string) => void;
   addStreamingAssistanteAndUserMessageTokens: (promptTokens: number, completionTokens: number) => void;

@@ -13,6 +13,8 @@ export const useChatZustandStore = create<ChatStore>((set) => ({
   setPromptId: (id: string | undefined) => set({ promptId: id }),
   messages: [],
   setMessages: (messages: ChatMessage[]) => set({ messages }),
+  selectedFile: null,
+  setSelectedFile: (file: File | null) => set({ selectedFile: file }),
   addStreamingAssistantMessage: () =>
     set((state) => ({
       messages: [
