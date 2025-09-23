@@ -1,4 +1,4 @@
-import { KeyboardEvent, useEffect, useState } from "react";
+import { KeyboardEvent, lazy, Suspense, useEffect, useState } from "react";
 import { Input } from "antd";
 import { SendAltFilledIcon } from "icons/SendAltFilledIcon";
 import { InputActionButtons } from "./InputActionButton/InputActionButtons";
@@ -14,6 +14,7 @@ const { TextArea } = Input;
 export const InputSection = () => {
   const [newMessage, setNewMessage] = useState("");
   const [isSending, setIsSending] = useState(false);
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const params = useChatParams();
   const { sendNewMessage } = useChat();
   const {
@@ -26,6 +27,14 @@ export const InputSection = () => {
   } = useChatStore();
   const { startStreaming } = useStreamAssistantMessage();
   const { setIsGettingNewChat } = useAppStoreActions();
+
+  const LazySelectedImage = selectedFile
+    ? lazy(() =>
+        import("./SelectedFilePreview").then((module) => ({
+          default: module.SelectedFilePreview,
+        }))
+      )
+    : null;
 
   useEffect(() => {
     setNewMessage("");
@@ -42,7 +51,7 @@ export const InputSection = () => {
       model,
       maxOutputTokens,
       isWebSearchMode,
-      file: undefined,
+      file: selectedFile,
       promptId,
     };
 
@@ -59,13 +68,33 @@ export const InputSection = () => {
   };
 
   const onTranscription = (transcription: string) => {
-  const cleaned = transcription.replace(/\n+$/g, '').trim();
-  if (cleaned === '') return;
-  setNewMessage((prev) => (prev ? `${prev} ${cleaned}` : cleaned));
+    const cleaned = transcription.replace(/\n+$/g, "").trim();
+    if (cleaned === "") return;
+    setNewMessage((prev) => (prev ? `${prev} ${cleaned}` : cleaned));
+  };
+
+  const onSelectFile = (file: File) => {
+    setSelectedFile(file);
+  };
+
+  const removeSelectedFile = () => {
+    setSelectedFile(null);
   };
 
   return (
     <section className="w-full md:w-11/12 xl:10/12 max-w-5xl mx-auto border-[1px] border-b-0 border-gray-300 rounded-t-lg p-2 pb-4">
+      {selectedFile && (
+        <section>
+          <Suspense fallback={null}>
+            {LazySelectedImage && (
+              <LazySelectedImage
+                selectedFile={selectedFile!}
+                removeSelectedFile={removeSelectedFile}
+              />
+            )}
+          </Suspense>
+        </section>
+      )}
       <section
         className={`flex gap-2 items-end mb-2 px-1 ${
           isRecordingAudio || isSendingAudio ? "hidden" : ""
@@ -93,7 +122,10 @@ export const InputSection = () => {
         )}
       </section>
       {isSendingAudio && <AudioSendingLoader />}
-      <InputActionButtons onTranscription={onTranscription} />
+      <InputActionButtons
+        onTranscription={onTranscription}
+        onSelectFile={onSelectFile}
+      />
     </section>
   );
 };
