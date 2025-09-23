@@ -1,17 +1,17 @@
 import { lazy, Suspense, useEffect, useRef, useState } from "react";
 import { Grid } from "antd";
-import { useChatStore } from "store/app/ChatStore";
+import { useChatStore, useChatStoreActions } from "store/app/ChatStore";
 import { UploadFromSelection } from "./UploadFromSelection";
 import { PaperClipIcon } from "icons/PaperClipIcon";
 import { InfoModal } from "core/modals/InfoModal";
 
 type Props = {
   buttonClassName?: string;
-  onSelectFile: (file: File) => void;
 };
 
-export const AttachFileButton = ({ buttonClassName, onSelectFile }: Props) => {
+export const AttachFileButton = ({ buttonClassName }: Props) => {
   const { isRecordingAudio, isSendingAudio } = useChatStore();
+  const { setSelectedFile } = useChatStoreActions();
   const [isInfoDialogOpen, setInfoDialogOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(true);
   const optionsRef = useRef<HTMLUListElement>(null);
@@ -50,6 +50,10 @@ export const AttachFileButton = ({ buttonClassName, onSelectFile }: Props) => {
     return () => window.removeEventListener("resize", handleResize);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  const onSelectFile = (file: File) => {
+    setSelectedFile(file);
+  };
 
   return (
     <div className="relative">

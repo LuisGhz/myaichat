@@ -21,7 +21,6 @@ const LazySelectedFilePreview = lazy(() =>
 export const InputSection = () => {
   const [newMessage, setNewMessage] = useState("");
   const [isSending, setIsSending] = useState(false);
-  const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const params = useChatParams();
   const { sendNewMessage } = useChat();
   const {
@@ -31,6 +30,7 @@ export const InputSection = () => {
     promptId,
     isRecordingAudio,
     isSendingAudio,
+    selectedFile,
   } = useChatStore();
   const { startStreaming } = useStreamAssistantMessage();
   const { setIsGettingNewChat } = useAppStoreActions();
@@ -72,23 +72,12 @@ export const InputSection = () => {
     setNewMessage((prev) => (prev ? `${prev} ${cleaned}` : cleaned));
   };
 
-  const onSelectFile = (file: File) => {
-    setSelectedFile(file);
-  };
-
-  const removeSelectedFile = () => {
-    setSelectedFile(null);
-  };
-
   return (
     <section className="w-full md:w-11/12 xl:10/12 max-w-5xl mx-auto border-[1px] border-b-0 border-gray-300 rounded-t-lg p-2 pb-4">
       {selectedFile && (
         <section>
           <Suspense fallback={null}>
-            <LazySelectedFilePreview
-              selectedFile={selectedFile}
-              removeSelectedFile={removeSelectedFile}
-            />
+            <LazySelectedFilePreview />
           </Suspense>
         </section>
       )}
@@ -119,10 +108,7 @@ export const InputSection = () => {
         )}
       </section>
       {isSendingAudio && <AudioSendingLoader />}
-      <InputActionButtons
-        onTranscription={onTranscription}
-        onSelectFile={onSelectFile}
-      />
+      <InputActionButtons onTranscription={onTranscription} />
     </section>
   );
 };
