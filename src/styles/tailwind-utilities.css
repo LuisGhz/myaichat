@@ -5,6 +5,10 @@
     @apply text-gray-700 dark:text-gray-200;
   }
 
+  .app-fill {
+    @apply fill-gray-700 dark:fill-gray-200;
+  }
+
   .transition-c-200 {
     @apply transition-colors duration-200;
   }
