@@ -5,7 +5,7 @@ import { OAuth2Callback } from "features/Auth/pages/OAuth2Callback";
 import { Chat } from "features/Chat/pages/Chat";
 import { CreateEditPrompt } from "features/Prompts/pages/CreateEditPrompt";
 import { Prompts } from "features/Prompts/pages/Prompts";
-import { Welcome } from "features/Welcome/Welcome";
+import { Welcome } from "features/Welcome/pages/Welcome";
 import { BrowserRouter, Route, Routes } from "react-router";
 
 export const AppRouter = () => {
