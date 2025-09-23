@@ -26,6 +26,7 @@ describe('useChat', () => {
   let setMessagesMock: ReturnType<typeof vi.fn>;
   let setMaxOutputTokensMock: ReturnType<typeof vi.fn>;
   let setIsWebSearchModeMock: ReturnType<typeof vi.fn>;
+  let setSelectedFileMock: ReturnType<typeof vi.fn>;
   let setChatsSummaryMock: ReturnType<typeof vi.fn>;
   let addStreamingAssistantMessageMock: ReturnType<typeof vi.fn>;
   let updateStreamingAssistantMessageMock: ReturnType<typeof vi.fn>;
@@ -82,6 +83,7 @@ describe('useChat', () => {
     setMessagesMock = vi.fn();
     setMaxOutputTokensMock = vi.fn();
     setIsWebSearchModeMock = vi.fn();
+    setSelectedFileMock = vi.fn();
     setChatsSummaryMock = vi.fn();
     addStreamingAssistantMessageMock = vi.fn();
     updateStreamingAssistantMessageMock = vi.fn();
@@ -101,6 +103,7 @@ describe('useChat', () => {
       messages: mockMessages,
       isRecordingAudio: false,
       isSendingAudio: false,
+      selectedFile: null,
     });
 
     // Mock useChatStoreActions return value
@@ -111,6 +114,7 @@ describe('useChat', () => {
       setCurrentChatMetadata: setCurrentChatMetadataMock,
       setMessages: setMessagesMock,
       setIsWebSearchMode: setIsWebSearchModeMock,
+      setSelectedFile: setSelectedFileMock,
       addStreamingAssistantMessage: addStreamingAssistantMessageMock,
       updateStreamingAssistantMessage: updateStreamingAssistantMessageMock,
       addStreamingAssistanteAndUserMessageTokens: addStreamingAssistanteAndUserMessageTokensMock,
@@ -169,6 +173,18 @@ describe('useChat', () => {
       expect(setModelMock).toHaveBeenCalledWith(DEFAULT_MODEL);
       expect(setPromptIdMock).toHaveBeenCalledWith(undefined);
       expect(setMessagesMock).toHaveBeenCalledWith([]);
+      expect(setSelectedFileMock).toHaveBeenCalledWith(null);
+    });
+
+    it('should clear selected file when resetting chat data', () => {
+      const { result } = renderUseChat();
+
+      act(() => {
+        result.current.resetChatData();
+      });
+
+      expect(setSelectedFileMock).toHaveBeenCalledWith(null);
+      expect(setSelectedFileMock).toHaveBeenCalledTimes(1);
     });
   });
 
@@ -302,6 +318,7 @@ describe('useChat', () => {
       model: 'gemini-2.0-flash',
       chatId: 'chat-123',
       promptId: 'prompt-456',
+      file: null,
     };
 
     const mockFile = new File(['test'], 'test.txt', { type: 'text/plain' });
@@ -392,6 +409,7 @@ describe('useChat', () => {
         content: 'Test message',
         maxOutputTokens: 4096,
         isWebSearchMode: false,
+        file: null,
       };
 
       const mockResponse: NewMessageRes = {
@@ -537,6 +555,7 @@ describe('useChat', () => {
         content: 'Hello, start new chat',
         maxOutputTokens: 4096,
         isWebSearchMode: false,
+        file: null,
       };
 
       const newChatResponse: NewMessageRes = {
@@ -607,6 +626,350 @@ describe('useChat', () => {
         ...mockMessages,
       ]);
       expect(setCurrentChatMetadataMock).toHaveBeenCalledTimes(1); // Only on initial load
+    });
+  });
+
+  describe('setSelectedFile functionality', () => {
+    const createMockFile = (name: string, type: string, size: number = 1024) => {
+      const content = new Array(size).fill('a').join('');
+      return new File([content], name, { type, lastModified: Date.now() });
+    };
+
+    describe('file handling through resetChatData', () => {
+      it('should call setSelectedFile with null when resetting chat data', () => {
+        const { result } = renderUseChat();
+
+        act(() => {
+          result.current.resetChatData();
+        });
+
+        expect(setSelectedFileMock).toHaveBeenCalledWith(null);
+      });
+    });
+
+    describe('file integration with sendNewMessage', () => {
+      it('should handle sendNewMessage with null file', async () => {
+        const request: SendNewMessageReq = {
+          content: 'Test message',
+          maxOutputTokens: 4096,
+          isWebSearchMode: false,
+          file: null,
+        };
+
+        const mockResponse: NewMessageRes = {
+          chatId: 'chat-123',
+          isNew: false,
+        };
+
+        chatServiceMock.sendNewMessageService.mockResolvedValue(mockResponse);
+        const { result } = renderUseChat();
+
+        await act(async () => {
+          await result.current.sendNewMessage(request);
+        });
+
+        const formDataCall = chatServiceMock.sendNewMessageService.mock.calls[0][0] as FormData;
+        expect(formDataCall.get('file')).toBeNull();
+        expect(formDataCall.get('content')).toBe(request.content);
+      });
+
+      it('should handle sendNewMessage with valid file', async () => {
+        const mockFile = createMockFile('test.jpg', 'image/jpeg');
+        const request: SendNewMessageReq = {
+          content: 'Test message with file',
+          maxOutputTokens: 4096,
+          isWebSearchMode: false,
+          file: mockFile,
+        };
+
+        const mockResponse: NewMessageRes = {
+          chatId: 'chat-123',
+          isNew: false,
+        };
+
+        chatServiceMock.sendNewMessageService.mockResolvedValue(mockResponse);
+        const { result } = renderUseChat();
+
+        await act(async () => {
+          await result.current.sendNewMessage(request);
+        });
+
+        const formDataCall = chatServiceMock.sendNewMessageService.mock.calls[0][0] as FormData;
+        expect(formDataCall.get('file')).toBe(mockFile);
+        expect(formDataCall.get('content')).toBe(request.content);
+      });
+
+      it('should handle different file types correctly', async () => {
+        const testCases = [
+          { name: 'document.pdf', type: 'application/pdf' },
+          { name: 'image.png', type: 'image/png' },
+          { name: 'text.txt', type: 'text/plain' },
+        ];
+
+        for (const testCase of testCases) {
+          const mockFile = createMockFile(testCase.name, testCase.type);
+          const request: SendNewMessageReq = {
+            content: `Test with ${testCase.name}`,
+            maxOutputTokens: 4096,
+            isWebSearchMode: false,
+            file: mockFile,
+          };
+
+          const mockResponse: NewMessageRes = {
+            chatId: 'chat-123',
+            isNew: false,
+          };
+
+          chatServiceMock.sendNewMessageService.mockResolvedValue(mockResponse);
+          const { result } = renderUseChat();
+
+          await act(async () => {
+            await result.current.sendNewMessage(request);
+          });
+
+          const formDataCall = chatServiceMock.sendNewMessageService.mock.calls[0][0] as FormData;
+          const sentFile = formDataCall.get('file') as File;
+          expect(sentFile.name).toBe(testCase.name);
+          expect(sentFile.type).toBe(testCase.type);
+
+          // Clear mock for next iteration
+          vi.clearAllMocks();
+          // Re-setup the mock for next iteration
+          chatStoreMock.useChatStoreActions.mockReturnValue({
+            setModel: setModelMock,
+            setMaxOutputTokens: setMaxOutputTokensMock,
+            setPromptId: setPromptIdMock,
+            setCurrentChatMetadata: setCurrentChatMetadataMock,
+            setMessages: setMessagesMock,
+            setIsWebSearchMode: setIsWebSearchModeMock,
+            setSelectedFile: setSelectedFileMock,
+            addStreamingAssistantMessage: addStreamingAssistantMessageMock,
+            updateStreamingAssistantMessage: updateStreamingAssistantMessageMock,
+            addStreamingAssistanteAndUserMessageTokens: addStreamingAssistanteAndUserMessageTokensMock,
+            setIsRecordingAudio: setIsRecordingAudioMock,
+            setIsSendingAudio: setIsSendingAudioMock,
+          });
+        }
+      });
+
+      it('should handle large files correctly', async () => {
+        const largeFile = createMockFile('large-image.jpg', 'image/jpeg', 5 * 1024 * 1024); // 5MB
+        const request: SendNewMessageReq = {
+          content: 'Test with large file',
+          maxOutputTokens: 4096,
+          isWebSearchMode: false,
+          file: largeFile,
+        };
+
+        const mockResponse: NewMessageRes = {
+          chatId: 'chat-123',
+          isNew: false,
+        };
+
+        chatServiceMock.sendNewMessageService.mockResolvedValue(mockResponse);
+        const { result } = renderUseChat();
+
+        await act(async () => {
+          await result.current.sendNewMessage(request);
+        });
+
+        const formDataCall = chatServiceMock.sendNewMessageService.mock.calls[0][0] as FormData;
+        const sentFile = formDataCall.get('file') as File;
+        expect(sentFile.size).toBe(5 * 1024 * 1024);
+        expect(sentFile.name).toBe('large-image.jpg');
+      });
+    });
+
+    describe('edge cases and error scenarios', () => {
+      it('should handle sendNewMessage when file is explicitly set to null', async () => {
+        const request: SendNewMessageReq = {
+          content: 'Test message',
+          maxOutputTokens: 4096,
+          isWebSearchMode: false,
+          file: null,
+        };
+
+        const mockResponse: NewMessageRes = {
+          chatId: 'chat-123',
+          isNew: false,
+        };
+
+        chatServiceMock.sendNewMessageService.mockResolvedValue(mockResponse);
+        const { result } = renderUseChat();
+
+        await act(async () => {
+          await result.current.sendNewMessage(request);
+        });
+
+        const formDataCall = chatServiceMock.sendNewMessageService.mock.calls[0][0] as FormData;
+        expect(formDataCall.get('file')).toBeNull();
+      });
+
+      it('should handle file with special characters in name', async () => {
+        const specialFile = createMockFile('test file (1) [copy].jpg', 'image/jpeg');
+        const request: SendNewMessageReq = {
+          content: 'Test with special filename',
+          maxOutputTokens: 4096,
+          isWebSearchMode: false,
+          file: specialFile,
+        };
+
+        const mockResponse: NewMessageRes = {
+          chatId: 'chat-123',
+          isNew: false,
+        };
+
+        chatServiceMock.sendNewMessageService.mockResolvedValue(mockResponse);
+        const { result } = renderUseChat();
+
+        await act(async () => {
+          await result.current.sendNewMessage(request);
+        });
+
+        const formDataCall = chatServiceMock.sendNewMessageService.mock.calls[0][0] as FormData;
+        const sentFile = formDataCall.get('file') as File;
+        expect(sentFile.name).toBe('test file (1) [copy].jpg');
+      });
+
+      it('should handle empty file', async () => {
+        const emptyFile = createMockFile('empty.txt', 'text/plain', 0);
+        const request: SendNewMessageReq = {
+          content: 'Test with empty file',
+          maxOutputTokens: 4096,
+          isWebSearchMode: false,
+          file: emptyFile,
+        };
+
+        const mockResponse: NewMessageRes = {
+          chatId: 'chat-123',
+          isNew: false,
+        };
+
+        chatServiceMock.sendNewMessageService.mockResolvedValue(mockResponse);
+        const { result } = renderUseChat();
+
+        await act(async () => {
+          await result.current.sendNewMessage(request);
+        });
+
+        const formDataCall = chatServiceMock.sendNewMessageService.mock.calls[0][0] as FormData;
+        const sentFile = formDataCall.get('file') as File;
+        expect(sentFile.size).toBe(0);
+        expect(sentFile.name).toBe('empty.txt');
+      });
+    });
+
+    describe('user flow scenarios with files', () => {
+      it('should handle complete flow: reset -> send with file -> send without file', async () => {
+        const { result } = renderUseChat();
+
+        // Step 1: Reset chat data (clears any selected file)
+        act(() => {
+          result.current.resetChatData();
+        });
+        expect(setSelectedFileMock).toHaveBeenCalledWith(null);
+
+        // Step 2: Send message with file
+        const fileRequest: SendNewMessageReq = {
+          content: 'Message with file',
+          maxOutputTokens: 4096,
+          isWebSearchMode: false,
+          file: createMockFile('document.pdf', 'application/pdf'),
+        };
+
+        const mockResponseWithFile: NewMessageRes = {
+          chatId: 'chat-123',
+          isNew: false,
+        };
+
+        chatServiceMock.sendNewMessageService.mockResolvedValue(mockResponseWithFile);
+
+        await act(async () => {
+          await result.current.sendNewMessage(fileRequest);
+        });
+
+        const firstFormData = chatServiceMock.sendNewMessageService.mock.calls[0][0] as FormData;
+        expect(firstFormData.get('file')).toBeTruthy();
+
+        // Step 3: Send message without file
+        const noFileRequest: SendNewMessageReq = {
+          content: 'Message without file',
+          maxOutputTokens: 4096,
+          isWebSearchMode: false,
+          file: null,
+        };
+
+        chatServiceMock.sendNewMessageService.mockResolvedValue(mockResponseWithFile);
+
+        await act(async () => {
+          await result.current.sendNewMessage(noFileRequest);
+        });
+
+        const secondFormData = chatServiceMock.sendNewMessageService.mock.calls[1][0] as FormData;
+        expect(secondFormData.get('file')).toBeNull();
+      });
+
+      it('should handle new chat creation with file attachment', async () => {
+        const mockFile = createMockFile('startup-doc.pdf', 'application/pdf');
+        const request: SendNewMessageReq = {
+          content: 'Start new chat with file',
+          maxOutputTokens: 4096,
+          isWebSearchMode: false,
+          file: mockFile,
+        };
+
+        const newChatResponse: NewMessageRes = {
+          chatId: 'new-chat-789',
+          isNew: true,
+        };
+
+        chatServiceMock.sendNewMessageService.mockResolvedValue(newChatResponse);
+        const { result } = renderUseChat();
+
+        let returnedChatId: string | undefined;
+        await act(async () => {
+          returnedChatId = await result.current.sendNewMessage(request);
+        });
+
+        // Verify file was sent correctly
+        const formDataCall = chatServiceMock.sendNewMessageService.mock.calls[0][0] as FormData;
+        const sentFile = formDataCall.get('file') as File;
+        expect(sentFile.name).toBe('startup-doc.pdf');
+
+        // Verify new chat was created
+        expect(returnedChatId).toBe('new-chat-789');
+        expect(setChatsSummaryMock).toHaveBeenCalledWith([
+          ...mockChatsSummary,
+          { id: 'new-chat-789', fav: false }
+        ]);
+      });
+
+      it('should handle service error with file attachment gracefully', async () => {
+        const consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
+        const mockFile = createMockFile('error-file.jpg', 'image/jpeg');
+        const request: SendNewMessageReq = {
+          content: 'Test error handling with file',
+          maxOutputTokens: 4096,
+          isWebSearchMode: false,
+          file: mockFile,
+        };
+
+        chatServiceMock.sendNewMessageService.mockRejectedValue(new Error('Network error'));
+        const { result } = renderUseChat();
+
+        let returnedChatId: string | undefined;
+        await act(async () => {
+          returnedChatId = await result.current.sendNewMessage(request);
+        });
+
+        expect(consoleErrorSpy).toHaveBeenCalledWith('Error sending new message:', expect.any(Error));
+        expect(returnedChatId).toBeUndefined();
+        
+        // User message should still be added optimistically
+        expect(setMessagesMock).toHaveBeenCalled();
+
+        consoleErrorSpy.mockRestore();
+      });
     });
   });
 });
