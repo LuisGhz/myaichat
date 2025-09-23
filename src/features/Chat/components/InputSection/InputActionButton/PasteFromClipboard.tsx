@@ -52,7 +52,7 @@ export const PasteFromClipboard = ({
 
   return (
     <li
-      className="py-1.5 hover:bg-cop-6 rounded-b-lg transition-colors duration-200 cursor-pointer"
+      className="py-1.5 rounded-b-lg transition-colors duration-200 cursor-pointer"
       onClick={(e) => {
         e.stopPropagation();
         handlePasteFromClipboard();
