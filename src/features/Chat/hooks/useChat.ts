@@ -17,6 +17,7 @@ export const useChat = () => {
     setMessages,
     setMaxOutputTokens,
     setIsWebSearchMode,
+    setSelectedFile,
   } = useChatStoreActions();
   const { chatsSummary } = useAppStore();
   const { setChatsSummary } = useAppStoreActions();
@@ -25,6 +26,7 @@ export const useChat = () => {
     setModel(DEFAULT_MODEL);
     setPromptId(undefined);
     setMessages([]);
+    setSelectedFile(null);
   };
 
   const getChatMessages = async (id: string, page: number = 0) => {
