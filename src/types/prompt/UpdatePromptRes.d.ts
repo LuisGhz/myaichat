@@ -1,0 +1,3 @@
+type UpdatedPromptRes = {
+  message: string;
+};
