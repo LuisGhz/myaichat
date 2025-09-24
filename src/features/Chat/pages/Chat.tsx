@@ -4,12 +4,17 @@ import { InputSection } from "../components/InputSection/InputSection";
 import { useChatParams } from "../hooks/useChatParams";
 import { useChat } from "../hooks/useChat";
 import { ChatMessages } from "../components/ChatMessages";
+import { useLocation } from "react-router";
 
 export const Chat = () => {
   const params = useChatParams();
-  const { resetChatData, getChatMessages, loadPreviousMessages, messages } = useChat();
+  const location = useLocation();
+  const fromStream = location.state?.fromStream;
+  const { resetChatData, getChatMessages, loadPreviousMessages, messages } =
+    useChat();
   const scrollContainerRef = useRef<HTMLElement>(null);
-  const [isLoadingPreviousMessages, setIsLoadingPreviousMessages] = useState(false);
+  const [isLoadingPreviousMessages, setIsLoadingPreviousMessages] =
+    useState(false);
   const [currentPage, setCurrentPage] = useState(0);
   const [hasMoreMessages, setHasMoreMessages] = useState(true);
   const [emptyPage, setEmptyPage] = useState(false);
@@ -24,7 +29,7 @@ export const Chat = () => {
       resetChatData();
       return;
     }
-
+    if (fromStream) return;
     // Reset pagination state when chat changes
     setCurrentPage(0);
     setHasMoreMessages(true);
@@ -44,22 +49,23 @@ export const Chat = () => {
       const previousMessageCount = previousMessageCountRef.current;
 
       // Check if messages were added at the beginning (pagination)
-      const messagesAddedAtTop = currentMessageCount > previousMessageCount && 
-                                currentMessageCount - previousMessageCount > 1;
+      const messagesAddedAtTop =
+        currentMessageCount > previousMessageCount &&
+        currentMessageCount - previousMessageCount > 1;
 
       // Only auto-scroll if:
       // 1. The last message is from assistant (streaming)
       // 2. Messages weren't loaded at the top (pagination)
       // 3. Not currently loading previous messages
       if (
-        lastMessage.role === "Assistant" && 
-        !messagesAddedAtTop && 
+        lastMessage.role === "Assistant" &&
+        !messagesAddedAtTop &&
         !isLoadingPreviousMessages
       ) {
         isProgrammaticScrollRef.current = true;
         scrollContainerRef.current.scrollTo({
           top: scrollContainerRef.current.scrollHeight,
-          behavior: "smooth"
+          behavior: "smooth",
         });
         // Reset the flag after a short delay to allow the scroll to complete
         setTimeout(() => {
@@ -69,7 +75,8 @@ export const Chat = () => {
         // Maintain scroll position when loading previous messages
         isProgrammaticScrollRef.current = true;
         const currentScrollHeight = scrollContainerRef.current.scrollHeight;
-        const heightDifference = currentScrollHeight - lastScrollHeightRef.current;
+        const heightDifference =
+          currentScrollHeight - lastScrollHeightRef.current;
         scrollContainerRef.current.scrollTop += heightDifference;
         setIsLoadingPreviousMessages(false);
         // Reset the flag after scroll position adjustment
@@ -91,10 +98,14 @@ export const Chat = () => {
     // Ignore scroll events during programmatic scrolling
     if (isProgrammaticScrollRef.current) return;
 
-    const { scrollTop, scrollHeight, clientHeight } = scrollContainerRef.current;
-    
+    const { scrollTop, scrollHeight, clientHeight } =
+      scrollContainerRef.current;
+
     // Capture the initial scroll position when content is first loaded
-    if (initialScrollPositionRef.current === null && scrollHeight > clientHeight) {
+    if (
+      initialScrollPositionRef.current === null &&
+      scrollHeight > clientHeight
+    ) {
       initialScrollPositionRef.current = scrollTop;
       return; // Exit early on first measurement
     }
@@ -102,7 +113,7 @@ export const Chat = () => {
     // Only mark as user scrolled if the scroll position has changed from initial position
     // and we have an initial position recorded
     if (
-      initialScrollPositionRef.current !== null && 
+      initialScrollPositionRef.current !== null &&
       Math.abs(scrollTop - initialScrollPositionRef.current) > 10 && // 10px tolerance
       !hasUserScrolledRef.current
     ) {
@@ -119,19 +130,22 @@ export const Chat = () => {
     // 5. User has actually scrolled (not initial state)
     // 6. There are existing messages
     if (
-      scrollTop < threshold && 
-      !isLoadingPreviousMessages && 
-      hasMoreMessages && 
+      scrollTop < threshold &&
+      !isLoadingPreviousMessages &&
+      hasMoreMessages &&
       !emptyPage &&
       hasUserScrolledRef.current &&
       messages.length > 0
     ) {
       setIsLoadingPreviousMessages(true);
-      
+
       try {
         const nextPage = currentPage + 1;
-        const loadedMessagesCount = await loadPreviousMessages(params.id, nextPage);
-        
+        const loadedMessagesCount = await loadPreviousMessages(
+          params.id,
+          nextPage
+        );
+
         if (loadedMessagesCount > 0) {
           setCurrentPage(nextPage);
           setEmptyPage(false); // Reset emptyPage since we got content
@@ -154,7 +168,7 @@ export const Chat = () => {
 
   return (
     <div className="h-full flex flex-col">
-      <section 
+      <section
         ref={scrollContainerRef}
         className="grow overflow-auto pb-10 scroll-hidden mx-auto w-full md:w-11/12 xl:10/12 max-w-4xl"
         role="main"
@@ -162,8 +176,14 @@ export const Chat = () => {
         onScroll={handleScroll}
       >
         {isLoadingPreviousMessages && (
-          <div className="flex justify-center p-4" role="status" aria-live="polite">
-            <span className="text-sm app-text">Loading previous messages...</span>
+          <div
+            className="flex justify-center p-4"
+            role="status"
+            aria-live="polite"
+          >
+            <span className="text-sm app-text">
+              Loading previous messages...
+            </span>
           </div>
         )}
         {messages.length === 0 && <NewConversation />}

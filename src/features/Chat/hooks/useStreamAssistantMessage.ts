@@ -37,7 +37,9 @@ export const useStreamAssistantMessage = () => {
         chunk.promptTokens || 0,
         chunk.completionTokens || 0
       );
-      if (!params.id) navigate(`/chat/${chatId}`);
+      if (!params.id) navigate(`/chat/${chatId}`, {
+        state: { fromStream: true }
+      });
       if (chatsSummary.find((chat) => chat.id === chatId)) return;
       setChatsSummary([
         ...chatsSummary,
