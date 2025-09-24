@@ -1,4 +1,6 @@
+import { Fragment } from "react";
 import { AssistantTyping } from "./AssistantTyping";
+import { ChatFileViewer } from "./ChatFileViewer";
 import { MessageActionButtons } from "./MessageActionButtons";
 
 type Props = {
@@ -7,37 +9,53 @@ type Props = {
 
 export const ChatMessages = ({ messages }: Props) => {
   return (
-    <section className="flex flex-col gap-10 px-1 md:px-2">
-      {messages.map((msg, idx) =>
-        msg.content.trim() === "" ? (
-          msg.role === "Assistant" ? (
-            <AssistantTyping key={idx} />
+    <section className="px-1 md:px-2">
+      <ul className="flex flex-col gap-10">
+        {messages.map((msg, idx) =>
+          msg.content.trim() === "" ? (
+            msg.role === "Assistant" ? (
+              <AssistantTyping key={idx} />
+            ) : (
+              <Fragment key={idx}></Fragment>
+            )
           ) : (
-            <></>
+            <li className="flex flex-col" key={idx}>
+              {msg.file && msg.role === "User" && (
+                <div className="self-end mb-2">
+                  <ChatFileViewer file={msg.file} />
+                </div>
+              )}
+              <div
+                className={`${
+                  msg.role === "User" ? "self-end" : "self-start"
+                } max-w-[70%] p-3 rounded-lg app-text bg-gray-300 dark:bg-gray-950 relative`}
+              >
+                <p className="text-[1rem]">{msg.content}</p>
+                {((msg.completionTokens || 0) > 0 ||
+                  (msg.promptTokens || 0) > 0) && (
+                  <>
+                    <span className="text-xs block mt-1.5 app-text">
+                      Tokens:{" "}
+                      {msg.role === "User"
+                        ? msg.promptTokens
+                        : msg.completionTokens}
+                    </span>
+                    <MessageActionButtons
+                      role={msg.role}
+                      content={msg.content}
+                    />
+                  </>
+                )}
+              </div>
+              {msg.file && msg.role === "Assistant" && (
+                <div className="self-start mt-2">
+                  <ChatFileViewer file={msg.file} />
+                </div>
+              )}
+            </li>
           )
-        ) : (
-          <div
-            className={`${
-              msg.role === "User" ? "self-end" : "self-start"
-            } max-w-[70%] p-3 rounded-lg app-text bg-gray-300 dark:bg-gray-950 relative`}
-            key={idx}
-          >
-            <p className="text-[1rem]">{msg.content}</p>
-            {((msg.completionTokens || 0) > 0 ||
-              (msg.promptTokens || 0) > 0) && (
-              <>
-                <span className="text-xs block mt-1.5 app-text">
-                  Tokens:{" "}
-                  {msg.role === "User"
-                    ? msg.promptTokens
-                    : msg.completionTokens}
-                </span>
-                <MessageActionButtons role={msg.role} content={msg.content} />
-              </>
-            )}
-          </div>
-        )
-      )}
+        )}
+      </ul>
     </section>
   );
 };
