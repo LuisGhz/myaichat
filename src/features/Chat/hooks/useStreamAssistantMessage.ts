@@ -26,7 +26,8 @@ export const useStreamAssistantMessage = () => {
       const newText = prev + chunk.content;
       // Update the assistant message in the chat store after state update
       setTimeout(() => {
-        updateStreamingAssistantMessage(newText);
+        if (chunk.content !== null && chunk.content !== undefined)
+          updateStreamingAssistantMessage(newText);
       }, 0);
       return newText;
     });
@@ -37,9 +38,10 @@ export const useStreamAssistantMessage = () => {
         chunk.promptTokens || 0,
         chunk.completionTokens || 0
       );
-      if (!params.id) navigate(`/chat/${chatId}`, {
-        state: { fromStream: true }
-      });
+      if (!params.id)
+        navigate(`/chat/${chatId}`, {
+          state: { fromStream: true },
+        });
       if (chatsSummary.find((chat) => chat.id === chatId)) return;
       setChatsSummary([
         ...chatsSummary,
