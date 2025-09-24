@@ -46,7 +46,7 @@ export const Prompts = () => {
               key={prompt.id}
               className="cursor-pointer w-48 py-1.5 hover:bg-gray-400 hover:text-shadow-gray-800 dark:hover:bg-gray-600 dark:hover:text-shadow-gray-200 transition-colors duration-200 rounded-xs px-0.5 flex justify-between"
             >
-              <Link className="!text-inherit" to={`/prompts/${prompt.id}`}>
+              <Link className="!text-inherit" to={`/prompts/form/${prompt.id}`}>
                 {prompt.name}
               </Link>
               <button
