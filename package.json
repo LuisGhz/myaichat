@@ -25,6 +25,7 @@
     "remark-gfm": "^4.0.1",
     "tailwindcss": "4.1.13",
     "uuid": "13.0.0",
+    "vite-plugin-pwa": "^1.0.3",
     "zod": "4.1.11",
     "zustand": "5.0.8"
   },
