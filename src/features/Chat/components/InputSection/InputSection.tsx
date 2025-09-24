@@ -4,7 +4,7 @@ import { SendAltFilledIcon } from "icons/SendAltFilledIcon";
 import { InputActionButtons } from "./InputActionButton/InputActionButtons";
 import { useChatParams } from "features/Chat/hooks/useChatParams";
 import { useChat } from "features/Chat/hooks/useChat";
-import { useChatStore } from "store/app/ChatStore";
+import { useChatStore, useChatStoreActions } from "store/app/ChatStore";
 import { useStreamAssistantMessage } from "features/Chat/hooks/useStreamAssistantMessage";
 import { useAppStoreActions } from "store/app/AppStore";
 import { AudioSendingLoader } from "./AudioSendingLoader";
@@ -32,6 +32,7 @@ export const InputSection = () => {
     isSendingAudio,
     selectedFile,
   } = useChatStore();
+  const { setSelectedFile } = useChatStoreActions();
   const { startStreaming } = useStreamAssistantMessage();
   const { setIsGettingNewChat } = useAppStoreActions();
 
@@ -42,7 +43,6 @@ export const InputSection = () => {
   const handleSendMessage = async () => {
     if (isSending || newMessage.trim() === "") return;
     if (!params.id) setIsGettingNewChat(true);
-    setNewMessage("");
     setIsSending(true);
     const req: SendNewMessageReq = {
       chatId: params.id || undefined,
@@ -53,6 +53,8 @@ export const InputSection = () => {
       file: selectedFile,
       promptId,
     };
+    setNewMessage("");
+    setSelectedFile(null);
 
     const chatId = await sendNewMessage(req);
     if (chatId) await startStreaming(chatId);
