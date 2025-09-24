@@ -1,5 +1,8 @@
 import { useState } from "react";
-import { GetAllPromptsService } from "../services/PromptsService";
+import {
+  deletePromptService,
+  GetAllPromptsService,
+} from "../services/PromptsService";
 
 export const usePrompts = () => {
   const [promptsSummary, setPromptsSummary] = useState<PromptSummary[]>([]);
@@ -10,5 +13,15 @@ export const usePrompts = () => {
     setPromptsSummary(response.prompts);
   };
 
-  return { getAllPrompts, promptsSummary };
+  const deletePrompt = async (promptId: string) => {
+    setPromptsSummary((prev) => prev.filter((p) => p.id !== promptId));
+    try {
+      await deletePromptService(promptId);
+    } catch (error) {
+      setPromptsSummary(promptsSummary);
+      console.error("Error deleting prompt:", error);
+    }
+  };
+
+  return { getAllPrompts, promptsSummary, deletePrompt };
 };
