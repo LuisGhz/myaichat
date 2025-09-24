@@ -33,7 +33,7 @@ export const ChatMessages = ({ messages }: Props) => {
                   msg.role === "User" ? "self-end" : "self-start"
                 } max-w-[70%] p-3 rounded-lg app-text bg-gray-300 dark:bg-gray-950 relative`}
               >
-                <p className="text-[1rem]">{formatToMarkDown(msg.content)}</p>
+                <div className="text-[1rem]">{formatToMarkDown(msg.content)}</div>
                 {((msg.completionTokens || 0) > 0 ||
                   (msg.promptTokens || 0) > 0) && (
                   <>
