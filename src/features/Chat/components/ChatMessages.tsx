@@ -2,12 +2,15 @@ import { Fragment } from "react";
 import { AssistantTyping } from "./AssistantTyping";
 import { ChatFileViewer } from "./ChatFileViewer";
 import { MessageActionButtons } from "./MessageActionButtons";
+import { useMarkDown } from "../hooks/useMarkdown";
 
 type Props = {
   messages: ChatMessage[];
 };
 
 export const ChatMessages = ({ messages }: Props) => {
+  const formatToMarkDown = useMarkDown();
+
   return (
     <section className="px-1 md:px-2">
       <ul className="flex flex-col gap-10">
@@ -30,7 +33,7 @@ export const ChatMessages = ({ messages }: Props) => {
                   msg.role === "User" ? "self-end" : "self-start"
                 } max-w-[70%] p-3 rounded-lg app-text bg-gray-300 dark:bg-gray-950 relative`}
               >
-                <p className="text-[1rem]">{msg.content}</p>
+                <p className="text-[1rem]">{formatToMarkDown(msg.content)}</p>
                 {((msg.completionTokens || 0) > 0 ||
                   (msg.promptTokens || 0) > 0) && (
                   <>
