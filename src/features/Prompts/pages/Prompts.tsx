@@ -41,25 +41,30 @@ export const Prompts = () => {
       </h2>
       <section>
         <ul className="app-text">
-          {promptsSummary.map((prompt) => (
-            <li
-              key={prompt.id}
-              className="cursor-pointer w-48 py-1.5 hover:bg-gray-400 hover:text-shadow-gray-800 dark:hover:bg-gray-600 dark:hover:text-shadow-gray-200 transition-colors duration-200 rounded-xs px-0.5 flex justify-between"
-            >
-              <Link className="!text-inherit" to={`/prompts/form/${prompt.id}`}>
-                {prompt.name}
-              </Link>
-              <button
-                className="hover:text-red-600 text-inherit transition-c-200 cursor-pointer text-lg"
-                aria-label="Delete Prompt"
-                title="Delete Prompt"
-                type="button"
-                onClick={askIfDelete(prompt.id)}
+          {promptsSummary
+            .sort((a, b) => a.name.localeCompare(b.name))
+            .map((prompt) => (
+              <li
+                key={prompt.id}
+                className="cursor-pointer w-48 py-1.5 hover:bg-gray-400 hover:text-shadow-gray-800 dark:hover:bg-gray-600 dark:hover:text-shadow-gray-200 transition-colors duration-200 rounded-xs px-0.5 flex justify-between"
               >
-                <TrashOutlineIcon />
-              </button>
-            </li>
-          ))}
+                <Link
+                  className="!text-inherit"
+                  to={`/prompts/form/${prompt.id}`}
+                >
+                  {prompt.name}
+                </Link>
+                <button
+                  className="hover:text-red-600 text-inherit transition-c-200 cursor-pointer text-lg"
+                  aria-label="Delete Prompt"
+                  title="Delete Prompt"
+                  type="button"
+                  onClick={askIfDelete(prompt.id)}
+                >
+                  <TrashOutlineIcon />
+                </button>
+              </li>
+            ))}
         </ul>
       </section>
       <section>
