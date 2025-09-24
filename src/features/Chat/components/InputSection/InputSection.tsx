@@ -97,6 +97,7 @@ export const InputSection = () => {
           onKeyDown={handleKeyDown}
           disabled={isSending}
           aria-label="Type a message"
+          autoComplete="off"
         />
         {newMessage.trim() !== "" && (
           <button
