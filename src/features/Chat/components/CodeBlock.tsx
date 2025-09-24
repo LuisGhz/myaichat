@@ -24,6 +24,7 @@ export const CodeBlock = ({ children, className }: Props) => {
         onClick={handleCopy}
         className="absolute top-2 right-2 px-2 py-1 text-xs bg-gray-700 hover:bg-gray-600 text-white rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 flex items-center gap-1 cursor-pointer"
         title={copied ? "Copied!" : "Copy code"}
+        aria-label="Copy code to clipboard"
       >
         {copied ? (
           <>
