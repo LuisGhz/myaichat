@@ -16,6 +16,7 @@ export const Chat = () => {
   const isFirstPageLoaded = useRef(false);
   const currentPage = useRef(0);
   const isEmptyPage = useRef(false);
+  const isLastUserMessageReady = useRef(false);
 
   useEffect(() => {
     setTimeout(() => {
@@ -26,6 +27,21 @@ export const Chat = () => {
       isFirstPageLoaded.current = true;
     }, 1000);
   }, []);
+
+  useEffect(() => {
+    if (messages.length === 0) return;
+    if (messages.at(-1)?.role === "User") isLastUserMessageReady.current = true;
+    if (
+      messages.at(-1)?.role === "Assistant" &&
+      isLastUserMessageReady.current
+    ) {
+      setTimeout(() => {
+        if (containerRef.current)
+          containerRef.current.scrollTop = containerRef.current.scrollHeight;
+        isLastUserMessageReady.current = false;
+      }, 250);
+    }
+  }, [messages]);
 
   useEffect(() => {
     if (!params.id) {
