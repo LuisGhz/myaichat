@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect } from "react";
 import { NewConversation } from "../components/NewConversation";
 import { InputSection } from "../components/InputSection/InputSection";
 import { useChatParams } from "../hooks/useChatParams";
