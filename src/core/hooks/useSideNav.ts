@@ -1,3 +1,4 @@
+import { useAppMessage } from "shared/hooks/useAppMessage";
 import {
   getChatSummaryService,
   toggleFavoriteService,
@@ -7,10 +8,16 @@ import { useAppStore, useAppStoreActions } from "store/app/AppStore";
 export const useSideNav = () => {
   const { chatsSummary } = useAppStore();
   const { setChatsSummary } = useAppStoreActions();
+  const { errorMessage } = useAppMessage();
 
   const getChatsSummary = async () => {
-    const res = await getChatSummaryService();
-    setChatsSummary(res?.chats || []);
+    try {
+      const res = await getChatSummaryService();
+      setChatsSummary(res?.chats || []);
+    } catch (error) {
+      errorMessage("Failed to fetch menu chats. Please try again later.");
+      throw error;
+    }
   };
 
   const toggleFavorite = async (chatId: string) => {
@@ -28,6 +35,7 @@ export const useSideNav = () => {
       await toggleFavoriteService(chatId);
     } catch (error) {
       setChatsSummary(chatsSummary);
+      errorMessage("Failed to update favorite status. Please try again later.");
       throw error;
     }
   };
