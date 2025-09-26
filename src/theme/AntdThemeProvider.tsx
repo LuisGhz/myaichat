@@ -31,6 +31,12 @@ const darkTheme: ThemeConfig = {
       defaultHoverColor: "var(--color-gray-100)",
       defaultHoverBorderColor: "var(--color-gray-400)",
     },
+    Message: {
+      colorText: "var(--color-gray-200)",
+      contentBg: "var(--color-gray-900)",
+      boxShadow:
+        "0 6px 16px 0 rgba(255, 255, 255, 0.08), 0 3px 6px -4px rgba(255, 255, 255, 0.12), 0 9px 28px 8px rgba(255, 255, 255, 0.05)",
+    },
   },
 };
 
