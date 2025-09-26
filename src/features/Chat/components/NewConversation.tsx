@@ -57,19 +57,21 @@ export const NewConversation = () => {
             onChange={(value) => setModel(value as ModelsValues)}
           />
         </div>
-        <div>
-          <Select
-            className="w-56 dark:!bg-gray-800"
-            options={promptsSummary.map((prompt) => ({
-              value: prompt.id,
-              label: prompt.name,
-            }))}
-            placeholder="Select a prompt if you wish"
-            value={promptId}
-            onChange={(value) => setPromptId(value as string)}
-            allowClear
-          />
-        </div>
+        {promptsSummary.length > 0 ? (
+          <div>
+            <Select
+              className="w-56 dark:!bg-gray-800"
+              options={promptsSummary.map((prompt) => ({
+                value: prompt.id,
+                label: prompt.name,
+              }))}
+              placeholder="Select a prompt if you wish"
+              value={promptId}
+              onChange={(value) => setPromptId(value as string)}
+              allowClear
+            />
+          </div>
+        ) : null}
       </section>
     </div>
   );
