@@ -31,7 +31,7 @@ export const usePrompts = () => {
       errorMessage("Failed to fetch prompt. Please try again later.");
       throw error; // Re-throw the error so calling code can handle it
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const deletePromptMessage = useCallback(
@@ -57,10 +57,12 @@ export const usePrompts = () => {
       try {
         await deletePromptService(promptId);
       } catch (error) {
+        errorMessage("Failed to delete prompt. Please try again later.");
         setPromptsSummary(promptsSummary);
         console.error("Error deleting prompt:", error);
       }
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [promptsSummary]
   );
 
