@@ -5,7 +5,7 @@ import { NewConversation } from './NewConversation';
 
 // Mock the hooks
 const getAllPromptsMock = vi.fn();
-const promptsSummaryMock = [
+let promptsSummaryMock = [
   { id: '1', name: 'Prompt 1' },
   { id: '2', name: 'Prompt 2' },
 ];
@@ -67,6 +67,13 @@ describe('NewConversation', () => {
     renderComponent();
     const promptSelect = screen.getAllByRole('combobox')[1];
     expect(promptSelect).toBeInTheDocument();
+  });
+
+  it('Do not displays prompt select with options if array is empty', () => {
+    promptsSummaryMock = [];
+    renderComponent();
+    const promptSelect = screen.queryAllByRole('combobox')[1];
+    expect(promptSelect).toBeUndefined();
   });
 
   it('allows selecting a prompt', async () => {
