@@ -1,5 +1,6 @@
 import { Layout } from "antd";
 import { AppHeader } from "components/header/AppHeader";
+import { MessageProvider } from "components/providers/MessageProvider";
 import { SideNav } from "components/sidenav/SideNav";
 import { Outlet } from "react-router";
 
@@ -12,6 +13,7 @@ function App() {
       <Layout>
         <AppHeader />
         <Content className="!bg-gray-100 dark:!bg-gray-900">
+          <MessageProvider />
           <Outlet />
         </Content>
       </Layout>
