@@ -30,6 +30,7 @@ vi.mock('antd', async () => {
 const onPromptFormSubmitMock = vi.fn();
 const onPromptUpdateFormSubmitMock = vi.fn();
 const getPromptByIdMock = vi.fn();
+const deletePromptMessageMock = vi.fn();
 
 vi.mock('../hooks/usePromptForm', () => ({
   usePromptForm: () => ({
@@ -41,6 +42,7 @@ vi.mock('../hooks/usePromptForm', () => ({
 vi.mock('../hooks/usePrompts', () => ({
   usePrompts: () => ({
     getPromptById: getPromptByIdMock,
+    deletePromptMessage: deletePromptMessageMock,
   }),
 }));
 
@@ -96,6 +98,7 @@ describe('CreateEditPrompt', () => {
     onPromptFormSubmitMock.mockClear();
     onPromptUpdateFormSubmitMock.mockClear();
     getPromptByIdMock.mockClear();
+    deletePromptMessageMock.mockClear();
   });
 
   const renderComponent = () => {
@@ -154,6 +157,7 @@ describe('CreateEditPrompt', () => {
       // Should only have one message left at index 0 (the array gets reindexed)
       expect(screen.getByTestId('prompt-message-0')).toBeInTheDocument();
       expect(screen.queryByTestId('prompt-message-1')).not.toBeInTheDocument();
+      expect(deletePromptMessageMock).not.toHaveBeenCalled();
     });
 
     it('submits create form successfully', async () => {
@@ -306,6 +310,33 @@ describe('CreateEditPrompt', () => {
       });
 
       expect(navigateMock).not.toHaveBeenCalled();
+    });
+
+    it('keeps message when backend deletion fails', async () => {
+      useParamsMock.mockReturnValue({ id: 'test-id' });
+      getPromptByIdMock.mockResolvedValue(mockPrompt);
+      deletePromptMessageMock.mockRejectedValue(new Error('failed to delete'));
+
+      renderComponent();
+
+      await waitFor(() => {
+        expect(screen.queryByText('Loading prompt...')).not.toBeInTheDocument();
+      });
+
+      const removeButton = screen.getByTestId('remove-message-0');
+      await user.click(removeButton);
+
+      await waitFor(() => {
+        expect(deletePromptMessageMock).toHaveBeenCalledTimes(1);
+        expect(deletePromptMessageMock).toHaveBeenCalledWith('test-id', expect.any(String));
+      });
+
+      const [, messageId] = deletePromptMessageMock.mock.calls[0];
+      expect(typeof messageId).toBe('string');
+      expect((messageId as string).startsWith('default-')).toBe(false);
+
+      expect(screen.getByTestId('prompt-message-0')).toBeInTheDocument();
+      expect(screen.getByTestId('prompt-message-1')).toBeInTheDocument();
     });
 
     it('handles prompt fetch error', async () => {

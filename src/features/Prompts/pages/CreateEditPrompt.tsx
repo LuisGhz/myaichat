@@ -13,19 +13,15 @@ const { TextArea } = Input;
 
 export const CreateEditPrompt = () => {
   const navigate = useNavigate();
-  const { id } = useParams<{ id?: string }>();
-  const isEditMode = Boolean(id);
+  const { id: promptId } = useParams<{ id?: string }>();
+  const isEditMode = Boolean(promptId);
   const [isLoading, setIsLoading] = useState(false);
   const [isInitialLoading, setIsInitialLoading] = useState(isEditMode);
 
   const { onPromptFormSubmit, onPromptUpdateFormSubmit } = usePromptForm();
-  const { getPromptById } = usePrompts();
+  const { getPromptById, deletePromptMessage } = usePrompts();
 
-  const {
-    control,
-    handleSubmit,
-    reset,
-  } = useForm<PromptForm>({
+  const { control, handleSubmit, reset } = useForm<PromptForm>({
     resolver: zodResolver(promptSchema),
     defaultValues: {
       name: "",
@@ -40,18 +36,19 @@ export const CreateEditPrompt = () => {
   });
 
   useEffect(() => {
-    if (isEditMode && id) {
+    if (isEditMode && promptId) {
       const fetchPrompt = async () => {
         try {
-          const prompt = await getPromptById(id);
+          const prompt = await getPromptById(promptId);
           if (prompt) {
             const formData = {
               name: prompt.name,
               content: prompt.content,
-              messages: prompt.messages?.map((msg, index) => ({
-                ...msg,
-                id: msg.id || `default-${index}`,
-              })) || [],
+              messages:
+                prompt.messages?.map((msg, index) => ({
+                  ...msg,
+                  id: msg.id || `default-${index}`,
+                })) || [],
             };
             reset(formData);
           } else {
@@ -72,13 +69,13 @@ export const CreateEditPrompt = () => {
       // Not in edit mode, so we don't need to load anything
       setIsInitialLoading(false);
     }
-  }, [id, isEditMode, getPromptById, reset, navigate]);
+  }, [promptId, isEditMode, getPromptById, reset, navigate]);
 
   const onSubmit = async (data: PromptForm) => {
     setIsLoading(true);
     try {
-      if (isEditMode && id) {
-        await onPromptUpdateFormSubmit(id, data);
+      if (isEditMode && promptId) {
+        await onPromptUpdateFormSubmit(promptId, data);
         message.success("Prompt updated successfully!");
       } else {
         await onPromptFormSubmit(data);
@@ -100,6 +97,23 @@ export const CreateEditPrompt = () => {
     });
   };
 
+  const handleRemoveMessage = (index: number) => async () => {
+    const messageId = fields[index]?.id;
+    try {
+      // Only attempt to delete from backend if it's an existing message
+      if (
+        isEditMode &&
+        promptId &&
+        messageId &&
+        !messageId.startsWith("default-")
+      )
+        await deletePromptMessage(promptId, messageId);
+      remove(index);
+    } catch (error) {
+      console.error("Error deleting message:", error);
+    }
+  };
+
   if (isInitialLoading) {
     return (
       <div className="flex items-center justify-center h-full">
@@ -109,14 +123,17 @@ export const CreateEditPrompt = () => {
   }
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="flex items-center h-full flex-col gap-4">
+    <form
+      onSubmit={handleSubmit(onSubmit)}
+      className="flex items-center h-full flex-col gap-4"
+    >
       <h2 className="text-xl app-text font-semibold">
         {isEditMode ? "Edit Prompt" : "Create Prompt"}
       </h2>
       <p className="app-text">
         {isEditMode ? "Edit your prompt here." : "Create a prompt here."}
       </p>
-      
+
       <section className="flex flex-col gap-2 w-full items-center">
         <Controller
           name="name"
@@ -130,12 +147,14 @@ export const CreateEditPrompt = () => {
                 status={fieldState.error ? "error" : undefined}
               />
               {fieldState.error && (
-                <span className="text-red-500 text-sm">{fieldState.error.message}</span>
+                <span className="text-red-500 text-sm">
+                  {fieldState.error.message}
+                </span>
               )}
             </>
           )}
         />
-        
+
         <Controller
           name="content"
           control={control}
@@ -149,7 +168,9 @@ export const CreateEditPrompt = () => {
                 status={fieldState.error ? "error" : undefined}
               />
               {fieldState.error && (
-                <span className="text-red-500 text-sm">{fieldState.error.message}</span>
+                <span className="text-red-500 text-sm">
+                  {fieldState.error.message}
+                </span>
               )}
             </>
           )}
@@ -168,7 +189,7 @@ export const CreateEditPrompt = () => {
             <BaselinePlusIcon className="text-green-600 dark:text-green-300 hover:text-green-700 dark:hover:text-green-400 transition-colors duration-200 w-7 h-7 cursor-pointer" />
           </button>
         </section>
-        
+
         <section className="mt-2 flex flex-col gap-4">
           {fields.length === 0 ? (
             <p className="app-text">No messages yet.</p>
@@ -178,7 +199,7 @@ export const CreateEditPrompt = () => {
                 key={field.id}
                 control={control}
                 index={index}
-                onRemove={() => remove(index)}
+                onRemove={handleRemoveMessage(index)}
               />
             ))
           )}
