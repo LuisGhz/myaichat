@@ -8,6 +8,14 @@ vi.mock('../services/PromptsService');
 
 const mockedService = vi.mocked(PromptsService);
 
+// Mock useAppMessage to capture errorMessage calls
+const errorMessageMock = vi.fn();
+vi.mock('shared/hooks/useAppMessage', () => ({
+  useAppMessage: () => ({
+    errorMessage: errorMessageMock,
+  }),
+}));
+
 describe('usePrompts', () => {
   beforeEach(() => {
     vi.clearAllMocks();
@@ -50,18 +58,17 @@ describe('usePrompts', () => {
     });
 
     it('should handle service errors gracefully', async () => {
-      const errorMessage = 'Failed to fetch prompts';
-      mockedService.GetAllPromptsService.mockRejectedValue(new Error(errorMessage));
+      mockedService.GetAllPromptsService.mockRejectedValue(new Error('Network'));
 
       const { result } = renderHook(() => usePrompts());
 
-      await expect(async () => {
-        await act(async () => {
-          await result.current.getAllPrompts();
-        });
-      }).rejects.toThrow(errorMessage);
+      // Should not throw; should call errorMessage with a friendly message
+      await act(async () => {
+        await result.current.getAllPrompts();
+      });
 
       expect(mockedService.GetAllPromptsService).toHaveBeenCalledOnce();
+      expect(errorMessageMock).toHaveBeenCalledWith('Failed to fetch prompts. Please try again later.');
     });
 
     it('should handle undefined response', async () => {
@@ -115,6 +122,7 @@ describe('usePrompts', () => {
       }).rejects.toThrow('Prompt not found');
 
       expect(mockedService.getPromptByIdService).toHaveBeenCalledWith('999');
+      expect(errorMessageMock).toHaveBeenCalledWith('Failed to fetch prompt. Please try again later.');
     });
 
     it('should maintain stable reference across re-renders', () => {
@@ -200,6 +208,7 @@ describe('usePrompts', () => {
       });
 
       expect(mockedService.deletePromptMessageService).toHaveBeenCalledWith('prompt-1', 'message-1');
+      expect(errorMessageMock).toHaveBeenCalledWith('Failed to delete prompt message. Please try again later.');
     });
   });
 
