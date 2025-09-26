@@ -5,12 +5,14 @@ import {
   renameChatService,
 } from "features/Chat/services/ChatService";
 import { useAppStore, useAppStoreActions } from "store/app/AppStore";
+import { useAppMessage } from "shared/hooks/useAppMessage";
 
 export const useChatContext = () => {
   const navigate = useNavigate();
   const params = useChatParams();
   const { chatsSummary } = useAppStore();
   const { setChatsSummary } = useAppStoreActions();
+  const { errorMessage } = useAppMessage();
 
   const deleteChat = async (chatId: string) => {
     const updatedChats = chatsSummary.filter((chat) => chat.id !== chatId);
@@ -21,6 +23,7 @@ export const useChatContext = () => {
     } catch (error) {
       setChatsSummary(chatsSummary);
       navigate(`/chat/${chatId}`);
+      errorMessage("Failed to delete chat. Please try again later.");
       console.error("Failed to delete chat:", error);
     }
   };
@@ -34,6 +37,7 @@ export const useChatContext = () => {
       await renameChatService(id, newName);
     } catch (error) {
       setChatsSummary(chatsSummary);
+      errorMessage("Error renaming chat. Please try again later.");
       console.error("Error renaming chat:", error);
     }
   };
