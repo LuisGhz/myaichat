@@ -20,16 +20,24 @@ export const SettingsChatButton = ({ buttonClassName }: Props) => {
     setIsChatConfigModalOpen(true);
   };
 
-  const handleNewConfig = (newConfig: ChatConfigOnClose) => {
+  const handleNewConfig = async (newConfig: ChatConfigOnClose) => {
     if (maxOutputTokens !== newConfig.maxOutputTokens) {
-      setMaxOutputTokens(newConfig.maxOutputTokens);
-      if (params.id)
-        changeMaxOutputTokens(params.id, newConfig.maxOutputTokens);
+      try {
+        if (params.id)
+          await changeMaxOutputTokens(params.id, newConfig.maxOutputTokens);
+        setMaxOutputTokens(newConfig.maxOutputTokens);
+      } catch (error) {
+        console.error("Error updating max output tokens:", error);
+      }
     }
     if (isWebSearchMode !== newConfig.isWebSearchMode) {
-      setIsWebSearchMode(newConfig.isWebSearchMode);
-      if (params.id)
-        toggleIsWebSearchMode(params.id, newConfig.isWebSearchMode);
+      try {
+        if (params.id)
+          await toggleIsWebSearchMode(params.id, newConfig.isWebSearchMode);
+        setIsWebSearchMode(newConfig.isWebSearchMode);
+      } catch (error) {
+        console.error("Error updating web search mode:", error);
+      }
     }
   };
 
@@ -42,7 +50,11 @@ export const SettingsChatButton = ({ buttonClassName }: Props) => {
         title="Settings"
         onClick={openModal}
       >
-        <FileTypeLightConfigIcon className={`w-6 h-6 cursor-pointer fill-gray-700 dark:fill-gray-200 transition-transform duration-200 ${isChatConfigModalOpen ? "rotate-180" : ""}`} />
+        <FileTypeLightConfigIcon
+          className={`w-6 h-6 cursor-pointer fill-gray-700 dark:fill-gray-200 transition-transform duration-200 ${
+            isChatConfigModalOpen ? "rotate-180" : ""
+          }`}
+        />
       </button>
       {isChatConfigModalOpen && (
         <ChatConfigModal
