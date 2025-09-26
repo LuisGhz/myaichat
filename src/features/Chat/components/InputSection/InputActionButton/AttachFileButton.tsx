@@ -1,4 +1,5 @@
 import { lazy, Suspense, useEffect, useRef, useState } from "react";
+import { useAttachedFilesValidator } from "features/Chat/hooks/useAttachedFileValidator";
 import { Grid } from "antd";
 import { useChatStore, useChatStoreActions } from "store/app/ChatStore";
 import { UploadFromSelection } from "./UploadFromSelection";
@@ -13,7 +14,10 @@ export const AttachFileButton = ({ buttonClassName }: Props) => {
   const { isRecordingAudio, isSendingAudio } = useChatStore();
   const { setSelectedFile } = useChatStoreActions();
   const [isInfoDialogOpen, setInfoDialogOpen] = useState(false);
+  // Keep previous behaviour: `isMobile` follows `screens.md` in this codebase
+  // (tests expect PasteFromClipboard to render when screens.md is false).
   const [isMobile, setIsMobile] = useState(true);
+  const { validateFiles } = useAttachedFilesValidator();
   const optionsRef = useRef<HTMLUListElement>(null);
   const buttonRef = useRef<HTMLButtonElement>(null);
   const screens = Grid.useBreakpoint();
@@ -54,6 +58,36 @@ export const AttachFileButton = ({ buttonClassName }: Props) => {
   const onSelectFile = (file: File) => {
     setSelectedFile(file);
   };
+
+  // Listen for clipboard paste events so users can paste images directly.
+  useEffect(() => {
+    const handlePaste = (event: ClipboardEvent) => {
+      const items = event.clipboardData?.items;
+      if (!items) return;
+
+      for (const item of items) {
+        if (item.type && item.type.startsWith("image/")) {
+          const file = item.getAsFile?.();
+          if (!file) continue;
+
+          const isValid = validateFiles(file);
+          if (!isValid) {
+            setInfoDialogOpen(true);
+            return;
+          }
+
+          setSelectedFile(file);
+          // Prevent the default paste (e.g., inserting an image blob into focused element)
+          event.preventDefault();
+          return;
+        }
+      }
+    };
+
+    document.addEventListener("paste", handlePaste);
+    return () => document.removeEventListener("paste", handlePaste);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <div className="relative">

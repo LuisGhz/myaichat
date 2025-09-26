@@ -55,6 +55,7 @@ vi.mock("core/modals/InfoModal", () => ({
 import * as ChatStore from "store/app/ChatStore";
 import * as Antd from "antd";
 import { AttachFileButton } from "./AttachFileButton";
+import * as Validator from "features/Chat/hooks/useAttachedFileValidator";
 
 describe("AttachFileButton", () => {
   // Helper to render component with configurable mocked hook/grid state
@@ -177,5 +178,71 @@ describe("AttachFileButton", () => {
     // our mock PasteFromClipboard renders text 'paste'
     const paste = await screen.findByText("paste");
     expect(paste).toBeInTheDocument();
+  });
+
+  it("pastes an image from clipboard and sets selected file", async () => {
+    const setSelectedFileMock = vi.fn();
+    vi.spyOn(ChatStore, 'useChatStoreActions').mockReturnValue({ setSelectedFile: setSelectedFileMock } as unknown as ReturnType<typeof ChatStore.useChatStoreActions>);
+
+    await renderComponent({ isRecording: false, isSending: false, md: true });
+
+    // Create a small valid image file
+    const file = new File(["a"], "pasted.png", { type: "image/png" });
+
+    // Build a fake clipboardData object
+    const clipboardData = {
+      items: [
+        {
+          type: "image/png",
+          getAsFile: () => file,
+        },
+      ],
+      types: ["image/png"],
+    } as unknown as DataTransfer;
+
+    const pasteEvent = new Event("paste", { bubbles: true, cancelable: true });
+    // Attach clipboardData to the event (jsdom doesn't let us set it in constructor)
+    Object.defineProperty(pasteEvent, "clipboardData", { value: clipboardData });
+
+    document.dispatchEvent(pasteEvent as unknown as Event);
+
+    await waitFor(() => {
+      expect(setSelectedFileMock).toHaveBeenCalled();
+      const calledWith = setSelectedFileMock.mock.calls[0][0];
+      expect(calledWith).toBeInstanceOf(File);
+      expect((calledWith as File).name).toBe("pasted.png");
+    });
+  });
+
+  it("shows InfoModal when pasted image is invalid", async () => {
+    // mock validator to return false
+    const useValidatorMock = vi
+      .spyOn(Validator, "useAttachedFilesValidator")
+      .mockReturnValue({ validateFiles: () => false } as unknown as ReturnType<typeof Validator.useAttachedFilesValidator>);
+
+    await renderComponent({ isRecording: false, isSending: false, md: true });
+
+    const file = new File(["a"], "big.png", { type: "image/png" });
+    const clipboardData = {
+      items: [
+        {
+          type: "image/png",
+          getAsFile: () => file,
+        },
+      ],
+      types: ["image/png"],
+    } as unknown as DataTransfer;
+
+    const pasteEvent = new Event("paste", { bubbles: true, cancelable: true });
+    Object.defineProperty(pasteEvent, "clipboardData", { value: clipboardData });
+
+    document.dispatchEvent(pasteEvent as unknown as Event);
+
+    // InfoModal mock renders a dialog with the first message when opened
+    const dialog = await screen.findByRole("dialog");
+    expect(dialog).toHaveTextContent("File type not supported");
+
+    // restore spy
+    useValidatorMock.mockRestore();
   });
 });
