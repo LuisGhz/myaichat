@@ -4,6 +4,7 @@ import { useChatStoreActions } from "store/app/ChatStore";
 import { streamAssistantMessageService } from "../services/ChatService";
 import { useAppStore, useAppStoreActions } from "store/app/AppStore";
 import { useChatParams } from "./useChatParams";
+import { useAppMessage } from "shared/hooks/useAppMessage";
 
 export const useStreamAssistantMessage = () => {
   const [fullText, setFullText] = useState<string>("");
@@ -19,6 +20,7 @@ export const useStreamAssistantMessage = () => {
   } = useChatStoreActions();
   const navigate = useNavigate();
   const params = useChatParams();
+  const { errorMessage } = useAppMessage();
 
   const handleChunk = (chatId: string, chunk: AssistantChunkRes) => {
     // Calculate the new text first
@@ -80,6 +82,11 @@ export const useStreamAssistantMessage = () => {
       if (err instanceof Error && err.name !== "AbortError") {
         setError(err.message);
       }
+      handleChunk(chatId, {
+        content: "\n\n**[Error in getting response. Please try again later.]**",
+        isLastChunk: true,
+      });
+      errorMessage("Failed to get assistant message.");
     } finally {
       setIsStreaming(false);
       controllerRef.current = null;
