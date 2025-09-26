@@ -8,7 +8,8 @@ export const useAppStore = () => {
   const isGettingNewChat = useAppZustandStore(
     (state) => state.isGettingNewChat
   );
-  return { sideNavCollapsed, chatsSummary, isGettingNewChat };
+  const messageApi = useAppZustandStore((state) => state.messageApi);
+  return { sideNavCollapsed, chatsSummary, isGettingNewChat, messageApi };
 };
 
 export const useAppStoreActions = () => {
@@ -19,5 +20,11 @@ export const useAppStoreActions = () => {
   const setIsGettingNewChat = useAppZustandStore(
     (state) => state.setIsGettingNewChat
   );
-  return { setSideNavCollapsed, setChatsSummary, setIsGettingNewChat };
+  const setMessageApi = useAppZustandStore((state) => state.setMessageApi);
+  return {
+    setSideNavCollapsed,
+    setChatsSummary,
+    setIsGettingNewChat,
+    setMessageApi,
+  };
 };

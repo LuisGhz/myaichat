@@ -6,4 +6,6 @@ type AppStore = {
   setSideNavCollapsed: (collapsed: boolean) => void;
   setChatsSummary: (chats: ChatSummary[]) => void;
   setIsGettingNewChat: (isGetting: boolean) => void;
+  messageApi: MessageInstance | null;
+  setMessageApi: (api: MessageInstance) => void;
 }
