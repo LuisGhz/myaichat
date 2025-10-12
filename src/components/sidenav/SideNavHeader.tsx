@@ -19,7 +19,7 @@ export const SideNavHeader = () => {
       />
       <button onClick={handleToggle}>
         <MenuFoldLeftIcon
-          className={`w-6 h-6 xl:w-8 xl:h-8 transition-transform dark:text-white cursor-pointer`}
+          className={`w-7 h-7 xl:w-8 xl:h-8 transition-transform dark:text-white cursor-pointer`}
         />
       </button>
     </div>
