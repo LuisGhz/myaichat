@@ -1,6 +1,7 @@
 import { MenuFoldLeftIcon } from "icons/MenuFoldLeftIcon";
 import { useAppStore, useAppStoreActions } from "store/app/AppStore";
 import myaichatlogo from "assets/myaichat.png";
+import { Link } from "react-router";
 
 export const SideNavHeader = () => {
   const { sideNavCollapsed } = useAppStore();
@@ -12,11 +13,13 @@ export const SideNavHeader = () => {
 
   return (
     <div className="flex justify-between items-center p-2.5">
-      <img
-        className="w-8 h-8 xl:w-8 xl:h-8 rounded-full"
-        src={myaichatlogo}
-        alt="MyAIChatlogo"
-      />
+      <Link to="/">
+        <img
+          className="w-8 h-8 xl:w-8 xl:h-8 rounded-full"
+          src={myaichatlogo}
+          alt="MyAIChatlogo"
+        />
+      </Link>
       <button onClick={handleToggle}>
         <MenuFoldLeftIcon
           className={`w-7 h-7 xl:w-8 xl:h-8 transition-transform dark:text-white cursor-pointer`}
