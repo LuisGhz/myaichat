@@ -1,7 +1,7 @@
+import { Link } from "react-router";
 import { MenuFoldLeftIcon } from "icons/MenuFoldLeftIcon";
 import { useAppStore, useAppStoreActions } from "store/app/AppStore";
 import myaichatlogo from "assets/myaichat.png";
-import { Link } from "react-router";
 
 export const SideNavHeader = () => {
   const { sideNavCollapsed } = useAppStore();
