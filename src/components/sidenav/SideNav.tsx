@@ -46,8 +46,23 @@ export const SideNav = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isMobile]);
 
+  const handleBackdropClick = () => {
+    if (isMobile) {
+      setSideNavCollapsed(true);
+    }
+  };
+
   return (
     <>
+      {/* Backdrop overlay for mobile */}
+      {!sideNavCollapsed && isMobile && (
+        <div
+          className="fixed inset-0 bg-black/50 z-40 transition-opacity"
+          onClick={handleBackdropClick}
+          aria-hidden="true"
+        />
+      )}
+      
       <Sider
         className={`${
           isMobile ? "!absolute !top-0 !left-0 !z-50 !h-dvh" : ""
