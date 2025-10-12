@@ -8,8 +8,7 @@ export const AppHeader = () => {
   const { Header } = Layout;
   return (
     <Header
-      className="!bg-gray-100 dark:!bg-gray-900 shadow-sm flex items-center !px-1"
-      style={{ height: 32 }}
+      className="!bg-gray-100 dark:!bg-gray-900 shadow-sm flex items-center !px-1 h-9"
     >
       {sideNavCollapsed ? (
         <button
@@ -17,10 +16,10 @@ export const AppHeader = () => {
           onClick={() => setSideNavCollapsed(!sideNavCollapsed)}
           aria-label="Expand side navigation"
         >
-          <MenuFoldRight className="w-5 h-5 text-gray-600 dark:text-gray-300 cursor-pointer" />
+          <MenuFoldRight className="w-7 h-7 text-gray-600 dark:text-gray-300 cursor-pointer" />
         </button>
       ) : null}
-      <h1 className="text-lg font-semibold dark:text-white">My AI Chat</h1>
+      <h1 className="text-2xl font-semibold dark:text-white">My AI Chat</h1>
     </Header>
   );
 };
