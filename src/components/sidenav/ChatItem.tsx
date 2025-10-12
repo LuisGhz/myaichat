@@ -30,7 +30,7 @@ export const ChatItem = ({ chat, onContextMenu }: Props) => {
       {chat.title && (
         <>
           <Link
-            className={`grow min-w-0 truncate ps-2 py-2 no-underline hover:underline !text-inherit ${
+            className={`grow min-w-0 truncate ps-2 py-2 no-underline hover:underline !text-inherit text-lg ${
               params.id === chat.id ? "font-semibold" : ""
             }`}
             to={`/chat/${chat.id}`}
@@ -44,7 +44,7 @@ export const ChatItem = ({ chat, onContextMenu }: Props) => {
               aria-label="Mark as unfavorite"
               onClick={handleToggleFavorite}
             >
-              <FavoriteFilledIcon className="text-yellow-500 cursor-pointer w-5 h-5" />
+              <FavoriteFilledIcon className="text-yellow-500 cursor-pointer w-6 h-6" />
             </button>
           ) : (
             <button
@@ -52,7 +52,7 @@ export const ChatItem = ({ chat, onContextMenu }: Props) => {
               aria-label="Mark as favorite"
               onClick={handleToggleFavorite}
             >
-              <FavoriteIcon className="dark:text-gray-200 cursor-pointer w-5 h-5" />
+              <FavoriteIcon className="dark:text-gray-200 cursor-pointer w-6 h-6" />
             </button>
           )}
         </>
