@@ -60,9 +60,9 @@ export const ChatContextMenu = ({
   }, [isContextMenuOpen, parentRef, setIsContextMenuOpen]);
 
   const handleDeleteChat = async () => {
+    setIsContextMenuOpen(false);
     if (!chat) return;
     await deleteChat(chat.id);
-    setIsContextMenuOpen(false);
   };
 
   if (!isContextMenuOpen) return null;
