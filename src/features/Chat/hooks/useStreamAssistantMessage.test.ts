@@ -45,7 +45,9 @@ vi.mock("../services/ChatService", () => ({
 }));
 
 import { streamAssistantMessageService } from "../services/ChatService";
-const streamAssistantMessageServiceMock = vi.mocked(streamAssistantMessageService);
+const streamAssistantMessageServiceMock = vi.mocked(
+  streamAssistantMessageService
+);
 
 describe("useStreamAssistantMessage", () => {
   const renderUseStreamAssistantMessage = () => {
@@ -83,17 +85,20 @@ describe("useStreamAssistantMessage", () => {
     it("should initialize streaming state correctly", async () => {
       const mockChunks: AssistantChunkRes[] = [
         { content: "Hello ", isLastChunk: false },
-        { 
-          content: "world!", 
+        {
+          content: "world!",
           isLastChunk: true,
           chatTitle: "Test Chat",
           promptTokens: 10,
-          completionTokens: 15
+          completionTokens: 15,
         },
       ];
 
       streamAssistantMessageServiceMock.mockImplementation(
-        async (_chatId: string, onChunk: (chunk: AssistantChunkRes) => void) => {
+        async (
+          _chatId: string,
+          onChunk: (chunk: AssistantChunkRes) => void
+        ) => {
           for (const chunk of mockChunks) {
             onChunk(chunk);
           }
@@ -108,7 +113,9 @@ describe("useStreamAssistantMessage", () => {
 
       expect(result.current.isStreaming).toBe(false);
       expect(result.current.error).toBe(null);
-      expect(chatStoreActionsMock.addStreamingAssistantMessage).toHaveBeenCalledOnce();
+      expect(
+        chatStoreActionsMock.addStreamingAssistantMessage
+      ).toHaveBeenCalledOnce();
       expect(streamAssistantMessageServiceMock).toHaveBeenCalledWith(
         "new-chat-456",
         expect.any(Function),
@@ -120,17 +127,20 @@ describe("useStreamAssistantMessage", () => {
       const mockChunks: AssistantChunkRes[] = [
         { content: "Hello ", isLastChunk: false },
         { content: "world", isLastChunk: false },
-        { 
-          content: "!", 
+        {
+          content: "!",
           isLastChunk: true,
           chatTitle: "Progressive Test",
           promptTokens: 8,
-          completionTokens: 12
+          completionTokens: 12,
         },
       ];
 
       streamAssistantMessageServiceMock.mockImplementation(
-        async (_chatId: string, onChunk: (chunk: AssistantChunkRes) => void) => {
+        async (
+          _chatId: string,
+          onChunk: (chunk: AssistantChunkRes) => void
+        ) => {
           for (const chunk of mockChunks) {
             onChunk(chunk);
           }
@@ -156,7 +166,10 @@ describe("useStreamAssistantMessage", () => {
       };
 
       streamAssistantMessageServiceMock.mockImplementation(
-        async (_chatId: string, onChunk: (chunk: AssistantChunkRes) => void) => {
+        async (
+          _chatId: string,
+          onChunk: (chunk: AssistantChunkRes) => void
+        ) => {
           onChunk(mockLastChunk);
         }
       );
@@ -167,8 +180,12 @@ describe("useStreamAssistantMessage", () => {
         await result.current.startStreaming("brand-new-chat");
       });
 
-      expect(appStoreActionsMock.setIsGettingNewChat).toHaveBeenCalledWith(false);
-      expect(chatStoreActionsMock.addStreamingAssistanteAndUserMessageTokens).toHaveBeenCalledWith(20, 25);
+      expect(appStoreActionsMock.setIsGettingNewChat).toHaveBeenCalledWith(
+        false
+      );
+      expect(
+        chatStoreActionsMock.addStreamingAssistanteAndUserMessageTokens
+      ).toHaveBeenCalledWith(20, 25);
       expect(appStoreActionsMock.setChatsSummary).toHaveBeenCalledWith([
         ...appStoreMock.chatsSummary,
         { id: "brand-new-chat", title: "New Chat Title", fav: false },
@@ -177,7 +194,7 @@ describe("useStreamAssistantMessage", () => {
 
     it("should navigate to new chat when params.id is not present", async () => {
       chatParamsMock.id = "";
-      
+
       const mockLastChunk: AssistantChunkRes = {
         content: "Response for new chat",
         isLastChunk: true,
@@ -187,7 +204,10 @@ describe("useStreamAssistantMessage", () => {
       };
 
       streamAssistantMessageServiceMock.mockImplementation(
-        async (_chatId: string, onChunk: (chunk: AssistantChunkRes) => void) => {
+        async (
+          _chatId: string,
+          onChunk: (chunk: AssistantChunkRes) => void
+        ) => {
           onChunk(mockLastChunk);
         }
       );
@@ -198,7 +218,9 @@ describe("useStreamAssistantMessage", () => {
         await result.current.startStreaming("navigation-test-chat");
       });
 
-      expect(navigateMock).toHaveBeenCalledWith("/chat/navigation-test-chat");
+      expect(navigateMock).toHaveBeenCalledWith("/chat/navigation-test-chat", {
+        state: { fromStream: true },
+      });
     });
 
     it("should not update chat summary if chat already exists", async () => {
@@ -211,7 +233,10 @@ describe("useStreamAssistantMessage", () => {
       };
 
       streamAssistantMessageServiceMock.mockImplementation(
-        async (_chatId: string, onChunk: (chunk: AssistantChunkRes) => void) => {
+        async (
+          _chatId: string,
+          onChunk: (chunk: AssistantChunkRes) => void
+        ) => {
           onChunk(mockLastChunk);
         }
       );
@@ -227,7 +252,9 @@ describe("useStreamAssistantMessage", () => {
 
     it("should handle streaming errors correctly", async () => {
       const errorMessage = "Network error occurred";
-      streamAssistantMessageServiceMock.mockRejectedValue(new Error(errorMessage));
+      streamAssistantMessageServiceMock.mockRejectedValue(
+        new Error(errorMessage)
+      );
 
       const { result } = renderUseStreamAssistantMessage();
 
@@ -256,7 +283,9 @@ describe("useStreamAssistantMessage", () => {
 
     it("should reset state when starting new stream", async () => {
       // First, set some state by running a stream with error
-      streamAssistantMessageServiceMock.mockRejectedValue(new Error("Previous error"));
+      streamAssistantMessageServiceMock.mockRejectedValue(
+        new Error("Previous error")
+      );
       const { result } = renderUseStreamAssistantMessage();
 
       await act(async () => {
@@ -267,8 +296,15 @@ describe("useStreamAssistantMessage", () => {
 
       // Now start a successful stream
       streamAssistantMessageServiceMock.mockImplementation(
-        async (_chatId: string, onChunk: (chunk: AssistantChunkRes) => void) => {
-          onChunk({ content: "Success", isLastChunk: true, chatTitle: "Success Chat" });
+        async (
+          _chatId: string,
+          onChunk: (chunk: AssistantChunkRes) => void
+        ) => {
+          onChunk({
+            content: "Success",
+            isLastChunk: true,
+            chatTitle: "Success Chat",
+          });
         }
       );
 
@@ -325,21 +361,24 @@ describe("useStreamAssistantMessage", () => {
   describe("user flow scenarios", () => {
     it("should handle complete streaming flow for new chat creation", async () => {
       chatParamsMock.id = "";
-      
+
       const mockChunks: AssistantChunkRes[] = [
         { content: "Creating ", isLastChunk: false },
         { content: "new ", isLastChunk: false },
-        { 
-          content: "chat!", 
+        {
+          content: "chat!",
           isLastChunk: true,
           chatTitle: "Complete Flow Test",
           promptTokens: 25,
-          completionTokens: 30
+          completionTokens: 30,
         },
       ];
 
       streamAssistantMessageServiceMock.mockImplementation(
-        async (_chatId: string, onChunk: (chunk: AssistantChunkRes) => void) => {
+        async (
+          _chatId: string,
+          onChunk: (chunk: AssistantChunkRes) => void
+        ) => {
           for (const chunk of mockChunks) {
             onChunk(chunk);
           }
@@ -356,10 +395,18 @@ describe("useStreamAssistantMessage", () => {
       expect(result.current.fullText).toBe("Creating new chat!");
       expect(result.current.isStreaming).toBe(false);
       expect(result.current.error).toBe(null);
-      expect(chatStoreActionsMock.addStreamingAssistantMessage).toHaveBeenCalledOnce();
-      expect(appStoreActionsMock.setIsGettingNewChat).toHaveBeenCalledWith(false);
-      expect(chatStoreActionsMock.addStreamingAssistanteAndUserMessageTokens).toHaveBeenCalledWith(25, 30);
-      expect(navigateMock).toHaveBeenCalledWith("/chat/complete-flow-chat");
+      expect(
+        chatStoreActionsMock.addStreamingAssistantMessage
+      ).toHaveBeenCalledOnce();
+      expect(appStoreActionsMock.setIsGettingNewChat).toHaveBeenCalledWith(
+        false
+      );
+      expect(
+        chatStoreActionsMock.addStreamingAssistanteAndUserMessageTokens
+      ).toHaveBeenCalledWith(25, 30);
+      expect(navigateMock).toHaveBeenCalledWith("/chat/complete-flow-chat", {
+        state: { fromStream: true },
+      });
       expect(appStoreActionsMock.setChatsSummary).toHaveBeenCalledWith([
         ...appStoreMock.chatsSummary,
         { id: "complete-flow-chat", title: "Complete Flow Test", fav: false },
@@ -375,7 +422,10 @@ describe("useStreamAssistantMessage", () => {
       };
 
       streamAssistantMessageServiceMock.mockImplementation(
-        async (_chatId: string, onChunk: (chunk: AssistantChunkRes) => void) => {
+        async (
+          _chatId: string,
+          onChunk: (chunk: AssistantChunkRes) => void
+        ) => {
           onChunk(mockLastChunk);
         }
       );
@@ -386,7 +436,9 @@ describe("useStreamAssistantMessage", () => {
         await result.current.startStreaming("no-tokens-chat");
       });
 
-      expect(chatStoreActionsMock.addStreamingAssistanteAndUserMessageTokens).toHaveBeenCalledWith(0, 0);
+      expect(
+        chatStoreActionsMock.addStreamingAssistanteAndUserMessageTokens
+      ).toHaveBeenCalledWith(0, 0);
       expect(result.current.fullText).toBe("Response without tokens");
     });
 
@@ -395,8 +447,15 @@ describe("useStreamAssistantMessage", () => {
 
       // First streaming session
       streamAssistantMessageServiceMock.mockImplementation(
-        async (_chatId: string, onChunk: (chunk: AssistantChunkRes) => void) => {
-          onChunk({ content: "First response", isLastChunk: true, chatTitle: "First Chat" });
+        async (
+          _chatId: string,
+          onChunk: (chunk: AssistantChunkRes) => void
+        ) => {
+          onChunk({
+            content: "First response",
+            isLastChunk: true,
+            chatTitle: "First Chat",
+          });
         }
       );
 
@@ -408,8 +467,15 @@ describe("useStreamAssistantMessage", () => {
 
       // Second streaming session
       streamAssistantMessageServiceMock.mockImplementation(
-        async (_chatId: string, onChunk: (chunk: AssistantChunkRes) => void) => {
-          onChunk({ content: "Second response", isLastChunk: true, chatTitle: "Second Chat" });
+        async (
+          _chatId: string,
+          onChunk: (chunk: AssistantChunkRes) => void
+        ) => {
+          onChunk({
+            content: "Second response",
+            isLastChunk: true,
+            chatTitle: "Second Chat",
+          });
         }
       );
 
@@ -418,7 +484,9 @@ describe("useStreamAssistantMessage", () => {
       });
 
       expect(result.current.fullText).toBe("Second response");
-      expect(chatStoreActionsMock.addStreamingAssistantMessage).toHaveBeenCalledTimes(2);
+      expect(
+        chatStoreActionsMock.addStreamingAssistantMessage
+      ).toHaveBeenCalledTimes(2);
     });
   });
 });
