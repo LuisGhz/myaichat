@@ -65,7 +65,9 @@ export const ChatsList = () => {
                     onContextMenu={handleContextMenu}
                   />
                 ))}
-                {chatsSummary.length > 0 && <Divider />}
+                {chatsSummary.length > 0 && (
+                  <Divider className="my-2! dark:bg-gray-700" />
+                )}
               </>
             )}
           </>
