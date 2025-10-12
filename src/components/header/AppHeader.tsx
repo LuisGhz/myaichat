@@ -7,9 +7,7 @@ export const AppHeader = () => {
   const { setSideNavCollapsed } = useAppStoreActions();
   const { Header } = Layout;
   return (
-    <Header
-      className="!bg-gray-100 dark:!bg-gray-900 shadow-sm flex items-center !px-1 h-9"
-    >
+    <Header className="!bg-gray-100 dark:!bg-gray-900 shadow-sm flex items-center !px-1 h-9">
       {sideNavCollapsed ? (
         <button
           className="me-2"
