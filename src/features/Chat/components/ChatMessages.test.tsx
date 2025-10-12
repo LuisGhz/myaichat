@@ -12,9 +12,7 @@ vi.mock("./MessageActionButtons", () => ({
 }));
 
 vi.mock("../hooks/useMarkdown", () => ({
-  useMarkDown: () => ({
-    formatToMarkDown: (text: string) => text, // Simple passthrough for testing
-  }),
+  useMarkDown: () => (text: string) => text, // Simple passthrough for testing
 }));
 
 import { ChatMessages } from "./ChatMessages";
