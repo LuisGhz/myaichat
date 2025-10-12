@@ -4,7 +4,7 @@ import { MODELS } from "core/const/Models";
 
 export const Welcome = () => {
   return (
-    <div className="app-text text-center flex flex-col items-center justify-start h-full pt-10 overflow-y-auto">
+    <div className="app-text text-center flex flex-col items-center justify-start h-full overflow-y-auto scroll-hidden">
       <h1 className="text-2xl">Welcome to My AI Chat</h1>
       <p className="text-lg mt-2 mb-4">
         This app is designed to help you interact with various AI models. It
