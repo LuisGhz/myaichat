@@ -17,6 +17,7 @@ vi.mock("features/Chat/hooks/useChat", () => ({
 
 // shared mock for store actions so component and mocked children can assert calls
 const setSelectedFileMock = vi.fn();
+const setIsStreamingMock = vi.fn();
 vi.mock("store/app/ChatStore", () => ({
   useChatStore: () => ({
     model: "gpt-test",
@@ -26,8 +27,12 @@ vi.mock("store/app/ChatStore", () => ({
     isRecordingAudio: false,
     isSendingAudio: false,
     selectedFile: null,
+    isStreaming: false,
   }),
-  useChatStoreActions: () => ({ setSelectedFile: setSelectedFileMock }),
+  useChatStoreActions: () => ({
+    setSelectedFile: setSelectedFileMock,
+    setIsStreaming: setIsStreamingMock,
+  }),
 }));
 
 vi.mock("features/Chat/hooks/useStreamAssistantMessage", () => ({
@@ -43,7 +48,11 @@ vi.mock("icons/SendAltFilledIcon", () => ({
 }));
 vi.mock("./InputActionButton/InputActionButtons", () => ({
   // The real component receives onTranscription. For file selection the child now calls the store action directly.
-  InputActionButtons: ({ onTranscription }: { onTranscription: (t: string) => void }) => {
+  InputActionButtons: ({
+    onTranscription,
+  }: {
+    onTranscription: (t: string) => void;
+  }) => {
     return (
       <div>
         <button
@@ -99,6 +108,9 @@ describe("InputSection", () => {
 
     await waitFor(() => {
       expect(sendNewMessageMock).toHaveBeenCalled();
+      expect(setIsStreamingMock).toHaveBeenCalledTimes(2);
+      expect(setIsStreamingMock).toHaveBeenCalledWith(true);
+      expect(setIsStreamingMock).toHaveBeenCalledWith(false);
     });
   });
 
@@ -112,7 +124,12 @@ describe("InputSection", () => {
     // Simulate Ctrl+Enter
     await userEvent.keyboard("{Control>}{Enter}{/Control}");
 
-    await waitFor(() => expect(sendNewMessageMock).toHaveBeenCalled());
+    await waitFor(() => {
+      expect(sendNewMessageMock).toHaveBeenCalled();
+      expect(setIsStreamingMock).toHaveBeenCalledTimes(2);
+      expect(setIsStreamingMock).toHaveBeenCalledWith(true);
+      expect(setIsStreamingMock).toHaveBeenCalledWith(false);
+    });
   });
 
   it("appends transcription text via onTranscription", async () => {
