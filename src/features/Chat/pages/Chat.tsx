@@ -5,6 +5,7 @@ import { useChatParams } from "../hooks/useChatParams";
 import { useChat } from "../hooks/useChat";
 import { ChatMessages } from "../components/ChatMessages";
 import { useLocation } from "react-router";
+import { useChatStore } from "store/app/ChatStore";
 
 export const Chat = () => {
   const params = useChatParams();
@@ -12,6 +13,7 @@ export const Chat = () => {
   const fromStream = location.state?.fromStream;
   const { resetChatData, getChatMessages, messages, loadPreviousMessages } =
     useChat();
+  const { isStreaming } = useChatStore();
   const containerRef = useRef<HTMLDivElement>(null);
   const isFirstPageLoaded = useRef(false);
   const currentPage = useRef(0);
@@ -54,7 +56,7 @@ export const Chat = () => {
   }, [params.id]);
 
   const onScroll = (e: React.UIEvent<HTMLDivElement>) => {
-    if (!isFirstPageLoaded.current) return;
+    if (!isFirstPageLoaded.current || isStreaming) return;
     const target = e.target as HTMLDivElement;
     const tolerance = 20;
     if (target.scrollTop < tolerance) {

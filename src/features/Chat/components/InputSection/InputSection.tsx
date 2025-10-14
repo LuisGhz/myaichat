@@ -32,7 +32,7 @@ export const InputSection = () => {
     isSendingAudio,
     selectedFile,
   } = useChatStore();
-  const { setSelectedFile } = useChatStoreActions();
+  const { setSelectedFile, setIsStreaming } = useChatStoreActions();
   const { startStreaming } = useStreamAssistantMessage();
   const { setIsGettingNewChat } = useAppStoreActions();
 
@@ -44,6 +44,7 @@ export const InputSection = () => {
     if (isSending || newMessage.trim() === "") return;
     if (!params.id) setIsGettingNewChat(true);
     setIsSending(true);
+    setIsStreaming(true);
     const req: SendNewMessageReq = {
       chatId: params.id || undefined,
       content: newMessage.trim(),
@@ -59,6 +60,7 @@ export const InputSection = () => {
     const chatId = await sendNewMessage(req);
     if (chatId) await startStreaming(chatId);
     setIsSending(false);
+    setIsStreaming(false);
   };
 
   const handleKeyDown = (e: KeyboardEvent<HTMLTextAreaElement>) => {
