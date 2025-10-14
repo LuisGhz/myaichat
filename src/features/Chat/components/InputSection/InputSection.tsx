@@ -77,7 +77,7 @@ export const InputSection = () => {
   };
 
   return (
-    <section className="w-full md:w-11/12 xl:10/12 max-w-5xl mx-auto outline-[1px] outline-b-0 outline-gray-300 rounded-t-sm md:rounded-t-md p-2 pb-4">
+    <section className="w-full md:w-11/12 xl:10/12 max-w-5xl mx-auto outline-[1px] outline-b-0 outline-gray-300 rounded-t-sm md:rounded-t-md p-2 pb-4 mt-1.5">
       {selectedFile && (
         <section>
           <Suspense fallback={null}>
