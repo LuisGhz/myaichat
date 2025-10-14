@@ -85,6 +85,8 @@ export const useChatZustandStore = create<ChatStore>((set) => ({
         currentChatMetadata: newMetadata as CurrentChatMetadataStore,
       };
     }),
+  isStreaming: false,
+  setIsStreaming: (isLoading: boolean) => set({ isStreaming: isLoading }),
   currentChatMetadata: undefined,
   setCurrentChatMetadata: (metadata: Partial<CurrentChatMetadataStore>) =>
     set((state) => {

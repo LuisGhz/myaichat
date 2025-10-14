@@ -14,6 +14,7 @@ export const useChatStore = () => {
   );
   const isSendingAudio = useChatZustandStore((state) => state.isSendingAudio);
   const selectedFile = useChatZustandStore((state) => state.selectedFile);
+  const isStreaming = useChatZustandStore((state) => state.isStreaming);
   return {
     model,
     maxOutputTokens,
@@ -24,6 +25,7 @@ export const useChatStore = () => {
     isRecordingAudio,
     isSendingAudio,
     selectedFile,
+    isStreaming,
   };
 };
 
@@ -49,6 +51,7 @@ export const useChatStoreActions = () => {
   const addStreamingAssistanteAndUserMessageTokens = useChatZustandStore(
     (state) => state.addStreamingAssistanteAndUserMessageTokens
   );
+  const setIsStreaming = useChatZustandStore((state) => state.setIsStreaming);
   const setIsRecordingAudio = useChatZustandStore(
     (state) => state.setIsRecordingAudio
   );
@@ -67,6 +70,7 @@ export const useChatStoreActions = () => {
     addStreamingAssistantMessage,
     updateStreamingAssistantMessage,
     addStreamingAssistanteAndUserMessageTokens,
+    setIsStreaming,
     setIsRecordingAudio,
     setIsSendingAudio,
     setSelectedFile,

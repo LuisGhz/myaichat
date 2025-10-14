@@ -11,13 +11,16 @@ type ChatStore = {
   setSelectedFile: (file: File | null) => void;
   addStreamingAssistantMessage: () => void;
   updateStreamingAssistantMessage: (content: string) => void;
-  addStreamingAssistanteAndUserMessageTokens: (promptTokens: number, completionTokens: number) => void;
+  addStreamingAssistanteAndUserMessageTokens: (
+    promptTokens: number,
+    completionTokens: number
+  ) => void;
+  isStreaming: boolean;
+  setIsStreaming: (isStreaming: boolean) => void;
   promptId?: string | undefined;
   setPromptId: (id: string | undefined) => void;
   currentChatMetadata?: CurrentChatMetadataStore;
-  setCurrentChatMetadata: (
-    metadata: Partial<CurrentChatMetadataStore>
-  ) => void;
+  setCurrentChatMetadata: (metadata: Partial<CurrentChatMetadataStore>) => void;
   isRecordingAudio: boolean;
   setIsRecordingAudio: (isRecording: boolean) => void;
   isSendingAudio: boolean;
