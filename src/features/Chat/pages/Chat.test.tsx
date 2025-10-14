@@ -39,10 +39,18 @@ const defaultChatHookReturn = {
   changeMaxOutputTokens: changeMaxOutputTokensMock,
 };
 
+// Mock store before imports to avoid hoisting issues
+const useChatStoreMock = vi.fn(() => ({
+  isStreaming: false,
+}));
+
 vi.mock("../hooks/useChatParams");
 vi.mock("../hooks/useChat");
 vi.mock("react-router", () => ({
   useLocation: vi.fn(),
+}));
+vi.mock("store/app/ChatStore", () => ({
+  useChatStore: () => useChatStoreMock(),
 }));
 
 import { useChatParams } from "../hooks/useChatParams";
@@ -87,7 +95,13 @@ describe("Chat", () => {
     // Set up default mock implementations
     mockUseChatParams.mockReturnValue({ id: "chat-123" });
     mockUseChat.mockReturnValue(defaultChatHookReturn);
-    mockUseLocation.mockReturnValue({ state: null, pathname: "/", search: "", hash: "", key: "" });
+    mockUseLocation.mockReturnValue({
+      state: null,
+      pathname: "/",
+      search: "",
+      hash: "",
+      key: "",
+    });
 
     // Reset scroll-related refs and state by creating fresh mocks
     Object.defineProperty(HTMLElement.prototype, "scrollHeight", {
@@ -150,7 +164,6 @@ describe("Chat", () => {
   });
 
   describe("Scroll Functionality", () => {
-
     it("triggers pagination when scrolling near the top after first page loads", async () => {
       loadPreviousMessagesMock.mockResolvedValue(5); // Mock returning 5 new messages
 
@@ -159,7 +172,7 @@ describe("Chat", () => {
       const scrollContainer = screen.getByRole("main");
 
       // Wait for the first page to be marked as loaded (1000ms timeout in component)
-      await new Promise(resolve => setTimeout(resolve, 1100));
+      await new Promise((resolve) => setTimeout(resolve, 1100));
 
       // Mock scrollTop to be near the top (within tolerance of 20px)
       Object.defineProperty(scrollContainer, "scrollTop", {
@@ -169,9 +182,12 @@ describe("Chat", () => {
 
       fireEvent.scroll(scrollContainer, { target: { scrollTop: 15 } });
 
-      await waitFor(() => {
-        expect(loadPreviousMessagesMock).toHaveBeenCalledWith("chat-123", 1);
-      }, { timeout: 500 });
+      await waitFor(
+        () => {
+          expect(loadPreviousMessagesMock).toHaveBeenCalledWith("chat-123", 1);
+        },
+        { timeout: 500 }
+      );
     });
 
     it("does not trigger pagination before first page is loaded", () => {
@@ -200,7 +216,7 @@ describe("Chat", () => {
       const scrollContainer = screen.getByRole("main");
 
       // Wait for first page to load
-      await new Promise(resolve => setTimeout(resolve, 1100));
+      await new Promise((resolve) => setTimeout(resolve, 1100));
 
       // Trigger pagination once
       Object.defineProperty(scrollContainer, "scrollTop", {
@@ -223,6 +239,25 @@ describe("Chat", () => {
       // Should not call loadPreviousMessages again since empty page was reached
       expect(loadPreviousMessagesMock).toHaveBeenCalledTimes(1);
     });
+
+    it("does not trigger pagination when isStreaming is true", async () => {
+      useChatStoreMock.mockReturnValue({ isStreaming: true });
+      loadPreviousMessagesMock.mockResolvedValue(5);
+      renderComponent();
+      const scrollContainer = screen.getByRole("main");
+      // Wait for first page to load
+      await new Promise((resolve) => setTimeout(resolve, 1100));
+      // Try to trigger pagination
+      Object.defineProperty(scrollContainer, "scrollTop", {
+        value: 15,
+        writable: true,
+      });
+      fireEvent.scroll(scrollContainer, { target: { scrollTop: 15 } });
+      // Should not trigger pagination when isStreaming is true
+      await waitFor(() => {
+        expect(loadPreviousMessagesMock).not.toHaveBeenCalled();
+      });
+    });
   });
 
   describe("Pagination Logic", () => {
@@ -234,7 +269,7 @@ describe("Chat", () => {
       const scrollContainer = screen.getByRole("main");
 
       // Wait for first page to load
-      await new Promise(resolve => setTimeout(resolve, 1100));
+      await new Promise((resolve) => setTimeout(resolve, 1100));
 
       // Trigger first pagination
       Object.defineProperty(scrollContainer, "scrollTop", {
@@ -267,7 +302,7 @@ describe("Chat", () => {
       const scrollContainer = screen.getByRole("main");
 
       // Wait for first page to load
-      await new Promise(resolve => setTimeout(resolve, 1100));
+      await new Promise((resolve) => setTimeout(resolve, 1100));
 
       // Trigger pagination
       Object.defineProperty(scrollContainer, "scrollTop", {
@@ -300,7 +335,7 @@ describe("Chat", () => {
       const scrollContainer = screen.getByRole("main");
 
       // Wait for first page to load
-      await new Promise(resolve => setTimeout(resolve, 1100));
+      await new Promise((resolve) => setTimeout(resolve, 1100));
 
       // Trigger pagination
       Object.defineProperty(scrollContainer, "scrollTop", {
@@ -324,7 +359,7 @@ describe("Chat", () => {
       const scrollContainer = screen.getByRole("main");
 
       // Wait for first page load timeout
-      await new Promise(resolve => setTimeout(resolve, 1100));
+      await new Promise((resolve) => setTimeout(resolve, 1100));
 
       // Try to trigger pagination - will still call with undefined due to non-null assertion
       Object.defineProperty(scrollContainer, "scrollTop", {
@@ -344,7 +379,7 @@ describe("Chat", () => {
       renderComponent();
 
       const scrollContainer = screen.getByRole("main");
-      
+
       // Mock scrollHeight to simulate content
       Object.defineProperty(scrollContainer, "scrollHeight", {
         value: 1000,
@@ -353,8 +388,8 @@ describe("Chat", () => {
       });
 
       // Wait for the initial scroll timeout (200ms) and verify scroll happened
-      await new Promise(resolve => setTimeout(resolve, 250));
-      
+      await new Promise((resolve) => setTimeout(resolve, 250));
+
       // The component should have set scrollTop to scrollHeight
       expect(scrollContainer.scrollTop).toBe(1000);
     });
@@ -400,9 +435,12 @@ describe("Chat", () => {
       rerender(<Chat />);
 
       // Wait for the scroll timeout (250ms) after assistant message
-      await waitFor(() => {
-        expect(scrollContainer.scrollTop).toBe(1000);
-      }, { timeout: 350 });
+      await waitFor(
+        () => {
+          expect(scrollContainer.scrollTop).toBe(1000);
+        },
+        { timeout: 350 }
+      );
     });
 
     it("does not trigger user-assistant sequence auto-scroll when assistant message comes without user message first", async () => {
@@ -423,10 +461,10 @@ describe("Chat", () => {
       const { rerender } = renderComponent();
 
       const scrollContainer = screen.getByRole("main");
-      
+
       // Wait for initial auto-scroll to complete
-      await new Promise(resolve => setTimeout(resolve, 250));
-      
+      await new Promise((resolve) => setTimeout(resolve, 250));
+
       // Reset scrollTop after initial auto-scroll
       Object.defineProperty(scrollContainer, "scrollTop", {
         value: 100,
@@ -454,7 +492,7 @@ describe("Chat", () => {
       rerender(<Chat />);
 
       // Wait beyond the user-assistant sequence timeout to confirm no additional auto-scroll
-      await new Promise(resolve => setTimeout(resolve, 300));
+      await new Promise((resolve) => setTimeout(resolve, 300));
 
       // Should not have changed from our test value since no user->assistant sequence
       expect(scrollContainer.scrollTop).toBe(100);
@@ -490,13 +528,13 @@ describe("Chat", () => {
       // Clear any previous calls
       loadPreviousMessagesMock.mockClear();
       loadPreviousMessagesMock.mockResolvedValue(3);
-      
+
       renderComponent();
 
       const scrollContainer = screen.getByRole("main");
 
       // Wait for first page to load
-      await new Promise(resolve => setTimeout(resolve, 1100));
+      await new Promise((resolve) => setTimeout(resolve, 1100));
 
       // Test just under the tolerance boundary (19px < 20px) - should trigger
       Object.defineProperty(scrollContainer, "scrollTop", {
@@ -506,20 +544,23 @@ describe("Chat", () => {
       fireEvent.scroll(scrollContainer, { target: { scrollTop: 19 } });
 
       // Should trigger pagination when scrollTop < tolerance (19 < 20)
-      await waitFor(() => {
-        expect(loadPreviousMessagesMock).toHaveBeenCalledWith("chat-123", 1);
-      }, { timeout: 500 });
+      await waitFor(
+        () => {
+          expect(loadPreviousMessagesMock).toHaveBeenCalledWith("chat-123", 1);
+        },
+        { timeout: 500 }
+      );
     });
 
     it("does not trigger pagination when scroll is above tolerance", async () => {
       loadPreviousMessagesMock.mockResolvedValue(3);
-      
+
       renderComponent();
 
       const scrollContainer = screen.getByRole("main");
 
       // Wait for first page to load
-      await new Promise(resolve => setTimeout(resolve, 1100));
+      await new Promise((resolve) => setTimeout(resolve, 1100));
 
       // Test above the tolerance (21px > 20px tolerance)
       Object.defineProperty(scrollContainer, "scrollTop", {
@@ -529,14 +570,12 @@ describe("Chat", () => {
       fireEvent.scroll(scrollContainer, { target: { scrollTop: 21 } });
 
       // Wait a bit to ensure no pagination is triggered
-      await new Promise(resolve => setTimeout(resolve, 100));
+      await new Promise((resolve) => setTimeout(resolve, 100));
 
       // Should not trigger pagination above tolerance
       expect(loadPreviousMessagesMock).not.toHaveBeenCalled();
     });
   });
-
-
 
   describe("Integration with Child Components", () => {
     it("renders InputSection component at the bottom", () => {
@@ -589,12 +628,12 @@ describe("Chat", () => {
     });
 
     it("does not call getChatMessages when fromStream is true", () => {
-      mockUseLocation.mockReturnValue({ 
-        state: { fromStream: true }, 
-        pathname: "/", 
-        search: "", 
-        hash: "", 
-        key: "" 
+      mockUseLocation.mockReturnValue({
+        state: { fromStream: true },
+        pathname: "/",
+        search: "",
+        hash: "",
+        key: "",
       });
       mockUseChatParams.mockReturnValue({ id: "chat-123" });
 
@@ -618,15 +657,15 @@ describe("Chat", () => {
 
       const mainSection = screen.getByRole("main");
       expect(mainSection).toHaveClass(
-        "grow", 
-        "overflow-auto", 
-        "pb-10", 
-        "scroll-hidden", 
-        "mx-auto", 
-        "w-full", 
-        "md:w-11/12", 
-        "xl:10/12", 
-        "max-w-4xl", 
+        "grow",
+        "overflow-auto",
+        "pb-10",
+        "scroll-hidden",
+        "mx-auto",
+        "w-full",
+        "md:w-11/12",
+        "xl:10/12",
+        "max-w-4xl",
         "scroll-smooth"
       );
     });
