@@ -5,6 +5,10 @@
     @apply text-gray-700 dark:text-gray-200;
   }
 
+  .app-bg {
+    @apply !bg-gray-100 dark:!bg-gray-900;
+  }
+
   .app-fill {
     @apply fill-gray-700 dark:fill-gray-200;
   }
