@@ -12,7 +12,7 @@ function App() {
       <SideNav />
       <Layout>
         <AppHeader />
-        <Content className="!bg-gray-100 dark:!bg-gray-900">
+        <Content className="app-bg">
           <MessageProvider />
           <Outlet />
         </Content>

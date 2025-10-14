@@ -66,7 +66,7 @@ export const SideNav = () => {
       <Sider
         className={`${
           isMobile ? "!absolute !top-0 !left-0 !z-50 !h-dvh" : ""
-        } !bg-gray-100 dark:!bg-gray-900 !border-r !border-gray-300 dark:!border-gray-700 shadow-lg transition-all`}
+        } app-bg !border-r !border-gray-300 dark:!border-gray-700 shadow-lg transition-all`}
         width={siderWidth}
         collapsedWidth={0}
         collapsible
