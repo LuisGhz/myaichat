@@ -1,17 +1,21 @@
 import { useNavigate, useParams } from "react-router";
 import { Input, Button, message } from "antd";
-import { BaselinePlusIcon } from "icons/BaselinePlusIcon";
-import { PromptMessage } from "../components/PromptMessage";
 import { useForm, useFieldArray, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { promptSchema, PromptForm } from "../schemas/PromptSchema";
 import { usePromptForm } from "../hooks/usePromptForm";
 import { usePrompts } from "../hooks/usePrompts";
 import { useEffect, useState } from "react";
+import { PromptMessages } from "../components/PromptMessages";
+import { ConfirmationModal } from "shared/modals/ConfirmationModal";
 
 const { TextArea } = Input;
 
 export const CreateEditPrompt = () => {
+  const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
+  const [messageIndexToDelete, setMessageIndexToDelete] = useState<
+    number | null
+  >(null);
   const navigate = useNavigate();
   const { id: promptId } = useParams<{ id?: string }>();
   const isEditMode = Boolean(promptId);
@@ -97,8 +101,7 @@ export const CreateEditPrompt = () => {
     });
   };
 
-  const handleRemoveMessage = (index: number) => async () => {
-    // Get the actual message ID from form values, not the field array's internal ID
+  const removePromptMessage = async (index: number) => {
     const messages = getValues("messages");
     const messageId = messages?.[index]?.id;
     try {
@@ -108,13 +111,37 @@ export const CreateEditPrompt = () => {
         promptId &&
         messageId &&
         !messageId.startsWith("default-")
-      ) {
+      )
         await deletePromptMessage(promptId, messageId);
-      }
       remove(index);
     } catch (error) {
       console.error("Error deleting message:", error);
     }
+  };
+
+  const handleRemoveMessage = (index: number) => async () => {
+    // Get the actual message ID from form values, not the field array's internal ID
+    const messages = getValues("messages");
+    const messageId = messages?.[index]?.id;
+    if (messageId && !messageId.startsWith("default-")) {
+      setMessageIndexToDelete(index);
+      setIsConfirmModalOpen(true);
+      return;
+    }
+    removePromptMessage(index);
+  };
+
+  const onConfirmRemove = async () => {
+    if (messageIndexToDelete) {
+      await removePromptMessage(messageIndexToDelete);
+      setMessageIndexToDelete(null);
+      setIsConfirmModalOpen(false);
+    }
+  };
+
+  const onCloseModal = () => {
+    setIsConfirmModalOpen(false);
+    setMessageIndexToDelete(null);
   };
 
   if (isInitialLoading) {
@@ -179,36 +206,12 @@ export const CreateEditPrompt = () => {
           )}
         />
       </section>
-
-      <section className="w-10/12 max-w-96">
-        <section className="flex justify-between items-center">
-          <span className="app-text font-semibold text-lg">Messages</span>
-          <button
-            aria-label="Add Message"
-            title="Add Message"
-            type="button"
-            onClick={addMessage}
-          >
-            <BaselinePlusIcon className="text-green-600 dark:text-green-300 hover:text-green-700 dark:hover:text-green-400 transition-colors duration-200 w-7 h-7 cursor-pointer" />
-          </button>
-        </section>
-
-        <section className="mt-2 flex flex-col gap-4">
-          {fields.length === 0 ? (
-            <p className="app-text">No messages yet.</p>
-          ) : (
-            fields.map((field, index) => (
-              <PromptMessage
-                key={field.id}
-                control={control}
-                index={index}
-                onRemove={handleRemoveMessage(index)}
-              />
-            ))
-          )}
-        </section>
-      </section>
-
+      <PromptMessages
+        fields={fields}
+        addMessage={addMessage}
+        control={control}
+        handleRemoveMessage={handleRemoveMessage}
+      />
       <section className="flex gap-8">
         <Button
           className="w-30"
@@ -228,6 +231,15 @@ export const CreateEditPrompt = () => {
           {isEditMode ? "Update Prompt" : "Save Prompt"}
         </Button>
       </section>
+      <ConfirmationModal
+        message={[
+          "Are you sure you want to delete this message?",
+          "This action cannot be undone.",
+        ]}
+        onConfirm={onConfirmRemove}
+        onClose={onCloseModal}
+        isOpen={isConfirmModalOpen}
+      />
     </form>
   );
 };
