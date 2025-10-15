@@ -21,7 +21,7 @@ export const CreateEditPrompt = () => {
   const { onPromptFormSubmit, onPromptUpdateFormSubmit } = usePromptForm();
   const { getPromptById, deletePromptMessage } = usePrompts();
 
-  const { control, handleSubmit, reset } = useForm<PromptForm>({
+  const { control, handleSubmit, reset, getValues } = useForm<PromptForm>({
     resolver: zodResolver(promptSchema),
     defaultValues: {
       name: "",
@@ -98,7 +98,9 @@ export const CreateEditPrompt = () => {
   };
 
   const handleRemoveMessage = (index: number) => async () => {
-    const messageId = fields[index]?.id;
+    // Get the actual message ID from form values, not the field array's internal ID
+    const messages = getValues("messages");
+    const messageId = messages?.[index]?.id;
     try {
       // Only attempt to delete from backend if it's an existing message
       if (
@@ -106,8 +108,9 @@ export const CreateEditPrompt = () => {
         promptId &&
         messageId &&
         !messageId.startsWith("default-")
-      )
+      ) {
         await deletePromptMessage(promptId, messageId);
+      }
       remove(index);
     } catch (error) {
       console.error("Error deleting message:", error);
