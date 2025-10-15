@@ -1,6 +1,6 @@
 import { Select, Input } from "antd";
-import { BaselineCloseIcon } from "icons/BaselineCloseIcon";
 import { Control, Controller } from "react-hook-form";
+import { BaselineCloseIcon } from "icons/BaselineCloseIcon";
 import { PromptForm } from "../schemas/PromptSchema";
 
 const { TextArea } = Input;
