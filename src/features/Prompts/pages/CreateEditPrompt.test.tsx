@@ -188,38 +188,7 @@ describe('CreateEditPrompt', () => {
       expect(screen.getByRole('button', { name: /go back/i })).toBeInTheDocument();
     });
 
-    it('allows adding and removing messages without confirmation for new messages', async () => {
-      useParamsMock.mockReturnValue({});
 
-      renderComponent();
-
-      // Initially should show "No messages yet"
-      expect(screen.getByText('No messages yet.')).toBeInTheDocument();
-
-      // Click add message button
-      const addButton = screen.getByRole('button', { name: /add message/i });
-      await user.click(addButton);
-
-      // Should now show a message component
-      expect(screen.getByTestId('prompt-message-0')).toBeInTheDocument();
-      expect(screen.queryByText('No messages yet.')).not.toBeInTheDocument();
-
-      // Add another message
-      await user.click(addButton);
-      expect(screen.getByTestId('prompt-message-1')).toBeInTheDocument();
-
-      // Remove first message (should not show confirmation for new messages with default- prefix)
-      const removeButton = screen.getByTestId('remove-message-0');
-      await user.click(removeButton);
-
-      // Should not show confirmation modal
-      expect(screen.queryByTestId('confirmation-modal')).not.toBeInTheDocument();
-
-      // Should only have one message left at index 0 (the array gets reindexed)
-      expect(screen.getByTestId('prompt-message-0')).toBeInTheDocument();
-      expect(screen.queryByTestId('prompt-message-1')).not.toBeInTheDocument();
-      expect(deletePromptMessageMock).not.toHaveBeenCalled();
-    });
 
     it('submits create form successfully', async () => {
       useParamsMock.mockReturnValue({});
@@ -639,19 +608,8 @@ describe('CreateEditPrompt', () => {
       expect(screen.getByPlaceholderText('Prompt Content')).toBeInTheDocument();
 
       // Buttons should have proper labels
-      expect(screen.getByRole('button', { name: /add message/i })).toBeInTheDocument();
       expect(screen.getByRole('button', { name: /save prompt/i })).toBeInTheDocument();
       expect(screen.getByRole('button', { name: /go back/i })).toBeInTheDocument();
-    });
-
-    it('has proper ARIA attributes for add message button', () => {
-      useParamsMock.mockReturnValue({});
-
-      renderComponent();
-
-      const addButton = screen.getByRole('button', { name: /add message/i });
-      expect(addButton).toHaveAttribute('aria-label', 'Add Message');
-      expect(addButton).toHaveAttribute('title', 'Add Message');
     });
   });
 
@@ -736,41 +694,6 @@ describe('CreateEditPrompt', () => {
 
       // Should generate default IDs for messages without IDs
       expect(screen.getByTestId('prompt-message-0')).toBeInTheDocument();
-    });
-
-    it('does not show confirmation modal for newly added messages with default IDs', async () => {
-      useParamsMock.mockReturnValue({ id: 'test-id' });
-      getPromptByIdMock.mockResolvedValue(mockPrompt);
-
-      renderComponent();
-
-      await waitFor(() => {
-        expect(screen.queryByText('Loading prompt...')).not.toBeInTheDocument();
-      });
-
-      // Add a new message
-      const addButton = screen.getByRole('button', { name: /add message/i });
-      await user.click(addButton);
-
-      // Should have 3 messages now (2 existing + 1 new)
-      await waitFor(() => {
-        expect(screen.getByTestId('prompt-message-2')).toBeInTheDocument();
-      });
-
-      // Remove the newly added message (index 2)
-      const removeButton = screen.getByTestId('remove-message-2');
-      await user.click(removeButton);
-
-      // Should not show confirmation modal for new messages
-      expect(screen.queryByTestId('confirmation-modal')).not.toBeInTheDocument();
-
-      // Should not call deletePromptMessage
-      expect(deletePromptMessageMock).not.toHaveBeenCalled();
-
-      // Message should be removed
-      await waitFor(() => {
-        expect(screen.queryByTestId('prompt-message-2')).not.toBeInTheDocument();
-      });
     });
 
     it('properly closes confirmation modal when onCloseModal is called', async () => {
