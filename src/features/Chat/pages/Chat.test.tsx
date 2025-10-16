@@ -258,6 +258,111 @@ describe("Chat", () => {
         expect(loadPreviousMessagesMock).not.toHaveBeenCalled();
       });
     });
+
+    it("prevents rapid consecutive pagination calls (canLoadNextPageOnScroll)", async () => {
+      loadPreviousMessagesMock.mockResolvedValue(5);
+
+      renderComponent();
+
+      const scrollContainer = screen.getByRole("main");
+
+      // Wait for first page to load
+      await new Promise((resolve) => setTimeout(resolve, 1100));
+
+      // Trigger first pagination
+      Object.defineProperty(scrollContainer, "scrollTop", {
+        value: 15,
+        writable: true,
+      });
+      fireEvent.scroll(scrollContainer, { target: { scrollTop: 15 } });
+
+      // Immediately try to trigger another pagination before the delay expires
+      Object.defineProperty(scrollContainer, "scrollTop", {
+        value: 10,
+        writable: true,
+      });
+      fireEvent.scroll(scrollContainer, { target: { scrollTop: 10 } });
+
+      // Should only be called once due to canLoadNextPageOnScroll guard
+      await waitFor(() => {
+        expect(loadPreviousMessagesMock).toHaveBeenCalledTimes(1);
+      });
+    });
+
+    it("allows pagination again after canLoadNextPageOnScroll reset delay", async () => {
+      loadPreviousMessagesMock.mockResolvedValue(5);
+
+      renderComponent();
+
+      const scrollContainer = screen.getByRole("main");
+
+      // Wait for first page to load
+      await new Promise((resolve) => setTimeout(resolve, 1100));
+
+      // Trigger first pagination
+      Object.defineProperty(scrollContainer, "scrollTop", {
+        value: 15,
+        writable: true,
+      });
+      fireEvent.scroll(scrollContainer, { target: { scrollTop: 15 } });
+
+      await waitFor(() => {
+        expect(loadPreviousMessagesMock).toHaveBeenCalledWith("chat-123", 1);
+      });
+
+      // Wait for canLoadNextPageOnScroll to be reset (250ms delay)
+      await new Promise((resolve) => setTimeout(resolve, 300));
+
+      // Now trigger pagination again - should work
+      Object.defineProperty(scrollContainer, "scrollTop", {
+        value: 5,
+        writable: true,
+      });
+      fireEvent.scroll(scrollContainer, { target: { scrollTop: 5 } });
+
+      await waitFor(() => {
+        expect(loadPreviousMessagesMock).toHaveBeenCalledWith("chat-123", 2);
+        expect(loadPreviousMessagesMock).toHaveBeenCalledTimes(2);
+      });
+    });
+
+    it("prevents pagination during the 250ms reset window", async () => {
+      loadPreviousMessagesMock.mockResolvedValue(5);
+
+      renderComponent();
+
+      const scrollContainer = screen.getByRole("main");
+
+      // Wait for first page to load
+      await new Promise((resolve) => setTimeout(resolve, 1100));
+
+      // Trigger first pagination
+      Object.defineProperty(scrollContainer, "scrollTop", {
+        value: 15,
+        writable: true,
+      });
+      fireEvent.scroll(scrollContainer, { target: { scrollTop: 15 } });
+
+      await waitFor(() => {
+        expect(loadPreviousMessagesMock).toHaveBeenCalledTimes(1);
+      });
+
+      // Wait only 100ms (less than the 250ms delay)
+      await new Promise((resolve) => setTimeout(resolve, 100));
+
+      // Try to trigger pagination again before reset completes
+      Object.defineProperty(scrollContainer, "scrollTop", {
+        value: 5,
+        writable: true,
+      });
+      fireEvent.scroll(scrollContainer, { target: { scrollTop: 5 } });
+
+      // Wait a bit more
+      await new Promise((resolve) => setTimeout(resolve, 100));
+
+      // Should still be only 1 call since canLoadNextPageOnScroll hasn't reset yet
+      expect(loadPreviousMessagesMock).toHaveBeenCalledTimes(1);
+    });
   });
 
   describe("Pagination Logic", () => {
@@ -281,6 +386,9 @@ describe("Chat", () => {
       await waitFor(() => {
         expect(loadPreviousMessagesMock).toHaveBeenCalledWith("chat-123", 1);
       });
+
+      // Wait for canLoadNextPageOnScroll to be reset (250ms delay)
+      await new Promise((resolve) => setTimeout(resolve, 300));
 
       // Trigger second pagination
       Object.defineProperty(scrollContainer, "scrollTop", {
@@ -353,6 +461,7 @@ describe("Chat", () => {
 
     it("calls loadPreviousMessages with undefined ID when no chat ID is present", async () => {
       mockUseChatParams.mockReturnValue({ id: undefined });
+      loadPreviousMessagesMock.mockResolvedValue(3);
 
       renderComponent();
 
