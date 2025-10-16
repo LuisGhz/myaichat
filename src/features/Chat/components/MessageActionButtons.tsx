@@ -37,6 +37,8 @@ export const MessageActionButtons = ({ role, content }: Props) => {
       <button
         className="bg-gray-400 hover:bg-gray-500 dark:bg-gray-950 dark:hover:bg-gray-800 text-app transition-colors duration-200 p-1 rounded cursor-pointer"
         type="button"
+        title="Copy message to clipboard"
+        aria-label="Copy message to clipboard"
         onClick={handleCopyToClipboard}
       >
         {showCopied ? <BaselineCheckIcon /> : <BaselineContentCopyIcon />}
