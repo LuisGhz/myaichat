@@ -73,18 +73,32 @@ describe('NewConversation', () => {
     expect(getAllPromptsMock).toHaveBeenCalledTimes(1);
   });
 
-  it('displays model select with the current selected model', () => {
+  it('displays model select with the current selected model and accessible label', () => {
     renderComponent();
     const modelSelect = screen.getAllByRole('combobox')[0];
     expect(modelSelect).toBeInTheDocument();
     expect(screen.getByText('GPT 4o')).toBeInTheDocument();
+    
+    // Verify accessibility label exists
+    const modelLabel = screen.getByText('Select a model');
+    expect(modelLabel).toBeInTheDocument();
+    expect(modelLabel).toHaveClass('sr-only');
+    expect(modelLabel.tagName).toBe('LABEL');
+    expect(modelLabel).toHaveAttribute('for', 'model-select');
   });
 
-  it('displays prompt select when prompts are available', () => {
+  it('displays prompt select when prompts are available with accessible label', () => {
     renderComponent();
     const promptSelect = screen.getAllByRole('combobox')[1];
     expect(promptSelect).toBeInTheDocument();
     expect(screen.getByText('Prompt 1')).toBeInTheDocument();
+    
+    // Verify accessibility label exists
+    const promptLabel = screen.getByText('Select a prompt');
+    expect(promptLabel).toBeInTheDocument();
+    expect(promptLabel).toHaveClass('sr-only');
+    expect(promptLabel.tagName).toBe('LABEL');
+    expect(promptLabel).toHaveAttribute('for', 'prompt-select');
   });
 
   it('does not display prompt select when prompts array is empty', () => {
@@ -144,7 +158,7 @@ describe('NewConversation', () => {
     expect(screen.getByText('Prompt 1')).toBeInTheDocument();
   });
 
-  it('has accessible combobox roles for both selects', () => {
+  it('has accessible combobox roles and labels for both selects', () => {
     renderComponent();
     
     const comboboxes = screen.getAllByRole('combobox');
@@ -154,6 +168,62 @@ describe('NewConversation', () => {
     comboboxes.forEach((combobox) => {
       expect(combobox).toHaveAttribute('role', 'combobox');
       expect(combobox).toHaveAttribute('aria-expanded');
+    });
+    
+    // Verify both comboboxes are associated with accessible labels
+    const modelLabel = screen.getByText('Select a model');
+    const promptLabel = screen.getByText('Select a prompt');
+    expect(modelLabel).toBeInTheDocument();
+    expect(promptLabel).toBeInTheDocument();
+    expect(modelLabel).toHaveClass('sr-only');
+    expect(promptLabel).toHaveClass('sr-only');
+  });
+
+  describe('Accessibility', () => {
+    it('has screen reader only label for model select', () => {
+      renderComponent();
+      const modelLabel = screen.getByText('Select a model');
+      expect(modelLabel).toBeInTheDocument();
+      expect(modelLabel.tagName).toBe('LABEL');
+      expect(modelLabel).toHaveClass('sr-only');
+      expect(modelLabel).toHaveAttribute('for', 'model-select');
+    });
+
+    it('has screen reader only label for prompt select', () => {
+      renderComponent();
+      const promptLabel = screen.getByText('Select a prompt');
+      expect(promptLabel).toBeInTheDocument();
+      expect(promptLabel.tagName).toBe('LABEL');
+      expect(promptLabel).toHaveClass('sr-only');
+      expect(promptLabel).toHaveAttribute('for', 'prompt-select');
+    });
+
+    it('labels are properly associated with their inputs via for attribute', () => {
+      renderComponent();
+      const modelLabel = screen.getByText('Select a model');
+      const promptLabel = screen.getByText('Select a prompt');
+      
+      expect(modelLabel).toHaveAttribute('for', 'model-select');
+      expect(promptLabel).toHaveAttribute('for', 'prompt-select');
+    });
+
+    it('model and prompt selects have proper ids for label association', () => {
+      renderComponent();
+      const modelSelect = screen.getAllByRole('combobox')[0];
+      const promptSelect = screen.getAllByRole('combobox')[1];
+      
+      expect(modelSelect).toHaveAttribute('id', 'model-select');
+      expect(promptSelect).toHaveAttribute('id', 'prompt-select');
+    });
+
+    it('labels remain hidden from visual display but accessible to screen readers', () => {
+      renderComponent();
+      const modelLabel = screen.getByText('Select a model');
+      const promptLabel = screen.getByText('Select a prompt');
+      
+      // sr-only class should make labels visually hidden
+      expect(modelLabel).toHaveClass('sr-only');
+      expect(promptLabel).toHaveClass('sr-only');
     });
   });
 
