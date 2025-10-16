@@ -50,8 +50,12 @@ export const NewConversation = () => {
       </h2>
       <section className="flex flex-col gap-4">
         <div>
+          <label className="sr-only" htmlFor="model-select">
+            Select a model
+          </label>
           <Select
             className="w-56"
+            id="model-select"
             options={generateModelsOptions}
             value={model}
             onChange={(value) => setModel(value as ModelsValues)}
@@ -59,8 +63,12 @@ export const NewConversation = () => {
         </div>
         {promptsSummary.length > 0 ? (
           <div>
+            <label className="sr-only" htmlFor="prompt-select">
+              Select a prompt
+            </label>
             <Select
               className="w-56 dark:!bg-gray-800"
+              id="prompt-select"
               options={promptsSummary.map((prompt) => ({
                 value: prompt.id,
                 label: prompt.name,
