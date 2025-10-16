@@ -16,6 +16,7 @@ export const Chat = () => {
   const { isStreaming } = useChatStore();
   const containerRef = useRef<HTMLDivElement>(null);
   const isFirstPageLoaded = useRef(false);
+  const canLoadNextPageOnScroll = useRef(true);
   const currentPage = useRef(0);
   const isEmptyPage = useRef(false);
   const isLastUserMessageReady = useRef(false);
@@ -57,15 +58,20 @@ export const Chat = () => {
 
   const onScroll = (e: React.UIEvent<HTMLDivElement>) => {
     if (!isFirstPageLoaded.current || isStreaming) return;
+    if (!canLoadNextPageOnScroll.current) return;
     const target = e.target as HTMLDivElement;
     const tolerance = 20;
     if (target.scrollTop < tolerance) {
+      canLoadNextPageOnScroll.current = false;
       if (isEmptyPage.current) return;
       currentPage.current += 1;
       loadPreviousMessages(params.id!, currentPage.current).then(
         (newMessagesCount) => {
           console.log("New messages loaded:", newMessagesCount);
           if (newMessagesCount === -1) isEmptyPage.current = true;
+          setTimeout(() => {
+            canLoadNextPageOnScroll.current = true;
+          }, 250);
         }
       );
     }
