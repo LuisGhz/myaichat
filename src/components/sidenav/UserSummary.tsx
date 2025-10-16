@@ -9,7 +9,7 @@ export const UserSummary = () => {
 
   return (
     <div className="flex gap-3 px-2.5">
-      <img className="w-12 rounded-full" src={user.avatarUrl} alt={user.name} />
+      <img className="w-12 rounded-full" src={user.avatarUrl} alt={user.email} />
       <div className="grow">
         <p
           className="app-text truncate whitespace-nowrap overflow-hidden mb-1"
