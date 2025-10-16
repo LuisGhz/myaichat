@@ -33,7 +33,7 @@ describe('UserSummary', () => {
 
     expect(screen.getByText('jane@example.com')).toBeInTheDocument();
 
-    const img = screen.getByRole('img', { name: 'Jane Doe' });
+    const img = screen.getByRole('img', { name: 'jane@example.com' });
     expect(img).toHaveAttribute('src', 'avatar.png');
 
     const btn = screen.getByRole('button', { name: /logout/i });
