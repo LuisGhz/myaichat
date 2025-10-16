@@ -28,7 +28,7 @@ export const Welcome = () => {
             ) : null}
             <li className="mb-2" key={model.value}>
               <a
-                className="text-blue-500 hover:text-blue-400 transition-colors duration-200 cursor-pointer relative flex items-center justify-center gap-2 font-bold"
+                className="!text-blue-400 hover:!text-blue-300 transition-colors duration-200 cursor-pointer relative flex items-center justify-center gap-2 font-bold"
                 href={model.link}
                 target="_blank"
               >
