@@ -81,7 +81,7 @@ export const ChatsList = () => {
                 />
               ))}
           </>
-          {isGettingNewChat && <Skeleton.Button className="!w-11/12" active />}
+          {isGettingNewChat && <Skeleton.Button className="!w-full" active />}
         </ul>
       )}
       <ChatContextMenu
