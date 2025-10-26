@@ -1,4 +1,4 @@
-# Stage 1: Build the React application
+# Stage 1: Build the application
 FROM node:20.18-alpine AS build
 WORKDIR /app
 ARG VITE_API_URL
