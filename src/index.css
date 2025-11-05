@@ -30,6 +30,20 @@ body,
   display: none; /* Safari and Chrome */
 }
 
+@theme {
+  --color-woodsmoke-50: #f5f6f6;
+  --color-woodsmoke-100: #e5e8e7;
+  --color-woodsmoke-200: #ced3d2;
+  --color-woodsmoke-300: #abb5b3;
+  --color-woodsmoke-400: #818f8d;
+  --color-woodsmoke-500: #667472;
+  --color-woodsmoke-600: #576363;
+  --color-woodsmoke-700: #4b5353;
+  --color-woodsmoke-800: #424847;
+  --color-woodsmoke-900: #3a3f3f;
+  --color-woodsmoke-950: #121414;
+}
+
 /**
  * Modal styles
  */

@@ -2,15 +2,15 @@
 
 @layer utilities {
   .app-text {
-    @apply text-gray-700 dark:text-gray-200;
+    @apply text-woodsmoke-700 dark:text-woodsmoke-200;
   }
 
   .app-bg {
-    @apply !bg-gray-100 dark:!bg-gray-900;
+    @apply !bg-woodsmoke-100 dark:!bg-woodsmoke-900;
   }
 
   .app-fill {
-    @apply fill-gray-700 dark:fill-gray-200;
+    @apply fill-woodsmoke-700 dark:fill-woodsmoke-200;
   }
 
   .transition-c-200 {
