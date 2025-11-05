@@ -43,6 +43,7 @@ export const PromptMessage = ({ control, index, onRemove }: Props) => {
         render={({ field, fieldState }) => (
           <>
             <TextArea
+              className="scroll-hidden"
               {...field}
               autoSize={{ minRows: 4, maxRows: 10 }}
               placeholder="Message content"
