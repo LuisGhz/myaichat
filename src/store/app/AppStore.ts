@@ -21,10 +21,12 @@ export const useAppStoreActions = () => {
     (state) => state.setIsGettingNewChat
   );
   const setMessageApi = useAppZustandStore((state) => state.setMessageApi);
+  const closeSideNav = useAppZustandStore((state) => state.closeSideNav);
   return {
     setSideNavCollapsed,
     setChatsSummary,
     setIsGettingNewChat,
     setMessageApi,
+    closeSideNav,
   };
 };

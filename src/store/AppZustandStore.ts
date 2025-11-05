@@ -6,6 +6,7 @@ export const useAppZustandStore = create<AppStore>((set) => ({
   chatsSummary: [],
   isGettingNewChat: false,
   setSideNavCollapsed: (collapsed) => set({ sideNavCollapsed: collapsed }),
+  closeSideNav: () => set({ sideNavCollapsed: true }),
   setChatsSummary: (chats) => set({ chatsSummary: chats }),
   setIsGettingNewChat: (isGetting) => set({ isGettingNewChat: isGetting }),
   messageApi: null,
