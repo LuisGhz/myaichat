@@ -113,7 +113,7 @@ export const AttachFileButton = ({ buttonClassName }: Props) => {
         <PaperClipIcon className="size-6" />
       </button>
       <ul
-        className="hidden rounded-lg mt-2 w-40 shadow-lg transition-all duration-200 delay-150 absolute z-10 bottom-full -left-36 font-semibold text-center [&>li]:bg-gray-200 [&>li]:hover:bg-gray-300 [&>li]:dark:bg-gray-950 [&>li]:dark:hover:bg-gray-700 app-text"
+        className="hidden rounded-lg mt-2 w-40 shadow-lg transition-all duration-200 delay-150 absolute z-10 bottom-full -left-36 font-semibold text-center [&>li]:bg-gray-200 [&>li]:hover:bg-gray-300 [&>li]:dark:bg-woodsmoke-950 [&>li]:dark:hover:bg-woodsmoke-800 app-text"
         ref={optionsRef}
       >
         <UploadFromSelection
