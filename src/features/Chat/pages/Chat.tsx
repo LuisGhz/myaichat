@@ -51,10 +51,12 @@ export const Chat = () => {
       resetChatData();
       return;
     }
-    if (fromStream) return;
+    // Only skip fetching if we're coming from a stream AND already have messages
+    if (fromStream && messages.length > 0) return;
+
     getChatMessages(params.id);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [params.id]);
+  }, [params.id, fromStream]);
 
   const onScroll = (e: React.UIEvent<HTMLDivElement>) => {
     if (!isFirstPageLoaded.current || isStreaming) return;

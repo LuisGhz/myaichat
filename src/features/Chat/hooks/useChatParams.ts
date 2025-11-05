@@ -1,7 +1,7 @@
 import { useParams } from "react-router";
 
 type ChatParams = {
-  id: string;
+  id?: string;
 };
 
 export const useChatParams = () => {
