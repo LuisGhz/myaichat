@@ -23,7 +23,7 @@ export const ChatItem = ({ chat, onContextMenu }: Props) => {
     <li
       className={`hover:bg-gray-200 dark:hover:bg-gray-800 cursor-pointer flex items-center ${
         !chat.title ? "justify-end" : "justify-between"
-      } gap-2 text-black dark:text-gray-200 transition-colors duration-200`}
+      } gap-2 text-black dark:text-gray-200 transition-colors duration-200 app-outline-within`}
       onContextMenu={onContextMenu(chat.id)}
       ref={parentRef}
     >

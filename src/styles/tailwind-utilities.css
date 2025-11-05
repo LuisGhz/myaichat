@@ -17,6 +17,14 @@
     @apply fill-woodsmoke-700 dark:fill-woodsmoke-200;
   }
 
+  .app-outline {
+    @apply focus:outline focus-within:outline focus:outline-woodsmoke-700 focus:dark:outline-woodsmoke-200;
+  }
+
+  .app-outline-within {
+    @apply focus-within:outline focus:outline-woodsmoke-700 focus:dark:outline-woodsmoke-200;
+  }
+
   .transition-c-200 {
     @apply transition-colors duration-200;
   }
