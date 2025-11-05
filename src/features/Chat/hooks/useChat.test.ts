@@ -50,6 +50,7 @@ describe("useChat", () => {
   let setIsSendingAudioMock: ReturnType<typeof vi.fn>;
   let setSideNavCollapsedMock: ReturnType<typeof vi.fn>;
   let setIsGettingNewChatMock: ReturnType<typeof vi.fn>;
+  let setIsStreamingMock: ReturnType<typeof vi.fn>;
 
   // Mock data
   const mockMessages: ChatMessage[] = [
@@ -107,6 +108,7 @@ describe("useChat", () => {
     setIsSendingAudioMock = vi.fn();
     setSideNavCollapsedMock = vi.fn();
     setIsGettingNewChatMock = vi.fn();
+    setIsStreamingMock = vi.fn();
 
     // Mock useChatStore return value
     chatStoreMock.useChatStore.mockReturnValue({
@@ -119,6 +121,7 @@ describe("useChat", () => {
       isRecordingAudio: false,
       isSendingAudio: false,
       selectedFile: null,
+      isStreaming: false,
     });
 
     // Mock useChatStoreActions return value
@@ -136,6 +139,7 @@ describe("useChat", () => {
         addStreamingAssistanteAndUserMessageTokensMock,
       setIsRecordingAudio: setIsRecordingAudioMock,
       setIsSendingAudio: setIsSendingAudioMock,
+      setIsStreaming: setIsStreamingMock,
     });
 
     // Mock useAppStore return value
@@ -862,6 +866,7 @@ describe("useChat", () => {
               addStreamingAssistanteAndUserMessageTokensMock,
             setIsRecordingAudio: setIsRecordingAudioMock,
             setIsSendingAudio: setIsSendingAudioMock,
+            setIsStreaming: setIsStreamingMock,
           });
         }
       });
