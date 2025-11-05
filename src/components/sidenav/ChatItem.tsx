@@ -5,6 +5,7 @@ import { FavoriteIcon } from "icons/FavoriteIcon";
 import { useSideNav } from "core/hooks/useSideNav";
 import { useChatParams } from "features/Chat/hooks/useChatParams";
 import { useAppStoreActions } from "store/app/AppStore";
+import { Grid } from "antd";
 
 type Props = {
   chat: ChatSummary;
@@ -16,9 +17,14 @@ export const ChatItem = ({ chat, onContextMenu }: Props) => {
   const { closeSideNav } = useAppStoreActions();
   const parentRef = useRef<HTMLLIElement | null>(null);
   const params = useChatParams();
+  const screens = Grid.useBreakpoint();
 
   const handleToggleFavorite = async () => {
     await toggleFavorite(chat.id);
+  };
+
+  const handleCloseSideNav = () => {
+    if (!screens.md) closeSideNav();
   };
 
   return (
@@ -37,7 +43,7 @@ export const ChatItem = ({ chat, onContextMenu }: Props) => {
             }`}
             to={`/chat/${chat.id}`}
             title={chat.title}
-            onClick={closeSideNav}
+            onClick={handleCloseSideNav}
           >
             {chat.title}
           </Link>

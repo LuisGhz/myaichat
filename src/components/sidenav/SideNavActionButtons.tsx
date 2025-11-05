@@ -2,14 +2,16 @@ import { useNavigate } from "react-router";
 import { PencilSquareIcon } from "icons/PencilSquareIcon";
 import { Prompt16FilledIcon } from "icons/Prompt16FilledIcon";
 import { useAppStoreActions } from "store/app/AppStore";
+import { Grid } from "antd";
 
 export const SideNavActionButtons = () => {
   const { closeSideNav } = useAppStoreActions();
   const navigate = useNavigate();
+  const screens = Grid.useBreakpoint();
 
   const handleNavigation = (path: string) => () => {
     navigate(path);
-    closeSideNav();
+    if (!screens.md) closeSideNav();
   };
 
   return (
