@@ -44,10 +44,6 @@ body,
   --color-woodsmoke-950: #121414;
 }
 
-:where(.css-dev-only-do-not-override-1d8cpaa).ant-select .ant-select-arrow {
-  @apply dark:text-white/70;
-}
-
 /**
  * Modal styles
  */
@@ -70,4 +66,8 @@ body,
 .rename-chat-modal .ant-modal-close-x,
 .chat-configuration-modal .ant-modal-close-x {
   @apply text-gray-700 dark:text-gray-200;
+}
+
+.ant-select-arrow {
+  @apply dark:text-white/80!;
 }
