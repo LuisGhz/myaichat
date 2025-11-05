@@ -50,17 +50,17 @@ body,
 .generic-modal .ant-modal-content,
 .rename-chat-modal .ant-modal-content,
 .chat-configuration-modal .ant-modal-content {
-  @apply dark:bg-gray-800 text-gray-700 dark:text-gray-200;
+  @apply dark:bg-woodsmoke-900 text-gray-700 dark:text-gray-200;
 }
 .generic-modal .ant-modal-content,
 .rename-chat-modal .ant-modal-title,
 .chat-configuration-modal .ant-modal-title {
-  @apply dark:bg-gray-800 text-gray-700 dark:text-gray-200;
+  @apply dark:bg-woodsmoke-900 text-gray-700 dark:text-gray-200;
 }
 .generic-modal .ant-modal-content,
 .rename-chat-modal .ant-modal-footer,
 .chat-configuration-modal .ant-modal-footer {
-  @apply dark:bg-gray-800 text-gray-700 dark:text-gray-200;
+  @apply dark:bg-woodsmoke-900 text-gray-700 dark:text-gray-200;
 }
 .generic-modal .ant-modal-content,
 .rename-chat-modal .ant-modal-close-x,
