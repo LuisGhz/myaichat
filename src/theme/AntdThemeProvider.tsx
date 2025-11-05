@@ -8,17 +8,17 @@ type Props = {
 const darkTheme: ThemeConfig = {
   components: {
     Select: {
-      selectorBg: "var(--color-gray-950)",
+      selectorBg: "var(--color-woodsmoke-800)",
       colorText: "var(--color-gray-200)",
-      optionActiveBg: "var(--color-gray-800)",
-      optionSelectedBg: "var(--color-gray-700)",
-      colorBgElevated: "var(--color-gray-950)",
-      colorTextPlaceholder: "var(--color-gray-200)",
+      optionActiveBg: "var(--color-woodsmoke-950)",
+      optionSelectedBg: "var(--color-woodsmoke-700)",
+      colorBgElevated: "var(--color-woodsmoke-800)",
+      colorTextPlaceholder: "var(--color-woodsmoke-200)",
     },
     Input: {
-      colorText: "var(--color-gray-200)",
-      colorTextPlaceholder: "var(--color-gray-400)",
-      colorBgContainer: "var(--color-gray-950)",
+      colorText: "var(--color-woodsmoke-200)",
+      colorTextPlaceholder: "var(--color-woodsmoke-400)",
+      colorBgContainer: "var(--color-woodsmoke-800)",
     },
     Skeleton: {
       gradientFromColor: "rgba(0,0,0,0.2)",
@@ -26,14 +26,14 @@ const darkTheme: ThemeConfig = {
     },
     Button: {
       colorText: "var(--color-gray-200)",
-      colorBgContainer: "var(--color-gray-950)",
-      colorBorder: "var(--color-gray-600)",
-      defaultHoverColor: "var(--color-gray-100)",
-      defaultHoverBorderColor: "var(--color-gray-400)",
+      colorBgContainer: "var(--color-woodsmoke-800)",
+      colorBorder: "var(--color-woodsmoke-600)",
+      defaultHoverColor: "var(--color-woodsmoke-100)",
+      defaultHoverBorderColor: "var(--color-woodsmoke-400)",
     },
     Message: {
-      colorText: "var(--color-gray-200)",
-      contentBg: "var(--color-gray-900)",
+      colorText: "var(--color-woodsmoke-200)",
+      contentBg: "var(--color-woodsmoke-900)",
       boxShadow:
         "0 6px 16px 0 rgba(255, 255, 255, 0.08), 0 3px 6px -4px rgba(255, 255, 255, 0.12), 0 9px 28px 8px rgba(255, 255, 255, 0.05)",
     },
