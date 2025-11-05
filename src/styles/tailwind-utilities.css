@@ -9,6 +9,10 @@
     @apply !bg-woodsmoke-100 dark:!bg-woodsmoke-900;
   }
 
+  .app-bg-darker {
+    @apply !bg-woodsmoke-200 dark:!bg-woodsmoke-950;
+  }
+
   .app-fill {
     @apply fill-woodsmoke-700 dark:fill-woodsmoke-200;
   }
