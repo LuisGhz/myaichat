@@ -132,7 +132,8 @@ export const CreateEditPrompt = () => {
   };
 
   const onConfirmRemove = async () => {
-    if (messageIndexToDelete) {
+    // messageIndexToDelete can be 0, so check explicitly for null
+    if (messageIndexToDelete !== null) {
       await removePromptMessage(messageIndexToDelete);
       setMessageIndexToDelete(null);
       setIsConfirmModalOpen(false);
