@@ -62,11 +62,11 @@ export const SideNav = () => {
           aria-hidden="true"
         />
       )}
-      
+
       <Sider
         className={`${
           isMobile ? "!absolute !top-0 !left-0 !z-50 !h-dvh" : ""
-        } app-bg-darker !border-r !border-gray-300 dark:!border-gray-700 shadow-lg transition-all`}
+        } app-bg-darker !border-r !border-woodsmoke-300 dark:!border-woodsmoke-700 shadow-lg transition-all`}
         width={siderWidth}
         collapsedWidth={0}
         collapsible
