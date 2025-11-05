@@ -37,6 +37,10 @@ const darkTheme: ThemeConfig = {
       boxShadow:
         "0 6px 16px 0 rgba(255, 255, 255, 0.08), 0 3px 6px -4px rgba(255, 255, 255, 0.12), 0 9px 28px 8px rgba(255, 255, 255, 0.05)",
     },
+    Popover: {
+      colorBgElevated: "var(--color-woodsmoke-800)",
+      colorText: "var(--color-woodsmoke-100)",
+    }
   },
 };
 
