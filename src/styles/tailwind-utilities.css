@@ -2,7 +2,7 @@
 
 @layer utilities {
   .app-text {
-    @apply text-woodsmoke-700 dark:text-woodsmoke-200;
+    @apply !text-woodsmoke-700 dark:!text-woodsmoke-200;
   }
 
   .app-bg {
