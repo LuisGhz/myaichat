@@ -35,6 +35,7 @@ describe("AppHeader", () => {
       setChatsSummary: () => {},
       setIsGettingNewChat: () => {},
       setMessageApi: () => {},
+      closeSideNav: () => {},
     }));
 
     render(<AppHeader />);
@@ -60,6 +61,7 @@ describe("AppHeader", () => {
       setChatsSummary: () => {},
       setIsGettingNewChat: () => {},
       setMessageApi: () => {},
+      closeSideNav: () => {},
     }));
 
     render(<AppHeader />);

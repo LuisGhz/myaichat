@@ -156,6 +156,7 @@ describe("useChat", () => {
       setChatsSummary: setChatsSummaryMock,
       setIsGettingNewChat: setIsGettingNewChatMock,
       setMessageApi: vi.fn(),
+      closeSideNav: vi.fn(),
     });
   });
 
