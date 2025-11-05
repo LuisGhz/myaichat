@@ -40,8 +40,12 @@ body,
   --color-woodsmoke-600: #576363;
   --color-woodsmoke-700: #4b5353;
   --color-woodsmoke-800: #242729;
-  --color-woodsmoke-900: #191B1C;
+  --color-woodsmoke-900: #191b1c;
   --color-woodsmoke-950: #121414;
+}
+
+:where(.css-dev-only-do-not-override-1d8cpaa).ant-select .ant-select-arrow {
+  @apply dark:text-white/70;
 }
 
 /**
