@@ -20,7 +20,7 @@ export const SideNav = () => {
       // fallback for SSR / tests
       return `${maxWidth}px`;
     }
-    const ratio = mobile ? 0.8 : 0.25;
+    const ratio = mobile ? 0.8 : 0.35;
     const px = Math.round(window.innerWidth * ratio);
     return `${Math.min(px, maxWidth)}px`;
   }, []);
