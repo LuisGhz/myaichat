@@ -156,7 +156,7 @@ export const CreateEditPrompt = () => {
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}
-      className="flex items-center h-full flex-col gap-4"
+      className="flex items-center min-h-full flex-col gap-4 app-bg"
     >
       <h2 className="text-xl app-text font-semibold">
         {isEditMode ? "Edit Prompt" : "Create Prompt"}
@@ -213,7 +213,7 @@ export const CreateEditPrompt = () => {
         control={control}
         handleRemoveMessage={handleRemoveMessage}
       />
-      <section className="flex gap-8">
+      <section className="flex gap-8 mb-4">
         <Button
           className="w-30"
           type="default"
