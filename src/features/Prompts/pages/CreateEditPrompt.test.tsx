@@ -442,9 +442,9 @@ describe('CreateEditPrompt', () => {
       expect(screen.queryByTestId('confirmation-modal')).not.toBeInTheDocument();
     });
 
-    it('does not delete message at index 0 due to bug in onConfirmRemove', async () => {
-      // This test documents a bug in the implementation where index 0 cannot be deleted
-      // because onConfirmRemove checks `if (messageIndexToDelete)` which is falsy for 0
+    it('deletes message at index 0 correctly with explicit null check', async () => {
+      // This test verifies that index 0 can be deleted correctly
+      // because onConfirmRemove checks `if (messageIndexToDelete !== null)` which is truthy for 0
       useParamsMock.mockReturnValue({ id: 'test-id' });
       getPromptByIdMock.mockResolvedValue(mockPrompt);
       deletePromptMessageMock.mockResolvedValue(undefined);
@@ -454,6 +454,10 @@ describe('CreateEditPrompt', () => {
       await waitFor(() => {
         expect(screen.queryByText('Loading prompt...')).not.toBeInTheDocument();
       });
+
+      // Initially we have 2 messages
+      expect(screen.getByTestId('prompt-message-0')).toBeInTheDocument();
+      expect(screen.getByTestId('prompt-message-1')).toBeInTheDocument();
 
       // Click remove button on the first message (index 0)
       const removeButton = screen.getByTestId('remove-message-0');
@@ -468,17 +472,22 @@ describe('CreateEditPrompt', () => {
       const confirmButton = screen.getByTestId('confirm-button');
       await user.click(confirmButton);
 
-      // BUG: deletePromptMessage is NOT called because index 0 is falsy
+      // deletePromptMessage should be called with correct parameters
       await waitFor(() => {
-        expect(deletePromptMessageMock).not.toHaveBeenCalled();
+        expect(deletePromptMessageMock).toHaveBeenCalledWith('test-id', 'msg-1');
       });
 
-      // BUG: Modal does NOT close properly because the conditional prevents setIsConfirmModalOpen
-      // The modal stays open which is incorrect behavior
-      expect(screen.getByTestId('confirmation-modal')).toBeInTheDocument();
+      // Modal should close properly
+      await waitFor(() => {
+        expect(screen.queryByTestId('confirmation-modal')).not.toBeInTheDocument();
+      });
 
-      // Message should still be there because deletion didn't happen
-      expect(screen.getByTestId('prompt-message-0')).toBeInTheDocument();
+      // After deletion, only the second message should remain (displayed as index 0)
+      await waitFor(() => {
+        expect(screen.getByTestId('prompt-message-0')).toBeInTheDocument();
+      });
+      // The original second message should have been removed
+      expect(screen.queryByTestId('prompt-message-1')).not.toBeInTheDocument();
     });
 
     it('cancels message deletion when cancel is clicked', async () => {
