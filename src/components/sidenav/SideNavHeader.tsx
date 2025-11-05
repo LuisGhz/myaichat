@@ -20,7 +20,7 @@ export const SideNavHeader = () => {
           alt="MyAIChatlogo"
         />
       </Link>
-      <button onClick={handleToggle} aria-label="Collapse side menu">
+      <button onClick={handleToggle} aria-label="Collapse side menu" type="button">
         <MenuFoldLeftIcon
           className={`w-7 h-7 xl:w-8 xl:h-8 transition-transform dark:text-white cursor-pointer`}
         />
