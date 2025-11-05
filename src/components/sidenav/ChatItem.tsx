@@ -4,6 +4,7 @@ import { FavoriteFilledIcon } from "icons/FavoriteFilledIcon";
 import { FavoriteIcon } from "icons/FavoriteIcon";
 import { useSideNav } from "core/hooks/useSideNav";
 import { useChatParams } from "features/Chat/hooks/useChatParams";
+import { useAppStoreActions } from "store/app/AppStore";
 
 type Props = {
   chat: ChatSummary;
@@ -12,6 +13,7 @@ type Props = {
 
 export const ChatItem = ({ chat, onContextMenu }: Props) => {
   const { toggleFavorite } = useSideNav();
+  const { closeSideNav } = useAppStoreActions();
   const parentRef = useRef<HTMLLIElement | null>(null);
   const params = useChatParams();
 
@@ -35,6 +37,7 @@ export const ChatItem = ({ chat, onContextMenu }: Props) => {
             }`}
             to={`/chat/${chat.id}`}
             title={chat.title}
+            onClick={closeSideNav}
           >
             {chat.title}
           </Link>
